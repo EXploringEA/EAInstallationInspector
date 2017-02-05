@@ -18,7 +18,7 @@ Public Class frmHelp
     Private Sub Information_Load(sender As Object, e As System.EventArgs) Handles Me.Load
         Try
             Dim ms As New MemoryStream
-            Dim buffer As Byte() = Encoding.UTF8.GetBytes(My.Resources.eaInstallationInspectionInformationV3)
+            Dim buffer As Byte() = Encoding.UTF8.GetBytes(My.Resources.eaInstallationInspectorInformationV3)
 
             ms.Write(buffer, 0, buffer.Length)
             ms.Seek(0, SeekOrigin.Begin)
