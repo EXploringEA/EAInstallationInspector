@@ -7,4 +7,4 @@ For more information review the document **eaInstallationInspectorInformationV3.
 
 Current release is V3.
 
-NOTE: This code is released under the terms of the licence agreement - **GPLV3 TERMS AND CONDITIONS.pdf**
+NOTE: This code is now released under the terms of the licence agreement - **BSD 3-Clause License** - click link for details.
