@@ -5,12 +5,16 @@
 ' If not, please email: adrian@EXploringEA.co.uk 
 '=====================================================================================
 
+Imports System.IO
+Imports System.Reflection
+
 ''' <summary>
 ''' Form to present the detail for a single entry
 ''' </summary>
 ''' <seealso cref="System.Windows.Forms.Form" />
 Public Class frmEntryDetail
 
+    Private _DLLFilename As String = ""
     ''' <summary>
     ''' Initializes a new instance of the <see cref="frmEntryDetail"/> class.
     ''' Populate with the detail for the selected addin row
@@ -27,6 +31,7 @@ Public Class frmEntryDetail
             tbCLSIDSRC.Text = pEntryDetail.CLSIDSource
 
             tbDLL.Text = pEntryDetail.DLL
+            _DLLFilename = pEntryDetail.DLL
 
         Catch ex As Exception
 
@@ -52,6 +57,33 @@ Public Class frmEntryDetail
             Dim bmp As Bitmap = New Bitmap(Me.Width, Me.Height)
             Me.DrawToBitmap(bmp, New Rectangle(0, 0, Me.Width, Me.Height))
             My.Computer.Clipboard.SetImage(bmp)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+
+    Private Sub btDLLDetail_Click(sender As Object, e As EventArgs) Handles btDLLDetail.Click
+        Try
+            Dim filename As String = _DLLFilename.Replace("file:///", "")
+
+            If File.Exists(filename) Then
+                Dim assembly As Assembly = assembly.LoadFrom(_DLLFilename)
+                Dim types As Type() = assembly.GetTypes()
+                Dim s As String = " List of types " & vbCrLf
+                Dim a As New ArrayList
+
+                For Each t As Type In types
+                    '   s += t.ToString & vbCrLf
+                    '
+                    a.Add(t)
+                Next
+                '  MsgBox(s, MsgBoxStyle.OkOnly, "List of public methods for DLL")
+                Dim frmMethods As New frmListOfClasses(a)
+                frmMethods.ShowDialog()
+            End If
+
+
         Catch ex As Exception
 
         End Try

@@ -11,7 +11,7 @@ Imports Microsoft.Win32
 ''' Main form - presents the results of checking for EA AddIn's and related classes
 ''' </summary>
 ''' <seealso cref="System.Windows.Forms.Form" />
-Public Class frmInspector3
+Public Class frmInspector
 
     ''' <summary>
     ''' Handles the Load event of the frmInspector2 control - which retrieves and presents the information for EA AddIns

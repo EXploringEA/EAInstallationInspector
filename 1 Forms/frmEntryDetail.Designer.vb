@@ -45,6 +45,7 @@ Partial Class frmEntryDetail
         Me.lbCLSIDSRC = New System.Windows.Forms.Label()
         Me.tbCLSIDSRC = New System.Windows.Forms.TextBox()
         Me.btCopyDetailToClipboard = New System.Windows.Forms.Button()
+        Me.btDLLDetail = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lbAddInName
@@ -185,11 +186,21 @@ Partial Class frmEntryDetail
         Me.btCopyDetailToClipboard.Text = "Copy to clipboard"
         Me.btCopyDetailToClipboard.UseVisualStyleBackColor = True
         '
+        'btDLLDetail
+        '
+        Me.btDLLDetail.Location = New System.Drawing.Point(209, 213)
+        Me.btDLLDetail.Name = "btDLLDetail"
+        Me.btDLLDetail.Size = New System.Drawing.Size(189, 23)
+        Me.btDLLDetail.TabIndex = 16
+        Me.btDLLDetail.Text = "Get list of classes and methods"
+        Me.btDLLDetail.UseVisualStyleBackColor = True
+        '
         'frmEntryDetail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(632, 248)
+        Me.Controls.Add(Me.btDLLDetail)
         Me.Controls.Add(Me.btCopyDetailToClipboard)
         Me.Controls.Add(Me.tbCLSIDSRC)
         Me.Controls.Add(Me.lbCLSIDSRC)
@@ -229,4 +240,5 @@ Partial Class frmEntryDetail
     Friend WithEvents lbCLSIDSRC As System.Windows.Forms.Label
     Friend WithEvents tbCLSIDSRC As System.Windows.Forms.TextBox
     Friend WithEvents btCopyDetailToClipboard As System.Windows.Forms.Button
+    Friend WithEvents btDLLDetail As System.Windows.Forms.Button
 End Class

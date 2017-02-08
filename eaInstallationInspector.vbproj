@@ -68,6 +68,12 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="1 Forms\frmListOfClasses.Designer.vb">
+      <DependentUpon>frmListOfClasses.vb</DependentUpon>
+    </Compile>
+    <Compile Include="1 Forms\frmListOfClasses.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="2 SupportFunctions\Constants.vb" />
     <Compile Include="1 Forms\frmEntryDetail.Designer.vb">
       <DependentUpon>frmEntryDetail.vb</DependentUpon>
@@ -81,10 +87,10 @@
     <Compile Include="1 Forms\frmHelp.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="1 Forms\frmInspector3.Designer.vb">
-      <DependentUpon>frmInspector3.vb</DependentUpon>
+    <Compile Include="1 Forms\frmInspector.Designer.vb">
+      <DependentUpon>frmInspector.vb</DependentUpon>
     </Compile>
-    <Compile Include="1 Forms\frmInspector3.vb">
+    <Compile Include="1 Forms\frmInspector.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -112,8 +118,11 @@
     <EmbeddedResource Include="1 Forms\frmHelpvb.resx">
       <DependentUpon>frmHelp.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="1 Forms\frmInspector3.resx">
-      <DependentUpon>frmInspector3.vb</DependentUpon>
+    <EmbeddedResource Include="1 Forms\frmInspector.resx">
+      <DependentUpon>frmInspector.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="1 Forms\frmListOfClasses.resx">
+      <DependentUpon>frmListOfClasses.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

@@ -5,7 +5,7 @@
 ' If not, please email: adrian@EXploringEA.co.uk 
 '=====================================================================================
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class frmInspector3
+Partial Class frmInspector
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -29,7 +29,7 @@ Partial Class frmInspector3
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmInspector3))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmInspector))
         Me.lv2 = New System.Windows.Forms.ListView()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tbOS = New System.Windows.Forms.TextBox()
@@ -150,7 +150,7 @@ Partial Class frmInspector3
         Me.LinkLabel1.TabStop = True
         Me.LinkLabel1.Text = "EXploringEA.com"
         '
-        'frmInspector3
+        'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -167,8 +167,8 @@ Partial Class frmInspector3
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lv2)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "frmInspector3"
-        Me.Text = "EA Installation Inspector Version 3"
+        Me.Name = "frmInspector"
+        Me.Text = "EA Installation Inspector Version 4"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
