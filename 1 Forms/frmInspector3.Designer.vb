@@ -2,7 +2,7 @@
 ' You may use, distribute and modify this code under the terms of the 3-Clause BSD License
 '
 ' You should have received a copy of the 3-Clause BSD License with this file. 
-' If not, please email: eaForms@EXploringEA.co.uk 
+' If not, please email: adrian@EXploringEA.co.uk 
 '=====================================================================================
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmInspector3

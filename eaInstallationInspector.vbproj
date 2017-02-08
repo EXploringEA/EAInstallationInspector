@@ -103,6 +103,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="2 SupportFunctions\SupportFunctions.vb" />
+    <Compile Include="NameSpaceDoc.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="1 Forms\frmEntryDetail.resx">
@@ -122,7 +123,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="3 Resources\eaInstallationInspectionInformationV3.rtf" />
     <None Include="3 Resources\eaInstallationInspectorInformationV3.rtf" />
     <None Include="app.config" />
     <None Include="My Project\Application.myapp">

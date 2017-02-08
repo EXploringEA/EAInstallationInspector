@@ -2,7 +2,7 @@
 ' You may use, distribute and modify this code under the terms of the 3-Clause BSD License
 '
 ' You should have received a copy of the 3-Clause BSD License with this file. 
-' If not, please email: eaForms@EXploringEA.co.uk 
+' If not, please email: adrian@EXploringEA.co.uk 
 '=====================================================================================
 
 Imports Microsoft.Win32
@@ -278,12 +278,54 @@ End Class
 Public Class AddInDetail
 
     '' AddIn Name | Class | Source | CLSID | Source | DLL
+    ''' <summary>
+    ''' Gets or sets the name of the add in.
+    ''' </summary>
+    ''' <value>
+    ''' The AddIn Name
+    ''' </value>
     Property AddInName As String
-    Property ClassDefinition As String ' Assembly.Class
+    ''' <summary>
+    ''' Gets or sets the class definition.
+    ''' </summary>
+    ''' <value>
+    ''' The class name i.e. Assembly.Class
+    ''' </value>
+    Property ClassDefinition As String
+    ''' <summary>
+    ''' Gets or sets the sparx entry.
+    ''' </summary>
+    ''' <value>
+    ''' The location of the SparxEntry in registry - e.g. HKCU or HKLM
+    ''' </value>
     Property SparxEntry As String
+    ''' <summary>
+    ''' Gets or sets the class source.
+    ''' </summary>
+    ''' <value>
+    ''' Location of class in registry  - e.g. HKCU or HKLM
+    ''' </value>
     Property ClassSource
+    ''' <summary>
+    ''' Gets or sets the CLSID.
+    ''' </summary>
+    ''' <value>
+    ''' Class ID (GUID)
+    ''' </value>
     Property CLSID
+    ''' <summary>
+    ''' Gets or sets the CLSID source.
+    ''' </summary>
+    ''' <value>
+    ''' Class ID Source in registry  - e.g. HKCU or HKLM
+    ''' </value>
     Property CLSIDSource
+    ''' <summary>
+    ''' Gets or sets the DLL.
+    ''' </summary>
+    ''' <value>
+    ''' The DLL full file pathname
+    ''' </value>
     Property DLL
 
 End Class
