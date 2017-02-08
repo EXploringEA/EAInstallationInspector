@@ -1,17 +1,18 @@
-﻿'   Copyright (C) 2015-2016 EXploringEA
+﻿' Copyright (C) 2015 - 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+' You may use, distribute and modify this code under the terms of the 3-Clause BSD License
 '
-' This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
-' the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-'
-' This program is distributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-' See the GNU General Public License for more details.
-' You should have received a copy of the GNU General Public Licensealong with this program.  If not, see <http://www.gnu.org/licenses/>.
-'
+' You should have received a copy of the 3-Clause BSD License with this file. 
+' If not, please email: eaForms@EXploringEA.co.uk 
+'=====================================================================================
 
 Imports Microsoft.Win32
 
 Module SupportFunctions
 
+    ''' <summary>
+    ''' Versions the string.
+    ''' </summary>
+    ''' <returns>EA Installation inspector version</returns>
     Friend Function versionString() As String
         Dim myVersion As String = "NOT SET"
         Try
@@ -24,6 +25,11 @@ Module SupportFunctions
         End Try
         Return myVersion
     End Function
+    ''' <summary>
+    ''' Dls the lexists.
+    ''' </summary>
+    ''' <param name="pFilePath">DLL Filename path.</param>
+    ''' <returns>True if exists else false</returns>
     Friend Function DLLexists(pFilePath As String) As Boolean
         Try
             ' remove file from front of string
@@ -38,23 +44,23 @@ Module SupportFunctions
         Return False
     End Function
 
-    Friend Const EA As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA400\EA"
+
 
 
     ' set the relative widths of the columns
-    Friend AddInNameWidth As Integer = 2
-    Friend Classwidth As Integer = 3
-    Friend srcWidth As Integer = 1
-    Friend CLSIDWidth As Integer = 5
-    Friend DLLWidth As Integer = 10
+    Friend Const AddInNameWidth As Integer = 2
+    Friend Const Classwidth As Integer = 3
+    Friend Const srcWidth As Integer = 1
+    Friend Const CLSIDWidth As Integer = 5
+    Friend Const DLLWidth As Integer = 10
 
+  
     ''' <summary>
-    ''' init the list view 
+    ''' init the list view headers
     ''' add headers
     ''' set width
     ''' </summary>
-    ''' <param name="plv"></param>
-    ''' <remarks></remarks>
+    ''' <param name="plv">Listview</param>
     Friend Sub init_lv(plv As ListView)
         Try
             plv.Columns.Clear()
@@ -83,6 +89,11 @@ Module SupportFunctions
 
         End Try
     End Sub
+    ''' <summary>
+    ''' Scales the widths of Listview based based on either width provided or existing width
+    ''' </summary>
+    ''' <param name="plv">Listview</param>
+    ''' <param name="w">optional listview width, otherwise uses existing width </param>
     Friend Sub setWidths(plv As ListView, Optional w As Integer = 0)
         Try
             Dim mylv As ListView = plv
@@ -107,7 +118,12 @@ Module SupportFunctions
         End Try
     End Sub
 
-    Function getMyEntries() As ArrayList
+
+    ''' <summary>
+    ''' Gets a list of addin entries from Windows Registry
+    ''' </summary>
+    ''' <returns>List of AddIn entries</returns>
+    Function getListOfEAAddinEntries() As ArrayList
 
         ' keys can be in
         '? HKCU\Software\SparxSystems\EAAddIns
@@ -126,7 +142,7 @@ Module SupportFunctions
             For Each pEntryKey In myCUKey.GetSubKeyNames
                 Dim newKey As New AddInEntry
                 newKey.AddInName = pEntryKey ' registry location for addin name ' this only works for top level not the 6432
-                myClassKey = CUfullKey & "\" & pEntryKey ' create the key for the Class name
+                myClassKey = HKCUfullKey & "\" & pEntryKey ' create the key for the Class name
                 newKey.ClassDefinition = Registry.GetValue(myClassKey, "", "NOT SET") ' look for the class name CLSID name
                 newKey.SparxEntry = "HKCU"
                 myEntries.Add(newKey)
@@ -137,7 +153,7 @@ Module SupportFunctions
             For Each pEntryKey In myLMKey.GetSubKeyNames
                 Dim newKey As New AddInEntry
                 newKey.AddInName = pEntryKey ' registry location for addin name ' this only works for top level not the 6432
-                myClassKey = LMfullKey & "\" & pEntryKey ' create the key for the Class name
+                myClassKey = HKLMfullKey & "\" & pEntryKey ' create the key for the Class name
                 newKey.ClassDefinition = Registry.GetValue(myClassKey, "", "NOT SET") ' look for the class name CLSID name
                 newKey.SparxEntry = "HKLM"
                 myEntries.Add(newKey)
@@ -147,10 +163,15 @@ Module SupportFunctions
 
     End Function
 
-    Private Const cNotSet As String = "NOT SET"
-    Sub poplv(plv As ListView)
+    ''' <summary>
+    ''' Routine to:
+    ''' * Look for the class related to addin entries
+    ''' * Populate the listview with addin details
+    ''' </summary>
+    ''' <param name="plv">The PLV.</param>
+    Sub GetAddInClassDetailsAndPopulateListview(plv As ListView)
 
-        For Each AddIn As AddInEntry In getMyEntries()
+        For Each AddIn As AddInEntry In getListOfEAAddinEntries()
             ' we have the name, classname and sparx ref
             Try
                 Dim RowItem As ListViewItem = plv.Items.Add(AddIn.AddInName) ' add the addin name to list
@@ -167,11 +188,11 @@ Module SupportFunctions
                 ' 1st look in HKCU 
 
                 Dim CLSIDsrc As String = "HKCU" ' we are now looking in 
-                Dim cs1 As String = C1 & "\" & myClassKeyString & "\" & "CLSID" ' this should be class e.g. eaForms.eaForms - but only for CU
+                Dim cs1 As String = HKCRClasses & "\" & myClassKeyString & "\" & "CLSID" ' this should be class e.g. eaForms.eaForms - but only for CU
                 Dim myCSCLSID As String = Registry.GetValue(cs1, "", cNotSet) ' get the CLSID
                 If myCSCLSID = "" Then ' if it doesn't exist then need to look in HKLM
                     CLSIDsrc = "HKLM"
-                    Dim hs1 As String = H1 & "\" & myClassKeyString & "\" & "CLSID" ' this should be class e.g. eaForms.eaForms
+                    Dim hs1 As String = HKLMClasses & "\" & myClassKeyString & "\" & "CLSID" ' this should be class e.g. eaForms.eaForms
                     myCSCLSID = Registry.GetValue(hs1, "", cNotSet) ' get CLSID in HKLM
                     If myCSCLSID Is Nothing Then
                         CLSIDsrc = "Not found"
@@ -188,18 +209,18 @@ Module SupportFunctions
                     ' Now the DLL may be referenced by the CLSID in either HKCU or HKLM 
                     ' expect that it will be the same location as that in which the CLSID has been found
                     Dim DLLsrc As String = "HKCU" ' keep a track of the src
-                    Dim csv As String = C1 & "\CLSID\" & myCSCLSID & "\InprocServer32"
+                    Dim csv As String = HKCRClasses & "\CLSID\" & myCSCLSID & "\InprocServer32"
 
                     If Environment.Is64BitOperatingSystem Then
-                        csv = C1 & "\Wow6432Node\CLSID\" & myCSCLSID & "\InprocServer32"
+                        csv = HKCRClasses & "\Wow6432Node\CLSID\" & myCSCLSID & "\InprocServer32"
                     End If
 
                     Dim myCS1V As String = Registry.GetValue(csv, "CodeBase", cNotSet) 'using the class try to find the DLL path
                     If myCS1V = "" Then ' if it isn't found in HKCU then look in HKLM
                         DLLsrc = "HKLM"
-                        csv = H1 & "\CLSID\" & myCSCLSID & "\InprocServer32"
+                        csv = HKLMClasses & "\CLSID\" & myCSCLSID & "\InprocServer32"
                         If Environment.Is64BitOperatingSystem Then
-                            csv = H1 & "\Wow6432Node\CLSID\" & myCSCLSID & "\InprocServer32"
+                            csv = HKLMClasses & "\Wow6432Node\CLSID\" & myCSCLSID & "\InprocServer32"
                         End If
                         myCS1V = Registry.GetValue(csv, "CodeBase", cNotSet)
                         ' This was added in V3
@@ -238,6 +259,9 @@ Module SupportFunctions
     End Sub
 End Module
 
+''' <summary>
+''' AddIn entry summary
+''' </summary>
 Friend Class AddInEntry
 
     '' AddIn Name | Class | Source | CLSID | Source | DLL
@@ -248,6 +272,9 @@ Friend Class AddInEntry
 
 End Class
 
+''' <summary>
+''' AddIn entry details
+''' </summary>
 Public Class AddInDetail
 
     '' AddIn Name | Class | Source | CLSID | Source | DLL

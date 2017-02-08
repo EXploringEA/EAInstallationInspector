@@ -1,4 +1,10 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿' Copyright (C) 2015 - 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+' You may use, distribute and modify this code under the terms of the 3-Clause BSD License
+'
+' You should have received a copy of the 3-Clause BSD License with this file. 
+' If not, please email: eaForms@EXploringEA.co.uk 
+'=====================================================================================
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmEntryDetail
     Inherits System.Windows.Forms.Form
 
@@ -38,6 +44,7 @@ Partial Class frmEntryDetail
         Me.tbCLSID = New System.Windows.Forms.TextBox()
         Me.lbCLSIDSRC = New System.Windows.Forms.Label()
         Me.tbCLSIDSRC = New System.Windows.Forms.TextBox()
+        Me.btCopyDetailToClipboard = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lbAddInName
@@ -169,11 +176,21 @@ Partial Class frmEntryDetail
         Me.tbCLSIDSRC.Size = New System.Drawing.Size(85, 20)
         Me.tbCLSIDSRC.TabIndex = 14
         '
+        'btCopyDetailToClipboard
+        '
+        Me.btCopyDetailToClipboard.Location = New System.Drawing.Point(87, 213)
+        Me.btCopyDetailToClipboard.Name = "btCopyDetailToClipboard"
+        Me.btCopyDetailToClipboard.Size = New System.Drawing.Size(116, 23)
+        Me.btCopyDetailToClipboard.TabIndex = 15
+        Me.btCopyDetailToClipboard.Text = "Copy to clipboard"
+        Me.btCopyDetailToClipboard.UseVisualStyleBackColor = True
+        '
         'frmEntryDetail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(632, 248)
+        Me.Controls.Add(Me.btCopyDetailToClipboard)
         Me.Controls.Add(Me.tbCLSIDSRC)
         Me.Controls.Add(Me.lbCLSIDSRC)
         Me.Controls.Add(Me.tbCLSID)
@@ -211,4 +228,5 @@ Partial Class frmEntryDetail
     Friend WithEvents tbCLSID As System.Windows.Forms.TextBox
     Friend WithEvents lbCLSIDSRC As System.Windows.Forms.Label
     Friend WithEvents tbCLSIDSRC As System.Windows.Forms.TextBox
+    Friend WithEvents btCopyDetailToClipboard As System.Windows.Forms.Button
 End Class
