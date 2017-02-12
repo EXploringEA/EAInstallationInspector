@@ -66,7 +66,7 @@ Public Class frmEntryDetail
     Private Sub btDLLDetail_Click(sender As Object, e As EventArgs) Handles btDLLDetail.Click
         Try
             Dim filename As String = _DLLFilename.Replace("file:///", "")
-
+            filename = filename.Replace("/", "\")
             If File.Exists(filename) Then
                 Dim assembly As Assembly = assembly.LoadFrom(_DLLFilename)
                 Dim types As Type() = assembly.GetTypes()

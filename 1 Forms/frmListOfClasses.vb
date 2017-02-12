@@ -1,4 +1,11 @@
-﻿''' <summary>
+﻿' Copyright (C) 2015 - 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+' You may use, distribute and modify this code under the terms of the 3-Clause BSD License
+'
+' You should have received a copy of the 3-Clause BSD License with this file. 
+' If not, please email: adrian@EXploringEA.co.uk 
+'=====================================================================================
+
+''' <summary>
 ''' Form to display a list of public classes and methods for a selected AddIn entry (DLL)
 ''' </summary>
 ''' <seealso cref="System.Windows.Forms.Form" />
@@ -10,9 +17,9 @@ Public Class frmListOfClasses
     ''' </summary>
     Private ListOfClasses As New ArrayList
     ''' <summary>
-    ''' Initializes a new instance of the <see cref="frmListOfMethods"/> class.
+    ''' Initializes a new instance of the <see cref="frmListOfClasses"/> class.
     ''' </summary>
-    ''' <param name="pListOfMethods">list of methods.</param>
+    ''' <param name="pListOfClasses">list of methods.</param>
     Public Sub New(ByRef pListOfClasses As ArrayList)
         InitializeComponent()
         ListOfClasses = pListOfClasses
@@ -82,6 +89,7 @@ Public Class frmListOfClasses
             myNewcolumn = New DataGridViewTextBoxColumn
             myNewcolumn.HeaderText = "Public class"
             myNewcolumn.Width = width * 19
+            myNewcolumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.TopLeft
             dgView.Columns.Add(myNewcolumn)
             myNewcolumn = New DataGridViewTextBoxColumn
             myNewcolumn.HeaderText = "Public methods"
