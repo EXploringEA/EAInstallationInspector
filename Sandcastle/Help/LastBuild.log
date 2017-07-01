@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder and Tools" version="2016.5.28.0" projectFile="C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\EAII.shfbproj" started="01/07/2017 16:27:24">
+<shfbBuild product="Sandcastle Help File Builder and Tools" version="2016.5.28.0" projectFile="C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\EAII.shfbproj" started="01/07/2017 17:06:08">
 <buildStep step="Initializing">
 Finding tools...
 The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
@@ -28,16 +28,16 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (en-US, English (United States))...
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
-</plugIn>    Last step completed in 00:00:00.0125
+</plugIn>    Last step completed in 00:00:00.0265
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0025
+    Last step completed in 00:00:00.0035
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateRefInfo.proj]
-Build started 01/07/2017 16:27:25.
+Build started 01/07/2017 17:06:09.
 Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\GenerateRefInfo.proj&quot; on node 1 (default targets).
 Project file contains ToolsVersion=&quot;12.0&quot;. This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion=&quot;4.0&quot;. For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
 PrepareForBuild:
@@ -57,13 +57,13 @@ Done Building Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallation
 
 Build succeeded.
 
-Time Elapsed 00:00:01.06
-    Last step completed in 00:00:01.5810
+Time Elapsed 00:00:01.07
+    Last step completed in 00:00:01.5874
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - TransformManifest.proj]
-Build started 01/07/2017 16:27:27.
+Build started 01/07/2017 17:06:11.
 Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\TransformManifest.proj&quot; on node 1 (default targets).
 Project file contains ToolsVersion=&quot;12.0&quot;. This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion=&quot;4.0&quot;. For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
 TransformManifest:
@@ -84,17 +84,17 @@ Done Building Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallation
 
 Build succeeded.
 
-Time Elapsed 00:00:01.44
-    Last step completed in 00:00:01.9215
+Time Elapsed 00:00:01.48
+    Last step completed in 00:00:01.9376
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0450
+    Last step completed in 00:00:00.0495
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
 No additional content to copy
-    Last step completed in 00:00:00.0000
+    Last step completed in 00:00:00.0015
 </buildStep>
 <buildStep step="MergeTablesOfContents">
 Merging conceptual and additional tables of contents...
@@ -103,7 +103,7 @@ Merging conceptual and additional tables of contents...
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - GenerateIntermediateTOC.proj]
-Build started 01/07/2017 16:27:29.
+Build started 01/07/2017 17:06:13.
 Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\GenerateIntermediateTOC.proj&quot; on node 1 (default targets).
 Project file contains ToolsVersion=&quot;12.0&quot;. This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion=&quot;4.0&quot;. For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
 GenerateIntermediateTOC:
@@ -115,26 +115,26 @@ Done Building Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallation
 
 Build succeeded.
 
-Time Elapsed 00:00:00.36
+Time Elapsed 00:00:00.35
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.8380
+    Last step completed in 00:00:00.8135
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.3135
+    Last step completed in 00:00:00.3465
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
 C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\sandcastle.config
   Updating reference topic configurations.
   No conceptual content.  Removing conceptual content components.
-    Last step completed in 00:00:00.0060
+    Last step completed in 00:00:00.0080
 </buildStep>
 <buildStep step="BuildTopics">
 Building help topics...
 [C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe - BuildTopics.proj]
-Build started 01/07/2017 16:27:30.
+Build started 01/07/2017 17:06:14.
 Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\BuildTopics.proj&quot; on node 1 (default targets).
 Project file contains ToolsVersion=&quot;12.0&quot;. This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion=&quot;4.0&quot;. For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
 BuildTopics:
@@ -150,12 +150,12 @@ Done Building Project &quot;C:\Users\EXploringEA\Documents\GitHub\EAInstallation
 
 Build succeeded.
 
-Time Elapsed 00:00:09.09
-    Last step completed in 00:00:09.5910
+Time Elapsed 00:00:08.55
+    Last step completed in 00:00:09.0476
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
-    Last step completed in 00:00:00.0030
+    Last step completed in 00:00:00.0045
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -172,7 +172,7 @@ Processed 40 HTML files
 Sorting keywords and generating See Also indices
 Saving HTML Help 1 keyword index to C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\EAInstallationInspectorClassDocumentation.hhk
 Saving HTML Help 1 table of contents to C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\EAInstallationInspectorClassDocumentation.hhc
-    Last step completed in 00:00:00.7650
+    Last step completed in 00:00:00.8229
 </buildStep>
 <buildStep step="CopyStandardHelpContent">
 Copying standard help content...
@@ -238,7 +238,7 @@ C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyle
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\styles\branding-zh-CN.css -&gt; C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\Output\HtmlHelp1\styles\branding-zh-CN.css
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\styles\branding-zh-TW.css -&gt; C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\Output\HtmlHelp1\styles\branding-zh-TW.css
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\styles\branding.css -&gt; C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\Sandcastle\Help\Working\Output\HtmlHelp1\styles\branding.css
-    Last step completed in 00:00:00.1940
+    Last step completed in 00:00:00.2535
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating HTML Help 1 table of contents file...
@@ -250,7 +250,7 @@ Generating HTML Help 1 index file...
 </buildStep>
 <buildStep step="GenerateHelpProject">
 Generating HTML Help 1 project file...
-    Last step completed in 00:00:00.0075
+    Last step completed in 00:00:00.0105
 </buildStep>
 <buildStep step="CompilingHelpFile">
 Compiling HTML Help 1 file...
@@ -284,15 +284,15 @@ Project file contains ToolsVersion=&quot;12.0&quot;. This toolset may be unknown
   
   Compression decreased file by 1,949,217 bytes.
   
-    Last step completed in 00:00:02.4721
+    Last step completed in 00:00:02.2870
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.1173
+    Last step completed in 00:00:00.1200
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 01/07/2017 16:27:43.  Total time: 00:00:18.2466
+Build completed successfully at 01/07/2017 17:06:26.  Total time: 00:00:18.5402
 
 </buildStep>
 </shfbBuild>
