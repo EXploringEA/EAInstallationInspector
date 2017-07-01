@@ -132,7 +132,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="3 Resources\eaInstallationInspectorInformationV3.rtf" />
     <None Include="app.config" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -145,6 +144,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="3 Resources\" />
     <Folder Include="Sandcastle\Help\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
