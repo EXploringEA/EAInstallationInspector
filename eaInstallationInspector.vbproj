@@ -143,8 +143,11 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="Sandcastle\Help\EAInstallationInspectorClassDocumentation.chm" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="GPL3 licence.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
