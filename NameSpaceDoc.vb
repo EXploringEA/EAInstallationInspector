@@ -1,4 +1,4 @@
-﻿'   eaForms(TM) Community Edition
+﻿'
 '   Copyright (C) 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
@@ -22,12 +22,3 @@
 <System.Runtime.CompilerServices.CompilerGeneratedAttribute()> _
 Class NamespaceDoc
 End Class
-
-
-
-
-
-
-
-
-
