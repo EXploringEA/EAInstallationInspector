@@ -1,4 +1,4 @@
-﻿' Copyright (C) 2015 - 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+﻿' Copyright (C) 2015 - 2018 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -137,6 +137,8 @@ Public Class frmListOfClasses
     Private Sub DGresize()
         Try
             Dim numColumns As Integer = dgView.Columns.Count
+            If dgView.Columns.Count < 2 Then Return
+
             Dim twidth As Integer = 0
             Dim hwidth As Integer = dgView.Columns.GetColumnsWidth(DataGridViewElementStates.Displayed)
             Dim dgwidth As Integer = dgView.Width

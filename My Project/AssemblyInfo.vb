@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("EA AddIn Registry Inspector")> 
 <Assembly: AssemblyCompany("EXploringEA.com")> 
 <Assembly: AssemblyProduct("eaInstallationInspector")> 
-<Assembly: AssemblyCopyright("Copyright © EXploringEA.com 2014-2017")> 
+<Assembly: AssemblyCopyright("Copyright © EXploringEA.com 2014-2018")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

@@ -1,4 +1,4 @@
-﻿' Copyright (C) 2015 - 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+﻿' Copyright (C) 2015 - 2018 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -16,9 +16,11 @@ Imports System.Reflection
 ''' Form to present the detail for a single entry
 ''' </summary>
 ''' <seealso cref="System.Windows.Forms.Form" />
-Public Class frmEntryDetail
+Friend Class frmEntryDetail
 
     Private _DLLFilename As String = ""
+    'Private Const fileprefix As String = "file:///"
+    'Private Const fileprefixlength As Integer = 8
     ''' <summary>
     ''' Initializes a new instance of the <see cref="frmEntryDetail"/> class.
     ''' Populate with the detail for the selected addin row
@@ -36,9 +38,24 @@ Public Class frmEntryDetail
 
             tbDLL.Text = pEntryDetail.DLL
             _DLLFilename = pEntryDetail.DLL
+            Dim _filename As String = Path.GetFullPath(_DLLFilename)
+
+            ' Get the DLL file details
+            If File.Exists(_filename) Then
+                ' either fileName or fileName2 works for me.
+                Dim fvi As FileVersionInfo = FileVersionInfo.GetVersionInfo(_filename)
+                ' now this fvi has all the properties for the FileVersion information.
+                tbDLLVersion.Text = fvi.FileVersion ' but other useful properties exist too.
+                Dim _DLLDate As DateTime = File.GetLastWriteTime(_filename)
+                tbDLLDate.Text = _DLLDate.ToString
+            Else
+                tbDLLVersion.Text = "FILE DOES NOT EXIST"
+            End If
 
         Catch ex As Exception
-
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
         End Try
     End Sub
     ''' <summary>
@@ -62,34 +79,37 @@ Public Class frmEntryDetail
             Me.DrawToBitmap(bmp, New Rectangle(0, 0, Me.Width, Me.Height))
             My.Computer.Clipboard.SetImage(bmp)
         Catch ex As Exception
-
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
         End Try
     End Sub
 
 
     Private Sub btDLLDetail_Click(sender As Object, e As EventArgs) Handles btDLLDetail.Click
         Try
-            Dim filename As String = _DLLFilename.Replace("file:///", "")
-            filename = filename.Replace("/", "\")
-            If File.Exists(filename) Then
-                Dim assembly As Assembly = assembly.LoadFrom(_DLLFilename)
-                Dim types As Type() = assembly.GetTypes()
-                Dim s As String = " List of types " & vbCrLf
-                Dim a As New ArrayList
+            Dim _filename As String = Path.GetFullPath(_DLLFilename)
 
+            'Dim filename As String = _DLLFilename.Replace("file:///", "")
+            'filename = filename.Replace("/", "\")
+            'filename = _f
+            If File.Exists(_filename) Then
+                Dim assembly As Assembly = assembly.LoadFrom(_filename)
+                Dim types As Type() = assembly.GetTypes()
+                '   Dim s As String = " List of types " & vbCrLf
+                Dim _ListOfTypes As New ArrayList
                 For Each t As Type In types
-                    '   s += t.ToString & vbCrLf
-                    '
-                    a.Add(t)
+                    _ListOfTypes.Add(t)
                 Next
                 '  MsgBox(s, MsgBoxStyle.OkOnly, "List of public methods for DLL")
-                Dim frmMethods As New frmListOfClasses(a)
+                Dim frmMethods As New frmListOfClasses(_ListOfTypes)
                 frmMethods.ShowDialog()
             End If
 
-
         Catch ex As Exception
-
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
         End Try
     End Sub
 End Class

@@ -1,5 +1,4 @@
-﻿'
-'   Copyright (C) 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+﻿' Copyright (C) 2015 - 2018 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,7 +10,7 @@
 ' =============================================================================================================================================
 ''' <summary>
 ''' <para>EA Installation Inspector - class documentation</para>
-''' <para>Copyright © 2015-2017 Adrian LINCOLN, EXploringEA</para>
+''' <para>Copyright © 2015-2018 Adrian LINCOLN, EXploringEA</para>
 ''' <para>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '''  the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</para>
 ''' <para>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,3 +21,12 @@
 <System.Runtime.CompilerServices.CompilerGeneratedAttribute()> _
 Class NamespaceDoc
 End Class
+
+
+
+
+
+
+
+
+

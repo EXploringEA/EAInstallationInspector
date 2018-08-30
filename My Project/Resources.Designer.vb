@@ -62,11 +62,11 @@ Namespace My.Resources
         
         '''<summary>
         '''  Looks up a localized string similar to {\rtf1\adeflang1025\ansi\ansicpg1252\uc1\adeff0\deff0\stshfdbch31505\stshfloch31506\stshfhich31506\stshfbi0\deflang2057\deflangfe2057\themelang2057\themelangfe0\themelangcs0{\fonttbl{\f0\fbidi \froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f2\fbidi \fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}
-        '''{\f3\fbidi \froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}{\f10\fbidi \fnil\fcharset2\fprq2{\*\panose 05000000000000000000}Wingdings;}{\f10\fbidi \fn [rest of string was truncated]&quot;;.
+        '''{\f3\fbidi \froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}{\f10\fbidi \fnil\fcharset2\fprq2{\*\panose 05000000000000000000}Wingdings;}{\f34\fbidi \fr [rest of string was truncated]&quot;;.
         '''</summary>
-        Friend ReadOnly Property eaInstallationInspectorInformationV3() As String
+        Friend ReadOnly Property eaInstallationInspectorInformationV5() As String
             Get
-                Return ResourceManager.GetString("eaInstallationInspectorInformationV3", resourceCulture)
+                Return ResourceManager.GetString("eaInstallationInspectorInformationV5", resourceCulture)
             End Get
         End Property
     End Module
