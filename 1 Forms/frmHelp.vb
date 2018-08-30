@@ -1,4 +1,4 @@
-﻿' Copyright (C) 2015 - 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+﻿' Copyright (C) 2015 - 2018 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -24,7 +24,7 @@ Public Class frmHelp
     Private Sub Information_Load(sender As Object, e As System.EventArgs) Handles Me.Load
         Try
             Dim ms As New MemoryStream
-            Dim buffer As Byte() = Encoding.UTF8.GetBytes(My.Resources.eaInstallationInspectorInformationV3)
+            Dim buffer As Byte() = Encoding.UTF8.GetBytes(My.Resources.eaInstallationInspectorInformationV5)
 
             ms.Write(buffer, 0, buffer.Length)
             ms.Seek(0, SeekOrigin.Begin)

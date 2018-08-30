@@ -74,6 +74,24 @@
     <Compile Include="1 Forms\frmListOfClasses.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="1 Forms\frmQuery.Designer.vb">
+      <DependentUpon>frmQuery.vb</DependentUpon>
+    </Compile>
+    <Compile Include="1 Forms\frmQuery.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="1 Forms\Inspector form\frmInspectorHandlers.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="1 Forms\Inspector form\frmInspectorSupport.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="1 Forms\Inspector form\frmInspectorQueryContextMenus.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="1 Forms\Inspector form\frmInspectorTreeviewBrowserContextMenus.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="2 SupportFunctions\Constants.vb" />
     <Compile Include="1 Forms\frmEntryDetail.Designer.vb">
       <DependentUpon>frmEntryDetail.vb</DependentUpon>
@@ -87,12 +105,21 @@
     <Compile Include="1 Forms\frmHelp.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="1 Forms\frmInspector.Designer.vb">
+    <Compile Include="1 Forms\Inspector form\frmInspector.Designer.vb">
       <DependentUpon>frmInspector.vb</DependentUpon>
     </Compile>
-    <Compile Include="1 Forms\frmInspector.vb">
+    <Compile Include="1 Forms\Inspector form\frmInspector.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="2 SupportFunctions\logger.vb" />
+    <Compile Include="4 Treeview\NodeInfo.vb" />
+    <Compile Include="1 Forms\Inspector form\frmInspectorBrowserEvents.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="4 Treeview\TreeViewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="5 Tab queries\Query.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -115,10 +142,13 @@
     <EmbeddedResource Include="1 Forms\frmEntryDetail.resx">
       <DependentUpon>frmEntryDetail.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="1 Forms\frmHelpvb.resx">
+    <EmbeddedResource Include="1 Forms\frmHelp.resx">
       <DependentUpon>frmHelp.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="1 Forms\frmInspector.resx">
+    <EmbeddedResource Include="1 Forms\frmQuery.resx">
+      <DependentUpon>frmQuery.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="1 Forms\Inspector form\frmInspector.resx">
       <DependentUpon>frmInspector.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="1 Forms\frmListOfClasses.resx">
@@ -132,6 +162,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="3 Resources\eaInstallationInspectorInformationV5.rtf" />
     <None Include="app.config" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -144,7 +175,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="3 Resources\" />
+    <Folder Include="4 Treeview\Reference\" />
     <Folder Include="Sandcastle\Help\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

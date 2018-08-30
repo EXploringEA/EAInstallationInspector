@@ -1,4 +1,4 @@
-﻿' Copyright (C) 2015 - 2017 Adrian LINCOLN, EXploringEA - All Rights Reserved
+﻿' Copyright (C) 2015 - 2018 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -50,160 +50,223 @@ Partial Class frmEntryDetail
         Me.tbCLSIDSRC = New System.Windows.Forms.TextBox()
         Me.btCopyDetailToClipboard = New System.Windows.Forms.Button()
         Me.btDLLDetail = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.tbDLLVersion = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.tbDLLDate = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
         '
         'lbAddInName
         '
         Me.lbAddInName.AutoSize = True
-        Me.lbAddInName.Location = New System.Drawing.Point(12, 19)
+        Me.lbAddInName.Location = New System.Drawing.Point(16, 23)
+        Me.lbAddInName.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lbAddInName.Name = "lbAddInName"
-        Me.lbAddInName.Size = New System.Drawing.Size(64, 13)
+        Me.lbAddInName.Size = New System.Drawing.Size(83, 17)
         Me.lbAddInName.TabIndex = 0
         Me.lbAddInName.Text = "AddIn name"
         '
         'lbAssemblyname
         '
         Me.lbAssemblyname.AutoSize = True
-        Me.lbAssemblyname.Location = New System.Drawing.Point(202, 46)
+        Me.lbAssemblyname.Location = New System.Drawing.Point(269, 57)
+        Me.lbAssemblyname.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lbAssemblyname.Name = "lbAssemblyname"
-        Me.lbAssemblyname.Size = New System.Drawing.Size(32, 13)
+        Me.lbAssemblyname.Size = New System.Drawing.Size(42, 17)
         Me.lbAssemblyname.TabIndex = 1
         Me.lbAssemblyname.Text = "Class"
         '
         'tbAddInName
         '
-        Me.tbAddInName.Location = New System.Drawing.Point(87, 16)
+        Me.tbAddInName.Location = New System.Drawing.Point(116, 20)
+        Me.tbAddInName.Margin = New System.Windows.Forms.Padding(4)
         Me.tbAddInName.Name = "tbAddInName"
         Me.tbAddInName.ReadOnly = True
-        Me.tbAddInName.Size = New System.Drawing.Size(243, 20)
+        Me.tbAddInName.Size = New System.Drawing.Size(323, 22)
         Me.tbAddInName.TabIndex = 2
         '
         'lbDLL
         '
         Me.lbDLL.AutoSize = True
-        Me.lbDLL.Location = New System.Drawing.Point(12, 130)
+        Me.lbDLL.Location = New System.Drawing.Point(16, 160)
+        Me.lbDLL.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lbDLL.Name = "lbDLL"
-        Me.lbDLL.Size = New System.Drawing.Size(27, 13)
+        Me.lbDLL.Size = New System.Drawing.Size(97, 17)
         Me.lbDLL.TabIndex = 3
-        Me.lbDLL.Text = "DLL"
+        Me.lbDLL.Text = "DLL - full path"
         '
         'tbAssemblyName
         '
-        Me.tbAssemblyName.Location = New System.Drawing.Point(202, 62)
+        Me.tbAssemblyName.Location = New System.Drawing.Point(269, 76)
+        Me.tbAssemblyName.Margin = New System.Windows.Forms.Padding(4)
         Me.tbAssemblyName.Name = "tbAssemblyName"
         Me.tbAssemblyName.ReadOnly = True
-        Me.tbAssemblyName.Size = New System.Drawing.Size(413, 20)
+        Me.tbAssemblyName.Size = New System.Drawing.Size(549, 22)
         Me.tbAssemblyName.TabIndex = 4
         '
         'tbDLL
         '
-        Me.tbDLL.Location = New System.Drawing.Point(87, 130)
+        Me.tbDLL.Location = New System.Drawing.Point(116, 160)
+        Me.tbDLL.Margin = New System.Windows.Forms.Padding(4)
         Me.tbDLL.Multiline = True
         Me.tbDLL.Name = "tbDLL"
         Me.tbDLL.ReadOnly = True
-        Me.tbDLL.Size = New System.Drawing.Size(528, 68)
+        Me.tbDLL.Size = New System.Drawing.Size(703, 69)
         Me.tbDLL.TabIndex = 5
         '
         'btClose
         '
-        Me.btClose.Location = New System.Drawing.Point(540, 213)
+        Me.btClose.BackColor = System.Drawing.Color.SpringGreen
+        Me.btClose.Location = New System.Drawing.Point(718, 275)
+        Me.btClose.Margin = New System.Windows.Forms.Padding(4)
         Me.btClose.Name = "btClose"
-        Me.btClose.Size = New System.Drawing.Size(75, 23)
+        Me.btClose.Size = New System.Drawing.Size(100, 32)
         Me.btClose.TabIndex = 6
         Me.btClose.Text = "Close"
-        Me.btClose.UseVisualStyleBackColor = True
+        Me.btClose.UseVisualStyleBackColor = False
         '
         'lbSparxRef
         '
         Me.lbSparxRef.AutoSize = True
-        Me.lbSparxRef.Location = New System.Drawing.Point(338, 19)
+        Me.lbSparxRef.Location = New System.Drawing.Point(451, 23)
+        Me.lbSparxRef.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lbSparxRef.Name = "lbSparxRef"
-        Me.lbSparxRef.Size = New System.Drawing.Size(60, 13)
+        Me.lbSparxRef.Size = New System.Drawing.Size(80, 17)
         Me.lbSparxRef.TabIndex = 7
         Me.lbSparxRef.Text = "Sparx entry"
         '
         'tbSparxRef
         '
-        Me.tbSparxRef.Location = New System.Drawing.Point(404, 16)
+        Me.tbSparxRef.Location = New System.Drawing.Point(539, 20)
+        Me.tbSparxRef.Margin = New System.Windows.Forms.Padding(4)
         Me.tbSparxRef.Name = "tbSparxRef"
         Me.tbSparxRef.ReadOnly = True
-        Me.tbSparxRef.Size = New System.Drawing.Size(211, 20)
+        Me.tbSparxRef.Size = New System.Drawing.Size(280, 22)
         Me.tbSparxRef.TabIndex = 8
         '
         'lbClasssSrc
         '
         Me.lbClasssSrc.AutoSize = True
-        Me.lbClasssSrc.Location = New System.Drawing.Point(87, 46)
+        Me.lbClasssSrc.Location = New System.Drawing.Point(116, 55)
+        Me.lbClasssSrc.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lbClasssSrc.Name = "lbClasssSrc"
-        Me.lbClasssSrc.Size = New System.Drawing.Size(67, 13)
+        Me.lbClasssSrc.Size = New System.Drawing.Size(89, 17)
         Me.lbClasssSrc.TabIndex = 9
         Me.lbClasssSrc.Text = "Class source"
         '
         'tbClassSource
         '
-        Me.tbClassSource.Location = New System.Drawing.Point(87, 62)
+        Me.tbClassSource.Location = New System.Drawing.Point(116, 76)
+        Me.tbClassSource.Margin = New System.Windows.Forms.Padding(4)
         Me.tbClassSource.Name = "tbClassSource"
         Me.tbClassSource.ReadOnly = True
-        Me.tbClassSource.Size = New System.Drawing.Size(85, 20)
+        Me.tbClassSource.Size = New System.Drawing.Size(112, 22)
         Me.tbClassSource.TabIndex = 10
         '
         'lbCLSID
         '
         Me.lbCLSID.AutoSize = True
-        Me.lbCLSID.Location = New System.Drawing.Point(202, 88)
+        Me.lbCLSID.Location = New System.Drawing.Point(269, 108)
+        Me.lbCLSID.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lbCLSID.Name = "lbCLSID"
-        Me.lbCLSID.Size = New System.Drawing.Size(46, 13)
+        Me.lbCLSID.Size = New System.Drawing.Size(59, 17)
         Me.lbCLSID.TabIndex = 11
         Me.lbCLSID.Text = "Class ID"
         '
         'tbCLSID
         '
-        Me.tbCLSID.Location = New System.Drawing.Point(202, 104)
+        Me.tbCLSID.Location = New System.Drawing.Point(269, 128)
+        Me.tbCLSID.Margin = New System.Windows.Forms.Padding(4)
         Me.tbCLSID.Name = "tbCLSID"
         Me.tbCLSID.ReadOnly = True
-        Me.tbCLSID.Size = New System.Drawing.Size(413, 20)
+        Me.tbCLSID.Size = New System.Drawing.Size(549, 22)
         Me.tbCLSID.TabIndex = 12
         '
         'lbCLSIDSRC
         '
         Me.lbCLSIDSRC.AutoSize = True
-        Me.lbCLSIDSRC.Location = New System.Drawing.Point(87, 88)
+        Me.lbCLSIDSRC.Location = New System.Drawing.Point(116, 108)
+        Me.lbCLSIDSRC.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lbCLSIDSRC.Name = "lbCLSIDSRC"
-        Me.lbCLSIDSRC.Size = New System.Drawing.Size(81, 13)
+        Me.lbCLSIDSRC.Size = New System.Drawing.Size(106, 17)
         Me.lbCLSIDSRC.TabIndex = 13
         Me.lbCLSIDSRC.Text = "Class ID source"
         '
         'tbCLSIDSRC
         '
-        Me.tbCLSIDSRC.Location = New System.Drawing.Point(87, 104)
+        Me.tbCLSIDSRC.Location = New System.Drawing.Point(116, 128)
+        Me.tbCLSIDSRC.Margin = New System.Windows.Forms.Padding(4)
         Me.tbCLSIDSRC.Name = "tbCLSIDSRC"
         Me.tbCLSIDSRC.ReadOnly = True
-        Me.tbCLSIDSRC.Size = New System.Drawing.Size(85, 20)
+        Me.tbCLSIDSRC.Size = New System.Drawing.Size(112, 22)
         Me.tbCLSIDSRC.TabIndex = 14
         '
         'btCopyDetailToClipboard
         '
-        Me.btCopyDetailToClipboard.Location = New System.Drawing.Point(87, 213)
+        Me.btCopyDetailToClipboard.BackColor = System.Drawing.Color.Gold
+        Me.btCopyDetailToClipboard.Location = New System.Drawing.Point(116, 275)
+        Me.btCopyDetailToClipboard.Margin = New System.Windows.Forms.Padding(4)
         Me.btCopyDetailToClipboard.Name = "btCopyDetailToClipboard"
-        Me.btCopyDetailToClipboard.Size = New System.Drawing.Size(116, 23)
+        Me.btCopyDetailToClipboard.Size = New System.Drawing.Size(155, 32)
         Me.btCopyDetailToClipboard.TabIndex = 15
         Me.btCopyDetailToClipboard.Text = "Copy to clipboard"
-        Me.btCopyDetailToClipboard.UseVisualStyleBackColor = True
+        Me.btCopyDetailToClipboard.UseVisualStyleBackColor = False
         '
         'btDLLDetail
         '
-        Me.btDLLDetail.Location = New System.Drawing.Point(209, 213)
+        Me.btDLLDetail.BackColor = System.Drawing.Color.Yellow
+        Me.btDLLDetail.Location = New System.Drawing.Point(279, 275)
+        Me.btDLLDetail.Margin = New System.Windows.Forms.Padding(4)
         Me.btDLLDetail.Name = "btDLLDetail"
-        Me.btDLLDetail.Size = New System.Drawing.Size(189, 23)
+        Me.btDLLDetail.Size = New System.Drawing.Size(252, 32)
         Me.btDLLDetail.TabIndex = 16
         Me.btDLLDetail.Text = "Get list of classes and methods"
-        Me.btDLLDetail.UseVisualStyleBackColor = True
+        Me.btDLLDetail.UseVisualStyleBackColor = False
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(12, 241)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(84, 17)
+        Me.Label1.TabIndex = 17
+        Me.Label1.Text = "DLL version"
+        '
+        'tbDLLVersion
+        '
+        Me.tbDLLVersion.Location = New System.Drawing.Point(116, 236)
+        Me.tbDLLVersion.Name = "tbDLLVersion"
+        Me.tbDLLVersion.ReadOnly = True
+        Me.tbDLLVersion.Size = New System.Drawing.Size(236, 22)
+        Me.tbDLLVersion.TabIndex = 18
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(370, 241)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(88, 17)
+        Me.Label2.TabIndex = 19
+        Me.Label2.Text = "File datetime"
+        '
+        'tbDLLDate
+        '
+        Me.tbDLLDate.Location = New System.Drawing.Point(464, 241)
+        Me.tbDLLDate.Name = "tbDLLDate"
+        Me.tbDLLDate.ReadOnly = True
+        Me.tbDLLDate.Size = New System.Drawing.Size(354, 22)
+        Me.tbDLLDate.TabIndex = 20
         '
         'frmEntryDetail
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(632, 248)
+        Me.BackColor = System.Drawing.Color.SkyBlue
+        Me.ClientSize = New System.Drawing.Size(843, 339)
+        Me.Controls.Add(Me.tbDLLDate)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.tbDLLVersion)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btDLLDetail)
         Me.Controls.Add(Me.btCopyDetailToClipboard)
         Me.Controls.Add(Me.tbCLSIDSRC)
@@ -221,9 +284,13 @@ Partial Class frmEntryDetail
         Me.Controls.Add(Me.tbAddInName)
         Me.Controls.Add(Me.lbAssemblyname)
         Me.Controls.Add(Me.lbAddInName)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Margin = New System.Windows.Forms.Padding(4)
+        Me.MaximumSize = New System.Drawing.Size(865, 390)
+        Me.MinimumSize = New System.Drawing.Size(865, 390)
         Me.Name = "frmEntryDetail"
-        Me.Text = "EA AddIn Entry"
+        Me.Text = "EA AddIn Entry & DLL Details"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -245,4 +312,8 @@ Partial Class frmEntryDetail
     Friend WithEvents tbCLSIDSRC As System.Windows.Forms.TextBox
     Friend WithEvents btCopyDetailToClipboard As System.Windows.Forms.Button
     Friend WithEvents btDLLDetail As System.Windows.Forms.Button
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents tbDLLVersion As System.Windows.Forms.TextBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents tbDLLDate As System.Windows.Forms.TextBox
 End Class
