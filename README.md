@@ -10,3 +10,5 @@ Current release is V5 (release D) - this has the functionality of V4 with some n
 A pre-built .exe and help file are contained in the file - ***EAInstallationInspectorDistributionV5.zip***
 
 NOTE: This code is released under the terms of the GPL3 licence agreement.
+
+For more information about the EA Installation Inspector and AddIn Installation errors check out - http://tools.exploringea.co.uk/index.php?n=EaInspector.Overview
