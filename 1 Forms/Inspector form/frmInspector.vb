@@ -30,6 +30,8 @@ Partial Friend Class frmInspector
     Private _logfilename As String = ""
     Private _FileDirectory As String = ""
 
+    Const cLogFile As String = "log file "
+    Const cLogFileLength As Integer = 9
 
     Friend _Query As Query = Nothing
     ''' <summary>
@@ -250,7 +252,7 @@ Partial Friend Class frmInspector
 
                 Dim cmd As String = "reg query HKCU\SOFTWARE\CLASSES /reg:32 /s /f " & _DLLname & " > " & _logFileName '& " && exit" HK..\SOFTWARE\Classes
                 Dim s = ExecuteCommand(cmd)
-                MsgBox("log file " & _logFileName)
+                MsgBox(cLogFile & _logFileName)
                 ' want to get a list of the classID's from these files and then get the entries for each 
                 ' note that even though indicated in 64bit they are in WOW6432Node - so need to look at each
                 ' collect registry entries
@@ -260,6 +262,8 @@ Partial Friend Class frmInspector
                 ' Filename
                 ' Version
                 ' RT version (.NET)
+
+
 
             End If
 
@@ -460,6 +464,32 @@ Partial Friend Class frmInspector
     End Sub
 
 
+    ' method to open the query logfile
+
+    Private Sub lvQuery_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles lvQuery.MouseDoubleClick
+        Try
+            If TypeOf sender Is ListView Then
+                Dim lv As ListView = sender
+                Dim _logfile = lv.SelectedItems(0).SubItems(1).Text
+                ' remove "log file " from start of line
+                If cLogFile.Contains(cLogFile) Then
+                    Dim _filename As String = Strings.Right(_logfile, _logfile.Length - cLogFileLength)
+                    If File.Exists(_filename) Then
+                        Dim psi As New ProcessStartInfo()
+                        With psi
+                            .FileName = _filename
+                            .UseShellExecute = True
+                        End With
+                        Process.Start(psi)
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+    End Sub
 #End Region
 
 End Class
