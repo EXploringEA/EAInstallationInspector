@@ -104,12 +104,16 @@ Friend Class frmEntryDetail
                 '  MsgBox(s, MsgBoxStyle.OkOnly, "List of public methods for DLL")
                 Dim frmMethods As New frmListOfClasses(_ListOfTypes)
                 frmMethods.ShowDialog()
+            Else
+                MessageBox.Show("File " & _filename & " does not exist")
             End If
 
         Catch ex As Exception
 #If DEBUG Then
             Debug.Print(ex.ToString)
 #End If
+            MessageBox.Show("Error accessing information " & vbCrLf & "(see detail below for some, but not all, the explanation): - " & vbCrLf & "====================================" _
+                            & vbCrLf & ex.ToString)
         End Try
     End Sub
 End Class

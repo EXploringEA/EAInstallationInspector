@@ -30,6 +30,7 @@ Partial Friend Class frmInspector
     Private _logfilename As String = ""
     Private _FileDirectory As String = ""
 
+    Private _installPath As String = ""
     Const cLogFile As String = "log file "
     Const cLogFileLength As Integer = 9
 
@@ -52,8 +53,21 @@ Partial Friend Class frmInspector
             ToolTip1.SetToolTip(btHelp, versionString()) ' sets the app version as tool tip to help
             ' Check OS and set text in 
             tbOS.Text = If(Environment.Is64BitOperatingSystem, "64-bit detected", "32-bit detected")
-            tbLocation.Text = Registry.GetValue(EA, "Install Path", "")
+            _installPath = Registry.GetValue(EA, "Install Path", "")
+            tbLocation.Text = _installPath ' Registry.GetValue(EA, "Install Path", "")
             tbVersion.Text = Registry.GetValue(EA, "Version", "")
+            '
+            checkDebugFrameworkConfig()
+            '
+            'Dim _DebugConfigFilename As String = _installPath & "\EA.Exe.config"
+            'If _DebugConfigFilename <> _installPath AndAlso File.Exists(_DebugConfigFilename) Then
+            '    btDebugFramework.BackColor = Color.SpringGreen
+            '    btDebugFramework.Enabled = True
+            'Else
+            '    btDebugFramework.BackColor = Color.Gray
+            '    btDebugFramework.Enabled = False
+            'End If
+
 
             ' initialise the registry tree and create node for SPARX Addin
             Browser.Nodes.Clear()
@@ -288,6 +302,9 @@ Partial Friend Class frmInspector
     ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     Private Sub btRefresh_Click(sender As Object, e As EventArgs) Handles btRefresh.Click
         Try
+            checkDebugFrameworkConfig()
+
+
             lvListOfAddIns.Items.Clear()
             GetAddInClassDetailsAndPopulateListview(lvListOfAddIns)
         Catch ex As Exception
@@ -491,5 +508,46 @@ Partial Friend Class frmInspector
         End Try
     End Sub
 #End Region
+
+    ' check on the debug framework
+    Private Sub btDebugFramework_Click(sender As Object, e As EventArgs) Handles btDebugFramework.Click
+        Try
+            '            MsgBox("EA install location " & _installPath)
+
+            Dim _DebugConfigFilename As String = _installPath & "\EA.Exe.config"
+            Dim _msg As String = "No framework config file found"
+            If _DebugConfigFilename <> _installPath AndAlso File.Exists(_DebugConfigFilename) Then
+                btDebugFramework.BackColor = Color.SpringGreen
+                btDebugFramework.Enabled = True
+                _msg = "Config file found" & vbCrLf
+                Dim _s As String = File.ReadAllText(_DebugConfigFilename)
+                _msg += _s
+            Else
+                btDebugFramework.BackColor = Color.Gray
+                btDebugFramework.Enabled = False
+            End If
+            MsgBox(_msg, MsgBoxStyle.Information)
+
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+    End Sub
+
+    Private Sub checkDebugFrameworkConfig()
+
+        Dim _DebugConfigFilename As String = _installPath & "\EA.Exe.config"
+        If _DebugConfigFilename <> _installPath AndAlso File.Exists(_DebugConfigFilename) Then
+            btDebugFramework.BackColor = Color.SpringGreen
+            btDebugFramework.Enabled = True
+            btDebugFramework.Visible = True
+        Else
+            btDebugFramework.Visible = False
+            btDebugFramework.BackColor = Color.Gray
+            btDebugFramework.Enabled = False
+        End If
+    End Sub
+
 
 End Class

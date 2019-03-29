@@ -61,6 +61,7 @@ Partial Class frmInspector
         Me.tbQueryMessage = New System.Windows.Forms.TextBox()
         Me.tbQueryActive = New System.Windows.Forms.TextBox()
         Me.btStopQueryActive = New System.Windows.Forms.Button()
+        Me.btDebugFramework = New System.Windows.Forms.Button()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -133,7 +134,7 @@ Partial Class frmInspector
         '
         Me.btHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btHelp.BackColor = System.Drawing.Color.Red
-        Me.btHelp.Location = New System.Drawing.Point(12, 379)
+        Me.btHelp.Location = New System.Drawing.Point(12, 383)
         Me.btHelp.Name = "btHelp"
         Me.btHelp.Size = New System.Drawing.Size(75, 23)
         Me.btHelp.TabIndex = 7
@@ -144,18 +145,19 @@ Partial Class frmInspector
         '
         Me.btRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btRefresh.BackColor = System.Drawing.Color.SpringGreen
-        Me.btRefresh.Location = New System.Drawing.Point(316, 380)
+        Me.btRefresh.Location = New System.Drawing.Point(316, 383)
         Me.btRefresh.Name = "btRefresh"
         Me.btRefresh.Size = New System.Drawing.Size(75, 23)
         Me.btRefresh.TabIndex = 8
         Me.btRefresh.Text = "Refresh Addins list"
+        Me.ToolTip1.SetToolTip(Me.btRefresh, "Refresh list of addins")
         Me.btRefresh.UseVisualStyleBackColor = False
         '
         'btCopy
         '
         Me.btCopy.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btCopy.BackColor = System.Drawing.Color.Gold
-        Me.btCopy.Location = New System.Drawing.Point(93, 379)
+        Me.btCopy.Location = New System.Drawing.Point(93, 383)
         Me.btCopy.Name = "btCopy"
         Me.btCopy.Size = New System.Drawing.Size(217, 23)
         Me.btCopy.TabIndex = 9
@@ -346,12 +348,24 @@ Partial Class frmInspector
         Me.btStopQueryActive.UseVisualStyleBackColor = False
         Me.btStopQueryActive.Visible = False
         '
+        'btDebugFramework
+        '
+        Me.btDebugFramework.Location = New System.Drawing.Point(391, 383)
+        Me.btDebugFramework.Name = "btDebugFramework"
+        Me.btDebugFramework.Size = New System.Drawing.Size(142, 22)
+        Me.btDebugFramework.TabIndex = 19
+        Me.btDebugFramework.Text = "EA debug config"
+        Me.ToolTip1.SetToolTip(Me.btDebugFramework, "EA.exe.config present if green," & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Press to display contents of file" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "to view order" & _
+        " of selection")
+        Me.btDebugFramework.UseVisualStyleBackColor = True
+        '
         'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
         Me.ClientSize = New System.Drawing.Size(1161, 416)
+        Me.Controls.Add(Me.btDebugFramework)
         Me.Controls.Add(Me.btStopQueryActive)
         Me.Controls.Add(Me.tbQueryActive)
         Me.Controls.Add(Me.tbQueryMessage)
@@ -373,7 +387,7 @@ Partial Class frmInspector
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmInspector"
-        Me.Text = "EA Installation Inspector Version 5 in development"
+        Me.Text = "EA Installation Inspector Version 6 in development"
         Me.tabControl.ResumeLayout(False)
         Me.tabListOfAddins.ResumeLayout(False)
         Me.tabRegistryTree.ResumeLayout(False)
@@ -409,4 +423,5 @@ Partial Class frmInspector
     Friend WithEvents tbQueryMessage As System.Windows.Forms.TextBox
     Friend WithEvents tbQueryActive As System.Windows.Forms.TextBox
     Friend WithEvents btStopQueryActive As System.Windows.Forms.Button
+    Friend WithEvents btDebugFramework As System.Windows.Forms.Button
 End Class
