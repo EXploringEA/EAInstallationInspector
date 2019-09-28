@@ -7,7 +7,7 @@ For more information review the document **eaInstallationInspectorInformationV5.
 
 Current release is V6 - this has the functionality of previous versions with single addition of a EA.exe debug config file.
 
-A pre-built .exe and help file are provuded at the root level.
+A pre-built .exe and help file are provided at the root level.
 
 NOTE: This code is released under the terms of the GPL3 licence agreement.
 
