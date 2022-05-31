@@ -41,6 +41,8 @@ Module SupportFunctions
             If Strings.InStr(pFilePath, "file:///") Then
                 Dim myNewFN As String = Strings.Right$(pFilePath, Len(pFilePath) - 8)
                 If System.IO.File.Exists(myNewFN) Then Return True
+            ElseIf Strings.InStr(pFilePath, ":\") Or Strings.InStr(pFilePath, ":/") Then
+                If System.IO.File.Exists(pFilePath) Then Return True
             End If
 
         Catch ex As Exception
