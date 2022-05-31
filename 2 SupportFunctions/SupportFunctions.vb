@@ -53,9 +53,9 @@ Module SupportFunctions
 
 
     ' set the relative widths of the columns
-    Friend Const AddInNameWidth As Integer = 2
+    Friend Const AddInNameWidth As Integer = 4
     Friend Const Classwidth As Integer = 3
-    Friend Const srcWidth As Integer = 1
+    Friend Const srcWidth As Integer = 2
     Friend Const CLSIDWidth As Integer = 5
     Friend Const DLLVersionWidth As Integer = 2
     Friend Const DLLWidth As Integer = 10
@@ -131,47 +131,75 @@ Module SupportFunctions
     ''' <summary>
     ''' Gets a list of addin entries from Windows Registry
     ''' - start with HKCU as they have precendence over the HKLM
+    ''' Assume that the registry keys in the following locations identify 32-bit AddIns
+    '''	"HKCU\SOFTWARE\Sparx Systems\EAAddins" - HKCU
+    '''	"HKLM\ SOFTWARE\Sparx Systems\EAAddins" - HKLM, although if the addin Is running on a 64-bit operating system this would be "HKLM\ SOFTWARE\WOW6432NODE\Sparx Systems\EAAddins"  HKLMWow
+    '''	 Assume that the registry keys in the following locations identify 64-bit AddIns
+    '''	 "HKCU\SOFTWARE\Sparx Systems\EAAddins64" - HKCU64
+    '''	 "HKLM\ SOFTWARE\Sparx Systems\EAAddins64" – HKLM64
     ''' </summary>
     ''' <returns>List of AddIn entries</returns>
     Function getListOfEAAddinEntries() As ArrayList
 
-        ' Sparx keys (32-bit apps) can be in
-        ' HKCU\Software\SparxSystems\EAAddIns
-        ' HKLM\Software\Wow6432Node\SparxSystems\EAAddIns
-        'Computer\HKEY_CURRENT_USER\Software\Sparx Systems\EAAddins
-        'Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins
-
-        Dim myCUKey As RegistryKey = Registry.CurrentUser.OpenSubKey(cAddins) '"Software\Sparx Systems\EAAddins") 'SparxKeys) ' get the sparx keys listing the addins for the current user
-        Dim myLMKey As RegistryKey = Registry.LocalMachine.OpenSubKey(cAddins) '"SOFTWARE\Sparx Systems\EAAddins") 'SparxKeys)
-        If Environment.Is64BitOperatingSystem Then myLMKey = Registry.LocalMachine.OpenSubKey(cWowAddins) '"SOFTWARE\WOW6432Node\Sparx Systems\EAAddins") 'SparxKeys)
-
-        Dim myAddInEntries As New ArrayList ' to store AddInEntries 
-        Dim myClassKey As String
-
         ' for all of the keys which are not nothing we add them to an array
-        Dim myEntries As New ArrayList
+        Dim myAddInEntries As New ArrayList
+
+        ' 32 bit AddIns when install for current users only
+        ' Sparx keys (32-bit apps) can be in HKCU\Software\SparxSystems\EAAddIns
+        Dim myCUKey As RegistryKey = Registry.CurrentUser.OpenSubKey(cAddins32) '"Software\Sparx Systems\EAAddins") 'SparxKeys) ' get the sparx keys listing the addins for the current user
         If myCUKey IsNot Nothing Then
             For Each pEntryKey In myCUKey.GetSubKeyNames
-                Dim newKey As New AddInEntry
-                newKey.AddInName = pEntryKey ' registry location for addin name ' this only works for top level not the 6432
-                myClassKey = HKCUfullKey & cBackSlash & pEntryKey ' create the key for the Class name
-                newKey.ClassDefinition = Registry.GetValue(myClassKey, "", cNotSet) ' look for the class name CLSID name
-                newKey.SparxAddinLocation = cHKCU
-                myEntries.Add(newKey)
+                Dim AddInInfo As New AddInEntry
+                AddInInfo.AddInName = pEntryKey ' registry location for addin name
+                AddInInfo.ClassDefinition = Registry.GetValue(HKCUfullKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
+                AddInInfo.SparxAddinLocation = cHKCU
+                myAddInEntries.Add(AddInInfo)
             Next
         End If
 
+        ' 32 bit AddIns when installed for all users
+        ' Sparx keys (32-bit apps) can be in HKLM\Software\SparxSystems\EAAddIns
+        ' BUT NOTE for 64-bit operating systems the keys will be located in HKLM\Software\Wow6432Node\SparxSystems\EAAddIns
+        Dim myLMKey As RegistryKey = Registry.LocalMachine.OpenSubKey(cAddins32)
+        If Environment.Is64BitOperatingSystem Then myLMKey = Registry.LocalMachine.OpenSubKey(cWowAddins32) '"SOFTWARE\WOW6432Node\Sparx Systems\EAAddins") 'SparxKeys)
         If myLMKey IsNot Nothing Then
             For Each pEntryKey In myLMKey.GetSubKeyNames
-                Dim newKey As New AddInEntry
-                newKey.AddInName = pEntryKey ' registry location for addin name ' this only works for top level not the 6432
-                myClassKey = HKLMfullKey & cBackSlash & pEntryKey ' create the key for the Class name
-                newKey.ClassDefinition = Registry.GetValue(myClassKey, "", cNotSet) ' look for the class name CLSID name
-                newKey.SparxAddinLocation = If(Environment.Is64BitOperatingSystem, cHKLMWow, cHKLM)
-                myEntries.Add(newKey)
+                Dim AddInInfo As New AddInEntry
+                AddInInfo.AddInName = pEntryKey ' registry location for addin name ' this only works for top level not the 6432
+                AddInInfo.ClassDefinition = Registry.GetValue(HKLMfullKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
+                AddInInfo.SparxAddinLocation = If(Environment.Is64BitOperatingSystem, cHKLMWow, cHKLM)
+                myAddInEntries.Add(AddInInfo)
             Next
         End If
-        Return myEntries
+
+        ' 64-bit
+        ' 64 bit AddIns when install for current users only
+        ' HKCU\Software\SparxSystems\EAAddins64
+        Dim myCUKey64 As RegistryKey = Registry.CurrentUser.OpenSubKey(cAddins64) '"Software\Sparx Systems\EAAddins64") 'SparxKeys) ' get the sparx keys listing the addins for the current user
+        If myCUKey64 IsNot Nothing Then
+            For Each pEntryKey In myCUKey64.GetSubKeyNames
+                Dim AddInInfo As New AddInEntry
+                AddInInfo.AddInName = pEntryKey ' registry location for addin name ' this only works for top level not the 6432
+                AddInInfo.ClassDefinition = Registry.GetValue(HKCUfullKey64 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
+                AddInInfo.SparxAddinLocation = cHKCU64
+                myAddInEntries.Add(AddInInfo)
+            Next
+        End If
+
+        ' 64 bit AddIns when installed for all users
+        ' HKLM\Software\Wow6432Node\SparxSystems\EAAddIns64
+        Dim myLMKey64 As RegistryKey = Registry.LocalMachine.OpenSubKey(cAddins64) '"SOFTWARE\Sparx Systems\EAAddins64") 'SparxKeys)
+        If myLMKey64 IsNot Nothing Then
+            For Each pEntryKey In myLMKey64.GetSubKeyNames
+                Dim AddInInfo As New AddInEntry
+                AddInInfo.AddInName = pEntryKey ' registry location for addin name 
+                AddInInfo.ClassDefinition = Registry.GetValue(HKLMfullKey64 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
+                AddInInfo.SparxAddinLocation = cHKLM64
+                myAddInEntries.Add(AddInInfo)
+            Next
+        End If
+
+        Return myAddInEntries
 
     End Function
 
@@ -194,19 +222,19 @@ Module SupportFunctions
     ''' <param name="plv">The PLV.</param>
     Sub GetAddInClassDetailsAndPopulateListview(plv As ListView)
 
-        For Each AddIn As AddInEntry In getListOfEAAddinEntries()
+        For Each AddInInfo As AddInEntry In getListOfEAAddinEntries() 'loop for each Sparx AddIn found in registry
 
-
+            ' Each AddInEntry contains the AddIn name, class name and where the Sparx AddI was registered HKCU, HKLM, HKCU64, HKLM64
             Try
-                ' 1. Output the AddIn name, classname and sparx location
-                Dim _RowItem As ListViewItem = plv.Items.Add(AddIn.AddInName) ' add the addin name to list
-                _RowItem.SubItems.Add(AddIn.SparxAddinLocation) ' sparx ref
-                Dim _ClassDefinition As String = AddIn.ClassDefinition ' get the name of the class that we looking for
+                ' 1. Output the AddInInformation - name, classname and sparx location
+                Dim _RowItem As ListViewItem = plv.Items.Add(AddInInfo.AddInName) ' add the addin name to list
+                _RowItem.SubItems.Add(AddInInfo.SparxAddinLocation) ' sparx ref
+                Dim _ClassDefinition As String = AddInInfo.ClassDefinition ' get the name of the class that we looking for
                 _RowItem.SubItems.Add(_ClassDefinition) ' class string
 
-                ' 2. Find the CLSID and source from the Classname
-                ' There are 3 location that we can check for the class
-                ' \HKEY_CURRENT_USER\Software\Classes\ - this is the 1st place to look as it has precendence for current user
+                ' 2. Find the CLSID in the registry from the Classname
+                ' There are 3 locations that we can check for the class
+                ' \HKEY_CURRENT_USER\Software\Classes\ - this is the 1st place to look as current user has precendence
                 ' \HKEY_LOCAL_MACHINE\SOFTWARE\Classes
                 ' \HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node - this is pretty unlikely unless 
 
@@ -218,40 +246,38 @@ Module SupportFunctions
                 ' For each string there should be a keys either under HKCU or HKLM
                 ' 1st look in HKCU this has precendence for current user
 
-                ' HKCU
-                Dim _ClassSource As String = cHKCU ' we are now looking in 
+                Dim _ClassSource As String = cNotFound
+                ' try HKCU
                 Dim _CLSID As String = Registry.GetValue(HKCUClasses & cBackSlash & _ClassDefinition & cBackSlash & cCLSID, "", cNotFound) ' get the CLSID
-                
-                'HKLM
-                If _CLSID = "" Then ' if it doesn't exist then need to look in HKLM
-                    _ClassSource = cHKLM 'AddIn.CLSIDSrc
+                If _CLSID <> "" Then
+                    _ClassSource = cHKCU
+                    ' HKLM
+                ElseIf _CLSID = "" Then ' if it doesn't exist then need to look in HKLM
                     _CLSID = Registry.GetValue(HKLMClasses & cBackSlash & _ClassDefinition & cBackSlash & cCLSID, "", cNotFound) ' get CLSID in HKLM
-                End If
-
-                'HKLMWow
-                If _CLSID = "" Then ' if it doesn't exist then need to look in HKLM
-                    _ClassSource = cHKLMWow 'AddIn.CLSIDSrc
+                    If _CLSID <> "" Then _ClassSource = cHKLM 'AddIn.CLSIDSrc
+                    'HKLMWow
+                ElseIf _CLSID = "" Then ' if it doesn't exist then need to look in HKLM WOW6432Node
                     _CLSID = Registry.GetValue(HKLMWowClasses & cBackSlash & _ClassDefinition & cBackSlash & cCLSID, "", cNotFound) ' get CLSID in HKLM
+                    If _CLSID <> "" Then _ClassSource = cHKLMWow 'AddIn.CLSIDSrc
                 End If
 
-                If _CLSID = "" Then _ClassSource = cNotFound
+                ' Add information to table
                 _RowItem.SubItems.Add(_ClassSource) ' location from which the CLSID is found
                 _RowItem.SubItems.Add(_CLSID) ' add the CLSID
 
-                '3. Look for DLL file
+                '3. Look for DLL file if we have the Class ID
 
                 If _CLSID = "" Then ' if we find no class found then the DLL cannot be found
-                    ' class not found
-                    _RowItem.BackColor = Color.Magenta
+                    _RowItem.BackColor = Color.Magenta ' class not found
                 Else
-                    ' CLSIDsrc indicates where the class entry is defined, hence we would expect to find the details within the same HIVE; note this may not always be the case
+                    ' CLSIDsrc indicates where the class entry is defined,
+                    ' hence we would expect to find the details within that HIVE
+                    ' NOTE: this may not always be the case, we have seen cases where the library is put in the "wrong place"
                     ' Also depending on whether it is a 32-bit or 64-bit machine will determine where the DLL detail is located
-                    ' However, we have seen cases where the library is put in the "wrong place"
-                    Dim _ClassInfo As DLLFileInfo
-                    _ClassInfo = getClassDLLFilename(_ClassSource, _CLSID)
 
-                    ' The DLL src will indicate where the information has been found
-                    _RowItem.SubItems.Add(_ClassInfo.DLLSource) ' add the source of the class information
+                    Dim _ClassInfo As DLLFileInfo = getClassDLLFilename(_ClassSource, _CLSID)
+
+                    _RowItem.SubItems.Add(_ClassInfo.DLLSource) ' DLLSource indicates where the  src add the source of the class information
 
                     ' get details of DLL assembly
                     Dim _filename As String = _ClassInfo.Filename
@@ -284,34 +310,55 @@ Module SupportFunctions
 
     End Sub
 
-    ' Get the DLL filename which we assume is in the relevant place for HKCU / HKLM - the hive is provided by the caller
-    ' TODO - if it fails to find then check other locations
-
+    ''' <summary>
+    ''' Get the DLL filename which we assume is in the relevant place for HKCU / HKLM - the hive is provided by the caller
+    ''' </summary>
+    ''' <param name="pHIVE">HIVE in which the Class ID was found</param>
+    ''' <param name="pClassID">Class ID</param>
+    ''' <returns>DLL File information</returns>
+    ''' <remarks>There are some instance where the file would not be found as expected - 
+    ''' e.g. the COMServer class but don't think this is a likely case have included some checks</remarks>
     Private Function getClassDLLFilename(pHIVE As String, pClassID As String) As DLLFileInfo
         Dim _result As New DLLFileInfo
+
         Try
-
-            ' Now the DLL may be referenced by the CLSID in either HKCU or HKLM 
-            ' expect that it will be the same location as that in which the CLSID has been found
-            'Dim DLLsrc As String = "HKCU" ' keep a track of the src
-
-            '   Dim root As String = If(pHIVE = cHKCU, HKCUClasses, HKLMClasses)
+            ' 1. Use the Select the HIVE where the classID was foujnd and get the information
             Dim _location As String = ""
+            _result.DLLSource = cNotFound
             Select Case pHIVE
                 Case cHKCU
                     _location = HKCUClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
-                    _result.DLLSource = cHKCU
+                    _result.Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
+                    If _result.Filename IsNot Nothing Then
+                        _result.DLLSource = cHKCU
+                    ElseIf (Environment.Is64BitOperatingSystem) Then ' check in Wow6432 
+                        _location = HKCUClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
+                        _result.Filename = Registry.GetValue(_location, cCodeBase, cNotSet)
+                        If _result.Filename IsNot Nothing Then
+                            _result.DLLSource = cHKCUWow
+                        Else
+                            _location = HKCUClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
+                            _result.Filename = Registry.GetValue(_location, "", cNotSet)
+                            If _result.Filename <> cNotSet Then _result.DLLSource = "HKCU In ROOT"
+                        End If
+                    End If
 
                 Case cHKLM, cHKLMWow
-                    _result.DLLSource = cHKLM
-                    _location = If(Environment.Is64BitOperatingSystem, HKLMClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32, _
+                    _location = If(Environment.Is64BitOperatingSystem, HKLMClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32,
                                    HKLMClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32)
+                    _result.Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
+                    If _result.Filename IsNot Nothing Then
+                        _result.DLLSource = cHKLM
+                    Else
+
+                        _location = HKLMClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
+                        _result.Filename = Registry.GetValue(_location, "", cNotSet)
+                        If _result.Filename IsNot Nothing Then _result.DLLSource = "HKLM ROOT KEY"
+                    End If
 
                 Case Else
                     ' ERROR
             End Select
-
-            _result.Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
             _result.Location = _location
 
         Catch ex As Exception
@@ -321,6 +368,8 @@ Module SupportFunctions
         End Try
         Return _result
     End Function
+
+
 
     ' function to get class information
     Friend Function getClassInformation(pHIVE As String, pID As String) As ClassRegistryInformation
@@ -338,7 +387,7 @@ Module SupportFunctions
             myClassInfo.Assembly = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cAssembly, cNotSet)
             myClassInfo.ClassName = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cClass, cNotSet)
             myClassInfo.RunTimeVersion = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cRuntimeVersion, cNotSet)
-            myClassInfo.ProgID = Registry.GetValue(_keylocation & cBackSlash & cProgId, "", cNotSet)
+            myClassInfo.ProgID = Registry.GetValue(_keylocation & cBackSlash & cProgID, "", cNotSet)
 
         Catch ex As Exception
 #If DEBUG Then
@@ -400,6 +449,45 @@ Module SupportFunctions
     End Sub
 
 
+    ' NOT USED
+    ''' <summary>
+    ''' Search and Find Registry Function
+    ''' </summary>
+    Private Function SearchRegistry(ByVal location As String) As String
+
+        'Open the HKEY_CLASSES_ROOT\CLSID which contains the list of all registered COM files (.ocx,.dll, .ax) 
+        'on the system no matters if is 32 or 64 bits.
+        Dim t_clsidKey As RegistryKey = Registry.ClassesRoot.OpenSubKey("CLSID")
+
+        'Get all the sub keys it contains, wich are the generated GUID of each COM.
+        '   For Each subKey In t_clsidKey.GetSubKeyNames.ToList
+
+        Dim t_clsidSubKey As RegistryKey = Registry.ClassesRoot.OpenSubKey(location) '"CLSID\" & subKey & "\InProcServer32")
+
+        If Not t_clsidSubKey Is Nothing Then
+            'in the case InProcServer32 exist we get the default value wich contains the path of the COM file.
+            Dim t_valueName As String = (From value In t_clsidSubKey.GetValueNames() Where value = "")(0).ToString
+
+            'Now gets the value.
+            Dim t_value As String = t_clsidSubKey.GetValue(t_valueName).ToString
+
+            'And finnaly if the value ends with the name of the dll (include .dll) we return it
+            If t_value.EndsWith(".dll") Then
+
+                Return t_value
+
+            End If
+
+        End If
+
+
+
+        'if not exist, return nothing
+        Return Nothing
+
+    End Function
+
+
 End Module
 
 Friend Class DLLFileInfo
@@ -424,7 +512,7 @@ Friend Class AddInEntry
     '' AddIn Name | Class | Source | CLSID | Source | DLL
     Property AddInName As String = ""
     Property ClassDefinition As String = "" ' Assembly.Class
-    Property SparxAddinLocation As String = ""
+    Property SparxAddinLocation As String = "" ' Values are HKCU, HKLM, HKCU64, HKLM64
 
 
 End Class

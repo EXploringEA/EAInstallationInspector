@@ -30,7 +30,9 @@ Partial Friend Class frmInspector
     Private _logfilename As String = ""
     Private _FileDirectory As String = ""
 
-    Private _installPath As String = ""
+    Private _installPath32 As String = ""
+    Private _installPath64 As String = ""
+
     Const cLogFile As String = "log file "
     Const cLogFileLength As Integer = 9
 
@@ -53,9 +55,24 @@ Partial Friend Class frmInspector
             ToolTip1.SetToolTip(btHelp, versionString()) ' sets the app version as tool tip to help
             ' Check OS and set text in 
             tbOS.Text = If(Environment.Is64BitOperatingSystem, "64-bit detected", "32-bit detected")
-            _installPath = Registry.GetValue(EA, "Install Path", "")
-            tbLocation.Text = _installPath ' Registry.GetValue(EA, "Install Path", "")
-            tbVersion.Text = Registry.GetValue(EA, "Version", "")
+
+            ' need to check if the key exists
+            _installPath32 = Registry.GetValue(EAHKCU32, "Install Path", "") ' assume installed for current user
+            If _installPath32 Is Nothing Then _installPath32 = Registry.GetValue(EAHKLM32, "Install Path", "") ' check if install for all users
+            If _installPath32 Is Nothing Then _installPath32 = "Not installed"
+            tbLocation32.Text = _installPath32 ' Registry.GetValue(EA, "Install Path", "")
+            Dim _EAVersion32 As String = Registry.GetValue(EAHKCU32, "Version", "")
+            If _EAVersion32 = "" Then _EAVersion32 = Registry.GetValue(EAHKLM32, "Version", "")
+            tbVersion32.Text = _EAVersion32
+
+            _installPath64 = Registry.GetValue(EAHKCU64, "Install Path", "")
+            If _installPath64 Is Nothing Then _installPath64 = Registry.GetValue(EAHKLM64, "Install Path", "")
+            If _installPath64 Is Nothing Then _installPath64 = "Not installed"
+            tbLocation64.Text = _installPath64 ' Registry.GetValue(EA, "Install Path", "")
+            Dim _EAVersion64 As String = Registry.GetValue(EAHKCU64, "Version", "")
+            If _EAVersion64 = "" Then _EAVersion64 = Registry.GetValue(EAHKLM64, "Version", "")
+            tbVersion64.Text = _EAVersion64
+
             '
             checkDebugFrameworkConfig()
             '
@@ -477,7 +494,7 @@ Partial Friend Class frmInspector
 
     Private Sub btnClearQueryWindow_Click(sender As Object, e As EventArgs) Handles btnClearQueryWindow.Click
         lvQuery.Items.Clear()
-        If _Query IsNot Nothing Then _Query.ResetCount()
+        If _Query IsNot Nothing Then _Query.resetCount()
     End Sub
 
 
@@ -514,9 +531,9 @@ Partial Friend Class frmInspector
         Try
             '            MsgBox("EA install location " & _installPath)
 
-            Dim _DebugConfigFilename As String = _installPath & "\EA.Exe.config"
+            Dim _DebugConfigFilename As String = _installPath32 & "\EA.Exe.config"
             Dim _msg As String = "No framework config file found"
-            If _DebugConfigFilename <> _installPath AndAlso File.Exists(_DebugConfigFilename) Then
+            If _DebugConfigFilename <> _installPath32 AndAlso File.Exists(_DebugConfigFilename) Then
                 btDebugFramework.BackColor = Color.SpringGreen
                 btDebugFramework.Enabled = True
                 _msg = "Config file found" & vbCrLf
@@ -537,8 +554,8 @@ Partial Friend Class frmInspector
 
     Private Sub checkDebugFrameworkConfig()
 
-        Dim _DebugConfigFilename As String = _installPath & "\EA.Exe.config"
-        If _DebugConfigFilename <> _installPath AndAlso File.Exists(_DebugConfigFilename) Then
+        Dim _DebugConfigFilename As String = _installPath32 & "\EA.Exe.config"
+        If _DebugConfigFilename <> _installPath32 AndAlso File.Exists(_DebugConfigFilename) Then
             btDebugFramework.BackColor = Color.SpringGreen
             btDebugFramework.Enabled = True
             btDebugFramework.Visible = True

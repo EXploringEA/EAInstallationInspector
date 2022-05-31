@@ -38,15 +38,16 @@ Partial Class frmInspector
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tbOS = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.tbVersion = New System.Windows.Forms.TextBox()
+        Me.tbVersion32 = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.tbLocation = New System.Windows.Forms.TextBox()
+        Me.tbLocation32 = New System.Windows.Forms.TextBox()
         Me.btHelp = New System.Windows.Forms.Button()
         Me.btRefresh = New System.Windows.Forms.Button()
         Me.btCopy = New System.Windows.Forms.Button()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnCheckDLL = New System.Windows.Forms.Button()
+        Me.btDebugFramework = New System.Windows.Forms.Button()
         Me.tabControl = New System.Windows.Forms.TabControl()
         Me.tabListOfAddins = New System.Windows.Forms.TabPage()
         Me.tabRegistryTree = New System.Windows.Forms.TabPage()
@@ -61,7 +62,10 @@ Partial Class frmInspector
         Me.tbQueryMessage = New System.Windows.Forms.TextBox()
         Me.tbQueryActive = New System.Windows.Forms.TextBox()
         Me.btStopQueryActive = New System.Windows.Forms.Button()
-        Me.btDebugFramework = New System.Windows.Forms.Button()
+        Me.tbLocation64 = New System.Windows.Forms.TextBox()
+        Me.tbVersion64 = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -72,10 +76,11 @@ Partial Class frmInspector
         '
         Me.lvListOfAddIns.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lvListOfAddIns.FullRowSelect = True
+        Me.lvListOfAddIns.HideSelection = False
         Me.lvListOfAddIns.Location = New System.Drawing.Point(2, 2)
         Me.lvListOfAddIns.MultiSelect = False
         Me.lvListOfAddIns.Name = "lvListOfAddIns"
-        Me.lvListOfAddIns.Size = New System.Drawing.Size(1109, 293)
+        Me.lvListOfAddIns.Size = New System.Drawing.Size(1108, 341)
         Me.lvListOfAddIns.TabIndex = 0
         Me.lvListOfAddIns.UseCompatibleStateImageBehavior = False
         '
@@ -101,40 +106,40 @@ Partial Class frmInspector
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(146, 9)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(59, 13)
+        Me.Label2.Size = New System.Drawing.Size(74, 13)
         Me.Label2.TabIndex = 3
-        Me.Label2.Text = "EA Version"
+        Me.Label2.Text = "EA 32 Version"
         '
-        'tbVersion
+        'tbVersion32
         '
-        Me.tbVersion.Location = New System.Drawing.Point(211, 6)
-        Me.tbVersion.Name = "tbVersion"
-        Me.tbVersion.ReadOnly = True
-        Me.tbVersion.Size = New System.Drawing.Size(100, 20)
-        Me.tbVersion.TabIndex = 4
+        Me.tbVersion32.Location = New System.Drawing.Point(229, 4)
+        Me.tbVersion32.Name = "tbVersion32"
+        Me.tbVersion32.ReadOnly = True
+        Me.tbVersion32.Size = New System.Drawing.Size(100, 20)
+        Me.tbVersion32.TabIndex = 4
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(317, 9)
+        Me.Label3.Location = New System.Drawing.Point(335, 9)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(94, 13)
+        Me.Label3.Size = New System.Drawing.Size(79, 13)
         Me.Label3.TabIndex = 5
-        Me.Label3.Text = "EA Install location "
+        Me.Label3.Text = "EA 32 location "
         '
-        'tbLocation
+        'tbLocation32
         '
-        Me.tbLocation.Location = New System.Drawing.Point(417, 6)
-        Me.tbLocation.Name = "tbLocation"
-        Me.tbLocation.ReadOnly = True
-        Me.tbLocation.Size = New System.Drawing.Size(610, 20)
-        Me.tbLocation.TabIndex = 6
+        Me.tbLocation32.Location = New System.Drawing.Point(417, 6)
+        Me.tbLocation32.Name = "tbLocation32"
+        Me.tbLocation32.ReadOnly = True
+        Me.tbLocation32.Size = New System.Drawing.Size(610, 20)
+        Me.tbLocation32.TabIndex = 6
         '
         'btHelp
         '
         Me.btHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btHelp.BackColor = System.Drawing.Color.Red
-        Me.btHelp.Location = New System.Drawing.Point(12, 383)
+        Me.btHelp.Location = New System.Drawing.Point(12, 487)
         Me.btHelp.Name = "btHelp"
         Me.btHelp.Size = New System.Drawing.Size(75, 23)
         Me.btHelp.TabIndex = 7
@@ -145,7 +150,7 @@ Partial Class frmInspector
         '
         Me.btRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btRefresh.BackColor = System.Drawing.Color.SpringGreen
-        Me.btRefresh.Location = New System.Drawing.Point(316, 383)
+        Me.btRefresh.Location = New System.Drawing.Point(316, 487)
         Me.btRefresh.Name = "btRefresh"
         Me.btRefresh.Size = New System.Drawing.Size(75, 23)
         Me.btRefresh.TabIndex = 8
@@ -157,7 +162,7 @@ Partial Class frmInspector
         '
         Me.btCopy.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btCopy.BackColor = System.Drawing.Color.Gold
-        Me.btCopy.Location = New System.Drawing.Point(93, 383)
+        Me.btCopy.Location = New System.Drawing.Point(93, 487)
         Me.btCopy.Name = "btCopy"
         Me.btCopy.Size = New System.Drawing.Size(217, 23)
         Me.btCopy.TabIndex = 9
@@ -169,7 +174,7 @@ Partial Class frmInspector
         Me.LinkLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.LinkLabel1.AutoSize = True
         Me.LinkLabel1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel1.Location = New System.Drawing.Point(1000, 382)
+        Me.LinkLabel1.Location = New System.Drawing.Point(1000, 486)
         Me.LinkLabel1.Name = "LinkLabel1"
         Me.LinkLabel1.Size = New System.Drawing.Size(149, 20)
         Me.LinkLabel1.TabIndex = 10
@@ -180,7 +185,7 @@ Partial Class frmInspector
         '
         Me.btnCheckDLL.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnCheckDLL.BackColor = System.Drawing.Color.Yellow
-        Me.btnCheckDLL.Location = New System.Drawing.Point(658, 382)
+        Me.btnCheckDLL.Location = New System.Drawing.Point(658, 486)
         Me.btnCheckDLL.Margin = New System.Windows.Forms.Padding(2)
         Me.btnCheckDLL.Name = "btnCheckDLL"
         Me.btnCheckDLL.Size = New System.Drawing.Size(101, 23)
@@ -190,6 +195,18 @@ Partial Class frmInspector
         Me.btnCheckDLL.UseVisualStyleBackColor = False
         Me.btnCheckDLL.Visible = False
         '
+        'btDebugFramework
+        '
+        Me.btDebugFramework.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btDebugFramework.Location = New System.Drawing.Point(391, 487)
+        Me.btDebugFramework.Name = "btDebugFramework"
+        Me.btDebugFramework.Size = New System.Drawing.Size(142, 22)
+        Me.btDebugFramework.TabIndex = 19
+        Me.btDebugFramework.Text = "EA debug config"
+        Me.ToolTip1.SetToolTip(Me.btDebugFramework, "EA.exe.config present if green," & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Press to display contents of file" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "to view order" &
+        " of selection")
+        Me.btDebugFramework.UseVisualStyleBackColor = True
+        '
         'tabControl
         '
         Me.tabControl.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -198,11 +215,11 @@ Partial Class frmInspector
         Me.tabControl.Controls.Add(Me.tabListOfAddins)
         Me.tabControl.Controls.Add(Me.tabRegistryTree)
         Me.tabControl.Controls.Add(Me.tabQueryRegistry)
-        Me.tabControl.Location = New System.Drawing.Point(14, 49)
+        Me.tabControl.Location = New System.Drawing.Point(14, 105)
         Me.tabControl.Margin = New System.Windows.Forms.Padding(2)
         Me.tabControl.Name = "tabControl"
         Me.tabControl.SelectedIndex = 0
-        Me.tabControl.Size = New System.Drawing.Size(1121, 323)
+        Me.tabControl.Size = New System.Drawing.Size(1120, 371)
         Me.tabControl.TabIndex = 12
         '
         'tabListOfAddins
@@ -212,7 +229,7 @@ Partial Class frmInspector
         Me.tabListOfAddins.Margin = New System.Windows.Forms.Padding(2)
         Me.tabListOfAddins.Name = "tabListOfAddins"
         Me.tabListOfAddins.Padding = New System.Windows.Forms.Padding(2)
-        Me.tabListOfAddins.Size = New System.Drawing.Size(1113, 297)
+        Me.tabListOfAddins.Size = New System.Drawing.Size(1112, 345)
         Me.tabListOfAddins.TabIndex = 0
         Me.tabListOfAddins.Text = "List of AddIns"
         Me.tabListOfAddins.UseVisualStyleBackColor = True
@@ -224,7 +241,7 @@ Partial Class frmInspector
         Me.tabRegistryTree.Margin = New System.Windows.Forms.Padding(2)
         Me.tabRegistryTree.Name = "tabRegistryTree"
         Me.tabRegistryTree.Padding = New System.Windows.Forms.Padding(2)
-        Me.tabRegistryTree.Size = New System.Drawing.Size(1113, 297)
+        Me.tabRegistryTree.Size = New System.Drawing.Size(1112, 345)
         Me.tabRegistryTree.TabIndex = 1
         Me.tabRegistryTree.Text = "Registry tree view"
         Me.tabRegistryTree.UseVisualStyleBackColor = True
@@ -235,7 +252,7 @@ Partial Class frmInspector
         Me.Browser.Location = New System.Drawing.Point(2, 2)
         Me.Browser.Margin = New System.Windows.Forms.Padding(2)
         Me.Browser.Name = "Browser"
-        Me.Browser.Size = New System.Drawing.Size(1109, 293)
+        Me.Browser.Size = New System.Drawing.Size(1108, 341)
         Me.Browser.TabIndex = 0
         '
         'tabQueryRegistry
@@ -244,7 +261,7 @@ Partial Class frmInspector
         Me.tabQueryRegistry.Location = New System.Drawing.Point(4, 22)
         Me.tabQueryRegistry.Margin = New System.Windows.Forms.Padding(2)
         Me.tabQueryRegistry.Name = "tabQueryRegistry"
-        Me.tabQueryRegistry.Size = New System.Drawing.Size(1113, 297)
+        Me.tabQueryRegistry.Size = New System.Drawing.Size(1112, 345)
         Me.tabQueryRegistry.TabIndex = 2
         Me.tabQueryRegistry.Text = "Query results"
         Me.tabQueryRegistry.UseVisualStyleBackColor = True
@@ -256,10 +273,11 @@ Partial Class frmInspector
         Me.lvQuery.FullRowSelect = True
         Me.lvQuery.GridLines = True
         Me.lvQuery.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
+        Me.lvQuery.HideSelection = False
         Me.lvQuery.Location = New System.Drawing.Point(0, 0)
         Me.lvQuery.Margin = New System.Windows.Forms.Padding(2)
         Me.lvQuery.Name = "lvQuery"
-        Me.lvQuery.Size = New System.Drawing.Size(1113, 297)
+        Me.lvQuery.Size = New System.Drawing.Size(1112, 345)
         Me.lvQuery.TabIndex = 0
         Me.lvQuery.UseCompatibleStateImageBehavior = False
         '
@@ -270,7 +288,7 @@ Partial Class frmInspector
         'BtnQuery
         '
         Me.BtnQuery.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BtnQuery.Location = New System.Drawing.Point(763, 380)
+        Me.BtnQuery.Location = New System.Drawing.Point(763, 484)
         Me.BtnQuery.Margin = New System.Windows.Forms.Padding(2)
         Me.BtnQuery.Name = "BtnQuery"
         Me.BtnQuery.Size = New System.Drawing.Size(74, 23)
@@ -282,7 +300,7 @@ Partial Class frmInspector
         'btnClearQueryWindow
         '
         Me.btnClearQueryWindow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnClearQueryWindow.Location = New System.Drawing.Point(841, 380)
+        Me.btnClearQueryWindow.Location = New System.Drawing.Point(841, 484)
         Me.btnClearQueryWindow.Margin = New System.Windows.Forms.Padding(2)
         Me.btnClearQueryWindow.Name = "btnClearQueryWindow"
         Me.btnClearQueryWindow.Size = New System.Drawing.Size(145, 23)
@@ -294,7 +312,7 @@ Partial Class frmInspector
         'btnRegisterDLL
         '
         Me.btnRegisterDLL.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnRegisterDLL.Location = New System.Drawing.Point(538, 382)
+        Me.btnRegisterDLL.Location = New System.Drawing.Point(538, 486)
         Me.btnRegisterDLL.Margin = New System.Windows.Forms.Padding(2)
         Me.btnRegisterDLL.Name = "btnRegisterDLL"
         Me.btnRegisterDLL.Size = New System.Drawing.Size(116, 23)
@@ -306,7 +324,7 @@ Partial Class frmInspector
         'lbQuery
         '
         Me.lbQuery.AutoSize = True
-        Me.lbQuery.Location = New System.Drawing.Point(317, 37)
+        Me.lbQuery.Location = New System.Drawing.Point(336, 71)
         Me.lbQuery.Name = "lbQuery"
         Me.lbQuery.Size = New System.Drawing.Size(55, 13)
         Me.lbQuery.TabIndex = 1
@@ -315,7 +333,7 @@ Partial Class frmInspector
         '
         'tbQueryMessage
         '
-        Me.tbQueryMessage.Location = New System.Drawing.Point(417, 34)
+        Me.tbQueryMessage.Location = New System.Drawing.Point(417, 71)
         Me.tbQueryMessage.Name = "tbQueryMessage"
         Me.tbQueryMessage.Size = New System.Drawing.Size(610, 20)
         Me.tbQueryMessage.TabIndex = 16
@@ -326,7 +344,7 @@ Partial Class frmInspector
         Me.tbQueryActive.BackColor = System.Drawing.Color.Yellow
         Me.tbQueryActive.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tbQueryActive.ForeColor = System.Drawing.Color.Red
-        Me.tbQueryActive.Location = New System.Drawing.Point(1032, 37)
+        Me.tbQueryActive.Location = New System.Drawing.Point(1032, 69)
         Me.tbQueryActive.Name = "tbQueryActive"
         Me.tbQueryActive.ReadOnly = True
         Me.tbQueryActive.Size = New System.Drawing.Size(102, 22)
@@ -340,7 +358,7 @@ Partial Class frmInspector
         Me.btStopQueryActive.BackColor = System.Drawing.Color.Yellow
         Me.btStopQueryActive.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btStopQueryActive.ForeColor = System.Drawing.Color.Red
-        Me.btStopQueryActive.Location = New System.Drawing.Point(1033, 6)
+        Me.btStopQueryActive.Location = New System.Drawing.Point(1032, 34)
         Me.btStopQueryActive.Name = "btStopQueryActive"
         Me.btStopQueryActive.Size = New System.Drawing.Size(101, 29)
         Me.btStopQueryActive.TabIndex = 18
@@ -348,23 +366,48 @@ Partial Class frmInspector
         Me.btStopQueryActive.UseVisualStyleBackColor = False
         Me.btStopQueryActive.Visible = False
         '
-        'btDebugFramework
+        'tbLocation64
         '
-        Me.btDebugFramework.Location = New System.Drawing.Point(391, 383)
-        Me.btDebugFramework.Name = "btDebugFramework"
-        Me.btDebugFramework.Size = New System.Drawing.Size(142, 22)
-        Me.btDebugFramework.TabIndex = 19
-        Me.btDebugFramework.Text = "EA debug config"
-        Me.ToolTip1.SetToolTip(Me.btDebugFramework, "EA.exe.config present if green," & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Press to display contents of file" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "to view order" & _
-        " of selection")
-        Me.btDebugFramework.UseVisualStyleBackColor = True
+        Me.tbLocation64.Location = New System.Drawing.Point(417, 32)
+        Me.tbLocation64.Name = "tbLocation64"
+        Me.tbLocation64.Size = New System.Drawing.Size(610, 20)
+        Me.tbLocation64.TabIndex = 20
+        '
+        'tbVersion64
+        '
+        Me.tbVersion64.Location = New System.Drawing.Point(228, 30)
+        Me.tbVersion64.Name = "tbVersion64"
+        Me.tbVersion64.Size = New System.Drawing.Size(100, 20)
+        Me.tbVersion64.TabIndex = 21
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(334, 34)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(80, 13)
+        Me.Label4.TabIndex = 22
+        Me.Label4.Text = "EA 64 Location"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(146, 32)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(73, 13)
+        Me.Label5.TabIndex = 23
+        Me.Label5.Text = "EA 64 version"
         '
         'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
-        Me.ClientSize = New System.Drawing.Size(1161, 416)
+        Me.ClientSize = New System.Drawing.Size(1160, 520)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.tbVersion64)
+        Me.Controls.Add(Me.tbLocation64)
         Me.Controls.Add(Me.btDebugFramework)
         Me.Controls.Add(Me.btStopQueryActive)
         Me.Controls.Add(Me.tbQueryActive)
@@ -379,15 +422,15 @@ Partial Class frmInspector
         Me.Controls.Add(Me.btCopy)
         Me.Controls.Add(Me.btRefresh)
         Me.Controls.Add(Me.btHelp)
-        Me.Controls.Add(Me.tbLocation)
+        Me.Controls.Add(Me.tbLocation32)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.tbVersion)
+        Me.Controls.Add(Me.tbVersion32)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.tbOS)
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmInspector"
-        Me.Text = "EA Installation Inspector Version 6 in development"
+        Me.Text = "EA Installation Inspector Version 6.1"
         Me.tabControl.ResumeLayout(False)
         Me.tabListOfAddins.ResumeLayout(False)
         Me.tabRegistryTree.ResumeLayout(False)
@@ -400,9 +443,9 @@ Partial Class frmInspector
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents tbOS As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents tbVersion As System.Windows.Forms.TextBox
+    Friend WithEvents tbVersion32 As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents tbLocation As System.Windows.Forms.TextBox
+    Friend WithEvents tbLocation32 As System.Windows.Forms.TextBox
     Friend WithEvents btHelp As System.Windows.Forms.Button
     Friend WithEvents btRefresh As System.Windows.Forms.Button
     Friend WithEvents btCopy As System.Windows.Forms.Button
@@ -424,4 +467,8 @@ Partial Class frmInspector
     Friend WithEvents tbQueryActive As System.Windows.Forms.TextBox
     Friend WithEvents btStopQueryActive As System.Windows.Forms.Button
     Friend WithEvents btDebugFramework As System.Windows.Forms.Button
+    Friend WithEvents tbLocation64 As TextBox
+    Friend WithEvents tbVersion64 As TextBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label5 As Label
 End Class

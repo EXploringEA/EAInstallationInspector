@@ -11,41 +11,53 @@
 
 Module Constants
 
-
     ''' <summary>
-    ''' Root to look in HKCU
+    ''' The sparx keys - 32-bit 
     ''' </summary>
-    Friend Const EA As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA400\EA"
-
-
+    Friend Const SparxKeys32 As String = "Software\Sparx Systems\EAAddins"
     ''' <summary>
-    ''' The sparx keys - x86
+    ''' The sparx keys - 32-bit addin for 64-bit OS
     ''' </summary>
-    Friend Const SparxKeys As String = "Software\Sparx Systems\EAAddins"
-    ''' <summary>
-    ''' The sparx keys - x64
-    ''' </summary>
-    Friend Const WSparxKeys As String = "Software\Wow6432Node\Sparx Systems\EAAddins"
+    Friend Const WSparxKeys32 As String = "Software\Wow6432Node\Sparx Systems\EAAddins"
 
     ''' <summary>
     ''' HKCU Keys
     ''' </summary>
-    Friend Const HKCUfullKey As String = "HKEY_CURRENT_USER\" & SparxKeys
+    Friend Const HKCUfullKey32 As String = "HKEY_CURRENT_USER\" & SparxKeys32
     ''' <summary>
     ''' HKLM Keys
     ''' </summary>
-    Friend Const HKLMfullKey As String = "HKEY_LOCAL_MACHINE\" & WSparxKeys
+    Friend Const HKLMfullKey32 As String = "HKEY_LOCAL_MACHINE\" & WSparxKeys32
+
+    ''' <summary>
+    ''' The sparx keys - x64
+    ''' </summary>
+    Friend Const SparxKeys64 As String = "Software\Sparx Systems\EAAddins64"
+    ''' <summary>
+    ''' HKCU Keys
+    ''' </summary>6
+    Friend Const HKCUfullKey64 As String = "HKEY_CURRENT_USER\" & SparxKeys64
+    ''' <summary>
+    ''' HKLM Keys
+    ''' </summary>
+    Friend Const HKLMfullKey64 As String = "HKEY_LOCAL_MACHINE\" & SparxKeys64
+
+    ' Registry locations
 
     ''' <summary>
     ''' HKCR Classes
     ''' </summary>
     Friend Const HKCUClasses As String = "HKEY_CURRENT_USER\SOFTWARE\Classes"
+
     ''' <summary>
     ''' HKLM Classes
     ''' </summary>
     Friend Const HKLMClasses As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes"
 
     Friend Const HKLMWowClasses As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node"
+
+
+
 
     ''' <summary>
     ''' Text not set
@@ -85,32 +97,65 @@ Module Constants
     Friend Const cHKLMWowProgID As String = "HKLMWow : ProgId = "
 
 
+    'Registry related strings
 
     Friend Const cHKCU As String = "HKCU"
     Friend Const cHKLM As String = "HKLM"
+
+    Friend Const cHKCUWow As String = "HKCUWow"
     Friend Const cHKLMWow As String = "HKLMWow"
+
+    Friend Const cHKCU64 As String = "HKCU64"
+    Friend Const cHKLM64 As String = "HKLM64"
+
+
     Friend Const cCLSID As String = "CLSID"
     Friend Const cProgID As String = "ProgID"
 
-    Friend cAddins As String = "SOFTWARE\Sparx Systems\EAAddins"
-    Friend cWowAddins As String = "SOFTWARE\WOW6432Node\Sparx Systems\EAAddins"
+    ' LOCATION Sparx AddIns keys
+    ' 32-bit
 
-    Friend Const cHKCUAddins As String = "HKCU\Software\Sparx Systems\EAAddins"
-    Friend Const cHKLMAddins As String = "HLKM\SOFTWARE\Sparx Systems\EAAddins"
-    Friend Const cHKLMWowAddins As String = "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins"
 
+    Friend cAddins32 As String = "SOFTWARE\Sparx Systems\EAAddins"
+    Friend cWowAddins32 As String = "SOFTWARE\WOW6432Node\Sparx Systems\EAAddins"
+
+    Friend Const cHKCUAddins32 As String = "HKCU\Software\Sparx Systems\EAAddins"
+    Friend Const cHKLMAddins32 As String = "HLKM\SOFTWARE\Sparx Systems\EAAddins"
+    Friend Const cHKLMWowAddins32 As String = "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins"
+
+    Friend Const cHKCUSparxAddinKeys32 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EAAddins"
+    Friend Const cHKLMSparxAddinKeys32 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EAAddins"
+    Friend Const cHKLMWowSparxAddinKeys32 As String = "HKEY_LOCAL_MACHINE\Software\Wow6432Node\Sparx Systems\EAAddins"
+
+    ' 64-bit
+
+    Friend Const cAddins64 As String = "SOFTWARE\Sparx Systems\EAAddins64"
+    Friend Const cHKCUAddins64 As String = "HKCU\Software\Sparx Systems\EAAddins64"
+    Friend Const cHKLMAddins64 As String = "HLKM\SOFTWARE\Sparx Systems\EAAddins64"
     ' Keys
-    Friend Const cHKCUSparxAddinKeys As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EAAddins"
-    Friend Const cHKLMSparxAddinKeys As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EAAddins"
-    Friend Const cHKLMWowSparxAddinKeys As String = "HKEY_LOCAL_MACHINE\Software\Wow6432Node\Sparx Systems\EAAddins"
+    Friend Const cHKCUSparxAddinKeys64 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EAAddins64"
+    Friend Const cHKLMSparxAddinKeys64 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EAAddins64"
 
+    ' LOCATION OF EA program keys
+    ' 32-bit
+    Friend Const EAHKCU32 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA400\EA"
+    Friend Const EAHKLM32 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EA400\EA"
+    ' 64-bit
+    Friend Const EAHKCU64 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA64\EA"
+    Friend Const EAHKLM64 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EA64\EA"
+
+
+    ' Strings that are used
     Friend Const cBackSlash As String = "\"
     Friend Const cForwardSlash As String = "/"
     Friend Const cInprocServer32 As String = "InprocServer32"
     Friend Const cWow6432Node As String = "Wow6432Node"
 
+    ' colours used for output
     Friend cQueryRowColorDefault As Color = Color.White
     Friend cQueryRowColorNew As Color = Color.Yellow
     Friend cQueryRowColorComplete As Color = Color.SpringGreen
     Friend cQueryRowWarning As Color = Color.Orange
+
+
 End Module

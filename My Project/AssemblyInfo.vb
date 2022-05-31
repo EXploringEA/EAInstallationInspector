@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("eaInstallationInspector")> 
+<Assembly: AssemblyTitle("eaInstallationInspector V7")>
 <Assembly: AssemblyDescription("EA AddIn Registry Inspector")> 
 <Assembly: AssemblyCompany("EXploringEA.com")> 
-<Assembly: AssemblyProduct("eaInstallationInspector")> 
-<Assembly: AssemblyCopyright("Copyright © EXploringEA.com 2014-2018")> 
+<Assembly: AssemblyProduct("eaInstallationInspector")>
+<Assembly: AssemblyCopyright("Copyright © EXploringEA.com 2014-2022")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("89b9dd83-1cfa-42a7-bac2-fe4ba4bdf545")> 
+<Assembly: Guid("89b9dd83-1cfa-42a7-bac2-fe4ba4bdf545")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("6.0.0")> 
-<Assembly: AssemblyFileVersion("6.0.0.0")> 
+<Assembly: AssemblyVersion("7.0.0")>
+<Assembly: AssemblyFileVersion("7.0.0.0")>
