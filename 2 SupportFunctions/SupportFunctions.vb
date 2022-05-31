@@ -154,7 +154,7 @@ Module SupportFunctions
                 Dim AddInInfo As New AddInEntry
                 AddInInfo.AddInName = pEntryKey ' registry location for addin name
                 AddInInfo.ClassDefinition = Registry.GetValue(HKCUfullKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
-                AddInInfo.SparxAddinLocation = cHKCU
+                AddInInfo.SparxAddinLocation = cHKCU32
                 myAddInEntries.Add(AddInInfo)
             Next
         End If
@@ -169,7 +169,7 @@ Module SupportFunctions
                 Dim AddInInfo As New AddInEntry
                 AddInInfo.AddInName = pEntryKey ' registry location for addin name ' this only works for top level not the 6432
                 AddInInfo.ClassDefinition = Registry.GetValue(HKLMfullKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
-                AddInInfo.SparxAddinLocation = If(Environment.Is64BitOperatingSystem, cHKLMWow, cHKLM)
+                AddInInfo.SparxAddinLocation = If(Environment.Is64BitOperatingSystem, cHKLMWow, cHKLM32)
                 myAddInEntries.Add(AddInInfo)
             Next
         End If
@@ -252,11 +252,11 @@ Module SupportFunctions
                 ' try HKCU
                 Dim _CLSID As String = Registry.GetValue(HKCUClasses & cBackSlash & _ClassDefinition & cBackSlash & cCLSID, "", cNotFound) ' get the CLSID
                 If _CLSID <> "" Then
-                    _ClassSource = cHKCU
+                    _ClassSource = cHKCU32
                     ' HKLM
                 ElseIf _CLSID = "" Then ' if it doesn't exist then need to look in HKLM
                     _CLSID = Registry.GetValue(HKLMClasses & cBackSlash & _ClassDefinition & cBackSlash & cCLSID, "", cNotFound) ' get CLSID in HKLM
-                    If _CLSID <> "" Then _ClassSource = cHKLM 'AddIn.CLSIDSrc
+                    If _CLSID <> "" Then _ClassSource = cHKLM32 'AddIn.CLSIDSrc
                     'HKLMWow
                 ElseIf _CLSID = "" Then ' if it doesn't exist then need to look in HKLM WOW6432Node
                     _CLSID = Registry.GetValue(HKLMWowClasses & cBackSlash & _ClassDefinition & cBackSlash & cCLSID, "", cNotFound) ' get CLSID in HKLM
@@ -277,7 +277,7 @@ Module SupportFunctions
                     ' NOTE: this may not always be the case, we have seen cases where the library is put in the "wrong place"
                     ' Also depending on whether it is a 32-bit or 64-bit machine will determine where the DLL detail is located
 
-                    Dim _ClassInfo As DLLFileInfo = getClassDLLFilename(_ClassSource, _CLSID)
+                    Dim _ClassInfo As DLLFileInfo = getClassDLLFilename(_ClassSource, _CLSID, AddInInfo)
 
                     _RowItem.SubItems.Add(_ClassInfo.DLLSource) ' DLLSource indicates where the  src add the source of the class information
 
@@ -320,7 +320,7 @@ Module SupportFunctions
     ''' <returns>DLL File information</returns>
     ''' <remarks>There are some instance where the file would not be found as expected - 
     ''' e.g. the COMServer class but don't think this is a likely case have included some checks</remarks>
-    Private Function getClassDLLFilename(pHIVE As String, pClassID As String) As DLLFileInfo
+    Private Function getClassDLLFilename(pHIVE As String, pClassID As String, pAddInInfo As AddInEntry) As DLLFileInfo
         Dim _result As New DLLFileInfo
 
         Try
@@ -328,11 +328,11 @@ Module SupportFunctions
             Dim _location As String = ""
             _result.DLLSource = cNotFound
             Select Case pHIVE
-                Case cHKCU
+                Case cHKCU32
                     _location = HKCUClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
                     _result.Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
                     If _result.Filename IsNot Nothing Then
-                        _result.DLLSource = cHKCU
+                        _result.DLLSource = cHKCU32
                     ElseIf (Environment.Is64BitOperatingSystem) Then ' check in Wow6432 
                         _location = HKCUClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
                         _result.Filename = Registry.GetValue(_location, cCodeBase, cNotSet)
@@ -345,12 +345,17 @@ Module SupportFunctions
                         End If
                     End If
 
-                Case cHKLM, cHKLMWow
-                    _location = If(Environment.Is64BitOperatingSystem, HKLMClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32,
-                                   HKLMClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32)
+                Case cHKLM32, cHKLMWow
+                    ' location will depend on whether the AddIn is 32-bit or 64-bit
+                    If pAddInInfo.SparxAddinLocation = cHKLM64 Or pAddInInfo.SparxAddinLocation = cHKCU64 Then
+                        _location = HKLMClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
+                    Else
+                        _location = If(Environment.Is64BitOperatingSystem, HKLMClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32,
+                                       HKLMClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32)
+                    End If
                     _result.Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
                     If _result.Filename IsNot Nothing Then
-                        _result.DLLSource = cHKLM
+                        _result.DLLSource = cHKLM32
                     Else
 
                         _location = HKLMClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
@@ -378,13 +383,31 @@ Module SupportFunctions
         Dim myClassInfo As New ClassRegistryInformation
         Try
 
-            Dim _HIVE As String = If(pHIVE = cHKCU, HKCUClasses, HKLMClasses) ' get the appropriate HIVE
-            Dim KeyLocation32bitRoot As String = _HIVE & cBackSlash & cCLSID & cBackSlash & pID
-            Dim KeyLocation64bitRoot As String = _HIVE & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pID
-            Dim _keylocation As String = If(Environment.Is64BitOperatingSystem, KeyLocation64bitRoot, KeyLocation32bitRoot)
+            '         Dim _HIVE As String = If(pHIVE = cHKCU32, HKCUClasses, HKLMClasses) ' get the appropriate HIVE
+            '          Dim KeyLocation32bitRoot As String = _HIVE & cBackSlash & cCLSID & cBackSlash & pID
+            '           Dim KeyLocation64bitRoot As String = _HIVE & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pID
+            Dim _keylocation As String = cNotSet
+            'If (Environment.Is64BitOperatingSystem, KeyLocation64bitRoot, KeyLocation32bitRoot) Then
+            '            _keylocation = _HIVE & cBackSlash & cCLSID & cBackSlash & pID
+            Select Case pHIVE
+                Case cHKCU32
+                    _keylocation = If(Environment.Is64BitOperatingSystem,
+                        HKCUClasses & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pID,
+                        HKCUClasses & cBackSlash & cCLSID & cBackSlash & pID)
 
+                Case cHKLM32
+                    _keylocation = If(Environment.Is64BitOperatingSystem,
+                        HKLMWowClasses & cBackSlash & cCLSID & cBackSlash & pID,
+                        HKLMClasses & cBackSlash & cCLSID & cBackSlash & pID)
 
-            myClassInfo.HIVE = _HIVE
+                Case cHKCU64
+                    _keylocation = HKCUClasses & cBackSlash & cCLSID & cBackSlash & pID
+                Case cHKLM64
+                    _keylocation = HKLMClasses & cBackSlash & cCLSID & cBackSlash & pID
+                Case Else
+                    Debug.Print("HIVE - " & pHIVE)
+            End Select
+            myClassInfo.HIVE = pHIVE
             myClassInfo.CodeBase = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cCodeBase, cNotSet)
             myClassInfo.Assembly = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cAssembly, cNotSet)
             myClassInfo.ClassName = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cClass, cNotSet)

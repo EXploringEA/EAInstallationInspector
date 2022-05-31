@@ -99,8 +99,8 @@ Module Constants
 
     'Registry related strings
 
-    Friend Const cHKCU As String = "HKCU"
-    Friend Const cHKLM As String = "HKLM"
+    Friend Const cHKCU32 As String = "HKCU"
+    Friend Const cHKLM32 As String = "HKLM"
 
     Friend Const cHKCUWow As String = "HKCUWow"
     Friend Const cHKLMWow As String = "HKLMWow"

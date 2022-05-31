@@ -196,7 +196,7 @@ Partial Class frmInspector
                             myCUKey = Registry.CurrentUser.OpenSubKey(cAddins32)
                             For Each pEntryKey In myCUKey.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey.SparxEntryLocation = cHKCU
+                                newKey.SparxEntryLocation = cHKCU32
                                 newKey.ClassNameLocation = HKCUfullKey32
                                 newKey.ClassName = Registry.GetValue(HKCUfullKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
@@ -209,7 +209,7 @@ Partial Class frmInspector
 
                             For Each pEntryKey In myLMKey.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey.SparxEntryLocation = cHKLM
+                                newKey.SparxEntryLocation = cHKLM32
                                 newKey.ClassNameLocation = HKLMfullKey32
                                 newKey.ClassName = Registry.GetValue(HKLMfullKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
@@ -222,7 +222,7 @@ Partial Class frmInspector
 
                             For Each pEntryKey In myLMKey.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey.SparxEntryLocation = cHKLM
+                                newKey.SparxEntryLocation = cHKLM32
                                 newKey.ClassNameLocation = HKLMfullKey32
                                 newKey.ClassName = Registry.GetValue(HKLMfullKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
@@ -274,22 +274,22 @@ Partial Class frmInspector
                             myCLSIDLocation = HKCUClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKCU
+                                CLSIDsrc = cHKCU32
                             Else
                                 myCLSIDLocation = HKLMClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKLM
+                                If myCLSID <> "" Then CLSIDsrc = cHKLM32
                             End If
 
                         Case cHKCUSparxAddinKeys64
                             myCLSIDLocation = HKCUClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKCU
+                                CLSIDsrc = cHKCU64
                             Else
                                 myCLSIDLocation = HKLMClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKLM
+                                If myCLSID <> "" Then CLSIDsrc = cHKLM64
                             End If
 
 
@@ -297,11 +297,11 @@ Partial Class frmInspector
                             myCLSIDLocation = HKLMClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKLM
+                                CLSIDsrc = cHKLM32
                             Else
                                 myCLSIDLocation = HKCUClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKCU
+                                If myCLSID <> "" Then CLSIDsrc = cHKCU32
                             End If
 
                         Case cHKLMWowSparxAddinKeys32
@@ -312,17 +312,17 @@ Partial Class frmInspector
                             Else
                                 myCLSIDLocation = HKCUClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKCU
+                                If myCLSID <> "" Then CLSIDsrc = cHKCU32
                             End If
                         Case cHKLMSparxAddinKeys64
                             myCLSIDLocation = HKLMClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKLM
+                                CLSIDsrc = cHKLM32
                             Else
                                 myCLSIDLocation = HKCUClasses & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKCU
+                                If myCLSID <> "" Then CLSIDsrc = cHKCU32
                             End If
                         Case Else
 
@@ -330,12 +330,17 @@ Partial Class frmInspector
 
                     myNode = New NodeInfo(NodeType.CLSIDNode, 0) ' no children
                     Select Case CLSIDsrc
-                        Case cHKCU
+                        Case cHKCU32
                             myNode.Name = cHKCUCLSID & myCLSID
-                        Case cHKLM
+                        Case cHKLM32
                             myNode.Name = cHKLMCLSID & myCLSID
                         Case cHKLMWow
                             myNode.Name = cHKLMWowCLSID & myCLSID
+                        Case cHKCU64
+                            myNode.Name = cHKCUCLSID & myCLSID
+                        Case cHKLM64
+                            myNode.Name = cHKLMCLSID & myCLSID
+
                     End Select
                     myNode.CLSIDSrc = CLSIDsrc
                     myNode.CLSID = myCLSID
@@ -350,12 +355,16 @@ Partial Class frmInspector
                     ' Classname
                     myNode = New NodeInfo(NodeType.CLSIDNode_ClassName, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU
+                        Case cHKCU32
                             myNode.Name = cHKCUClassname & _ClassInformation.ClassName
-                        Case cHKLM
+                        Case cHKLM32
                             myNode.Name = cHKLMClassname & _ClassInformation.ClassName
                         Case cHKLMWow
                             myNode.Name = cHKLMWowClassname & _ClassInformation.ClassName
+                        Case cHKCU64
+                            myNode.Name = cHKCUClassname & _ClassInformation.ClassName
+                        Case cHKLM64
+                            myNode.Name = cHKLMClassname & _ClassInformation.ClassName
                     End Select
                     myNode.CLSIDSrc = CLSIDsrc
                     myNode.ClassName = _ClassInformation.ClassName
@@ -371,9 +380,9 @@ Partial Class frmInspector
                     'Class ID
                     myNode = New NodeInfo(NodeType.CLSIDNode_CodeBase, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU
+                        Case cHKCU32
                             myNode.Name = cHKCUFilename & _filename
-                        Case cHKLM
+                        Case cHKLM32
                             myNode.Name = cHKLMFilename & _filename
                         Case cHKLMWow
                             myNode.Name = cHKLMWowFilename & _filename
@@ -392,9 +401,9 @@ Partial Class frmInspector
                     Dim ass As Assembly = Assembly.LoadFile(_filename)
                     myNode = New NodeInfo(NodeType.CLSIDNode_Version, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU
+                        Case cHKCU32
                             myNode.Name = cHKCUVersion & ass.GetName().Version.ToString
-                        Case cHKLM
+                        Case cHKLM32
                             myNode.Name = cHKLMVersion & ass.GetName().Version.ToString
                         Case cHKLMWow
                             myNode.Name = cHKLMWowVersion & ass.GetName().Version.ToString
@@ -411,9 +420,9 @@ Partial Class frmInspector
                     ' Run time version
                     myNode = New NodeInfo(NodeType.CLSIDNode_RunTimeVersion, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU
+                        Case cHKCU32
                             myNode.Name = cHKCURuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case cHKLM
+                        Case cHKLM32
                             myNode.Name = cHKLMRuntimeVersion & _ClassInformation.RunTimeVersion
                         Case cHKLMWow
                             myNode.Name = cHKLMWowRuntimeVersion & _ClassInformation.RunTimeVersion
@@ -424,9 +433,9 @@ Partial Class frmInspector
                     ' ProgID
                     myNode = New NodeInfo(NodeType.CLSIDNode_ProgID, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU
+                        Case cHKCU32
                             myNode.Name = cHKCUProgID & _ClassInformation.ProgID
-                        Case cHKLM
+                        Case cHKLM32
                             myNode.Name = cHKLMProgID & _ClassInformation.ProgID
                         Case cHKLMWow
                             myNode.Name = cHKLMWowProgID & _ClassInformation.ProgID
