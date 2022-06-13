@@ -6,7 +6,8 @@ This is a windows application which displays registry entries associated with Sp
 For more information review the document **eaInstallationInspectorInformationV5.pdf** located under the resources directory.
 
 Current release is V7a - this has the functionality of previous versions with support for the 64-but version of EA
-As of May 2022 - this is an alpha release as more testing is required across a range of platforms - please let me know if any issues found
+As of May 2022 - this is an alpha release as more testing is required across a range of platforms.
+Known issues the "list of AddIns" does not display the correct information - the tree view does working on it. Please let me know if any issues found
 
 A pre-built .exe and help file are provided under the folders V6 or V7 just below the root level.
 

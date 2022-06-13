@@ -383,12 +383,7 @@ Module SupportFunctions
         Dim myClassInfo As New ClassRegistryInformation
         Try
 
-            '         Dim _HIVE As String = If(pHIVE = cHKCU32, HKCUClasses, HKLMClasses) ' get the appropriate HIVE
-            '          Dim KeyLocation32bitRoot As String = _HIVE & cBackSlash & cCLSID & cBackSlash & pID
-            '           Dim KeyLocation64bitRoot As String = _HIVE & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pID
             Dim _keylocation As String = cNotSet
-            'If (Environment.Is64BitOperatingSystem, KeyLocation64bitRoot, KeyLocation32bitRoot) Then
-            '            _keylocation = _HIVE & cBackSlash & cCLSID & cBackSlash & pID
             Select Case pHIVE
                 Case cHKCU32
                     _keylocation = If(Environment.Is64BitOperatingSystem,
@@ -408,11 +403,21 @@ Module SupportFunctions
                     Debug.Print("HIVE - " & pHIVE)
             End Select
             myClassInfo.HIVE = pHIVE
-            myClassInfo.CodeBase = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cCodeBase, cNotSet)
-            myClassInfo.Assembly = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cAssembly, cNotSet)
-            myClassInfo.ClassName = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cClass, cNotSet)
-            myClassInfo.RunTimeVersion = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cRuntimeVersion, cNotSet)
-            myClassInfo.ProgID = Registry.GetValue(_keylocation & cBackSlash & cProgID, "", cNotSet)
+            If _keylocation = cNotSet Then
+                myClassInfo.CodeBase = cNotSet
+                myClassInfo.Assembly = cNotSet
+                myClassInfo.ClassName = cNotSet
+                myClassInfo.RunTimeVersion = cNotSet
+                myClassInfo.ProgID = cNotSet
+
+            Else
+                myClassInfo.CodeBase = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cCodeBase, cNotSet)
+                myClassInfo.Assembly = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cAssembly, cNotSet)
+                myClassInfo.ClassName = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cClass, cNotSet)
+                myClassInfo.RunTimeVersion = Registry.GetValue(_keylocation & cBackSlash & cInprocServer32, cRuntimeVersion, cNotSet)
+                myClassInfo.ProgID = Registry.GetValue(_keylocation & cBackSlash & cProgID, "", cNotSet)
+
+            End If
 
         Catch ex As Exception
 #If DEBUG Then
