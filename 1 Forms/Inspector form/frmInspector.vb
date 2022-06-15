@@ -37,6 +37,7 @@ Partial Friend Class frmInspector
     Const cLogFileLength As Integer = 9
 
     Friend _Query As Query = Nothing
+
     ''' <summary>
     ''' Handles the Load event of the frmInspector control - which retrieves and presents the information for EA AddIns
     ''' </summary>
@@ -51,7 +52,8 @@ Partial Friend Class frmInspector
             LinkLabel1.Links.Add(0, 15, "http://Exploringea.com")
             init_lv(lvListOfAddIns) ' set up the list view
             setWidths(lvListOfAddIns) ' set list view column widths
-            GetAddInClassDetailsAndPopulateListview(lvListOfAddIns)
+
+
             ToolTip1.SetToolTip(btHelp, versionString()) ' sets the app version as tool tip to help
             ' Check OS and set text in 
             tbOS.Text = If(Environment.Is64BitOperatingSystem, "64-bit detected", "32-bit detected")
@@ -59,6 +61,11 @@ Partial Friend Class frmInspector
             ' need to check if the key exists
             _installPath32 = Registry.GetValue(EAHKCU32, "Install Path", "") ' assume installed for current user
             If _installPath32 Is Nothing Then _installPath32 = Registry.GetValue(EAHKLM32, "Install Path", "") ' check if install for all users
+            _installPath32 += cBackSlash & "EA.exe"
+
+            '            _installPath32 = Path.GetFullPath(_installPath32)
+            _installPath32 = Path.GetDirectoryName(_installPath32)
+
             If _installPath32 Is Nothing Then _installPath32 = "Not installed"
             tbLocation32.Text = _installPath32 ' Registry.GetValue(EA, "Install Path", "")
             Dim _EAVersion32 As String = Registry.GetValue(EAHKCU32, "Version", "")
@@ -73,6 +80,7 @@ Partial Friend Class frmInspector
             If _EAVersion64 = "" Then _EAVersion64 = Registry.GetValue(EAHKLM64, "Version", "")
             tbVersion64.Text = _EAVersion64
 
+
             '
             checkDebugFrameworkConfig()
             '
@@ -84,6 +92,11 @@ Partial Friend Class frmInspector
             '    btDebugFramework.BackColor = Color.Gray
             '    btDebugFramework.Enabled = False
             'End If
+
+            'GetAddInClassDetailsAndPopulateListview(lvListOfAddIns)
+            Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns)
+
+
 
 
             ' initialise the registry tree and create node for SPARX Addin
@@ -323,7 +336,8 @@ Partial Friend Class frmInspector
 
 
             lvListOfAddIns.Items.Clear()
-            GetAddInClassDetailsAndPopulateListview(lvListOfAddIns)
+            '            GetAddInClassDetailsAndPopulateListview(lvListOfAddIns)
+            Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns)
         Catch ex As Exception
 #If DEBUG Then
             Debug.Print(ex.ToString)

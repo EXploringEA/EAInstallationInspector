@@ -41,7 +41,7 @@ Public Class frmListOfClasses
 
 
     ''' <summary>
-    ''' Handles the Load event of the frmListOfMethods control - populate the datagrid with the list of publiv methods provided
+    ''' Handles the Load event of the frmListOfMethods control - populate the datagrid with the list of public methods provided
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
