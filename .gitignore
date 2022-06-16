@@ -9,3 +9,7 @@
 /bin/Debug/eaInstallationInspector.exe.config
 /obj/x86/Debug/TempPE
 /obj/x86/Debug
+/obj/x86/Release
+obj/Debug/eaInstallationInspector.exe
+3 Resources/_old/eaInstallationInspectorInformationV7.rtf
+.vs/eaInstallationInspector/v17/.suo

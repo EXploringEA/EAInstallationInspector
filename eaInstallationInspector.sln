@@ -1,16 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "eaInstallationInspector", "eaInstallationInspector.vbproj", "{5D855D6C-2931-4882-8CC1-283A5FA1C10F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Debug|x86.ActiveCfg = Debug|x86
 		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Debug|x86.Build.0 = Debug|x86
+		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Release|x86.ActiveCfg = Release|x86
 		{5D855D6C-2931-4882-8CC1-283A5FA1C10F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
@@ -19,5 +27,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {2FD26802-85BA-4D02-8E8E-0075274A66AB}
 	EndGlobalSection
 EndGlobal

@@ -26,12 +26,12 @@ Friend Class frmEntryDetail
     ''' Populate with the detail for the selected addin row
     ''' </summary>
     ''' <param name="pEntryDetail">The p entry detail.</param>
-    Protected Friend Sub New(pEntryDetail As AddInDetail)
+    Protected Friend Sub New(pEntryDetail As AddInEntry)
         Try
             InitializeComponent()
             tbAddInName.Text = pEntryDetail.AddInName
             tbSparxRef.Text = pEntryDetail.SparxEntry
-            tbAssemblyName.Text = pEntryDetail.ClassDefinition
+            tbAssemblyName.Text = pEntryDetail.ClassName
             tbClassSource.Text = pEntryDetail.ClassSource
             tbCLSID.Text = pEntryDetail.CLSID
             tbCLSIDSRC.Text = pEntryDetail.CLSIDSource
