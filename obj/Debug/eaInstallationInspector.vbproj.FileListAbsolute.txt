@@ -2,7 +2,6 @@ C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Debug\eaInstal
 C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Debug\eaInstallationInspector.exe
 C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Debug\eaInstallationInspector.pdb
 C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Debug\eaInstallationInspector.xml
-C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Debug\eaInstallationInspector.vbproj.AssemblyReference.cache
 C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Debug\eaInstallationInspector.frmEntryDetail.resources
 C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Debug\eaInstallationInspector.frmHelp.resources
 C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Debug\eaInstallationInspector.frmQuery.resources

@@ -1,6 +1,62 @@
-﻿Imports Microsoft.Win32
+﻿' Copyright (C) 2022 Adrian LINCOLN, EXploringEA - All Rights Reserved
+'
+'   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
+'   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+'   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+'   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+'
+'    You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+' =============================================================================================================================================
+'
+Imports Microsoft.Win32
 
 Public Class AddInInformation
+
+
+    ' Sparx subkey folders - which exist in both HKCU and HKLM
+    ''' <summary>
+    ''' The sparx keys - 32-bit  
+    ''' </summary>
+    Friend Const SparxKeys32 As String = "Software\Sparx Systems\EAAddins"
+    ' Private SparxKeys32 As String = "SOFTWARE\Sparx Systems\EAAddins"
+
+    ''' <summary>
+    ''' The sparx keys - 32-bit addin for 64-bit OS
+    ''' </summary>
+    Friend Const SparxKeysWOW32 As String = "Software\Wow6432Node\Sparx Systems\EAAddins"
+
+
+    ' 64-bit AddIns
+
+    ''' <summary>
+    ''' The sparx keys - x64
+    ''' </summary>
+    Friend Const SparxKeys64 As String = "Software\Sparx Systems\EAAddins64"
+
+    ' Exact registry locations for Sparx keys
+    ' 32-bit AddIns
+
+    ''' <summary>
+    ''' HKCU Keys
+    ''' </summary>
+    Friend Const eaHKCU32AddInKeys As String = "HKEY_CURRENT_USER\" & SparxKeys32
+
+    ''' <summary>
+    ''' HKLM Keys
+    ''' </summary>
+    Friend Const eaHKLM32AddInKey64 As String = "HKEY_LOCAL_MACHINE\" & SparxKeysWOW32
+
+    Friend Const eaHKLM32AddInKeys As String = "HKEY_LOCAL_MACHINE\" & SparxKeys32
+    ' 64-bit AddIns
+    ''' <summary>
+    ''' HKCU Keys
+    ''' </summary>6
+    Friend Const eaHKCU64AddInKeys As String = "HKEY_CURRENT_USER\" & SparxKeys64
+    ''' <summary>
+    ''' HKLM Keys
+    ''' </summary>
+    Friend Const eaHKLM64AddInKeys As String = "HKEY_LOCAL_MACHINE\" & SparxKeys64
 
     ''' <summary>
     ''' Gets a list of addin entries from Windows Registry
@@ -39,7 +95,7 @@ Public Class AddInInformation
 
     ''' <summary>
     ''' 32 bit AddIns when install for current users only
-    ''' Sparx keys (32-bit apps) can be in HKCU\Software\SparxSystems\EAAddIns
+    ''' Sparx keys (32-bit apps) will be in HKCU\Software\SparxSystems\EAAddIns
     ''' </summary>
     ''' <returns>List of 32-bit AddIns for current user</returns>
     Function getListof32BitHKCUAddinEntries() As ArrayList
@@ -50,7 +106,7 @@ Public Class AddInInformation
                 Dim AddInInfo As New AddInEntry
                 AddInInfo.AddInName = pEntryKey
                 AddInInfo.ClassName = Registry.GetValue(eaHKCU32AddInKeys & cBackSlash & pEntryKey, "", cNotSet)
-                AddInInfo.SparxAddinLocation = cHKCU32
+                AddInInfo.SparxAddinLocation = AddInEntry.cHKCU32
                 my32HKCUAddInEntries.Add(AddInInfo)
             Next
         End If
@@ -70,8 +126,8 @@ Public Class AddInInformation
             For Each pEntryKey In myLMKey.GetSubKeyNames
                 Dim AddInInfo As New AddInEntry
                 AddInInfo.AddInName = pEntryKey ' registry location for addin name 
-                AddInInfo.ClassName = Registry.GetValue(eaHKLM32AddInKey32 & cBackSlash & pEntryKey, "", cNotSet)
-                AddInInfo.SparxAddinLocation = If(Environment.Is64BitOperatingSystem, cHKLM32Wow, cHKLM32)
+                AddInInfo.ClassName = Registry.GetValue(eaHKLM32AddInKey64 & cBackSlash & pEntryKey, "", cNotSet)
+                AddInInfo.SparxAddinLocation = If(Environment.Is64BitOperatingSystem, AddInEntry.cHKLM32Wow, AddInEntry.cHKLM32)
                 my32HKLMAddInEntries.Add(AddInInfo)
             Next
         End If
@@ -89,8 +145,8 @@ Public Class AddInInformation
             For Each pEntryKey In myCUKey64.GetSubKeyNames
                 Dim AddInInfo As New AddInEntry
                 AddInInfo.AddInName = pEntryKey
-                AddInInfo.ClassName = Registry.GetValue(eaHKCU64AddInKey & cBackSlash & pEntryKey, "", cNotSet)
-                AddInInfo.SparxAddinLocation = cHKCU64
+                AddInInfo.ClassName = Registry.GetValue(eaHKCU64AddInKeys & cBackSlash & pEntryKey, "", cNotSet)
+                AddInInfo.SparxAddinLocation = AddInEntry.cHKCU64
                 my64HKUCAddInEntries.Add(AddInInfo)
             Next
         End If
@@ -108,34 +164,32 @@ Public Class AddInInformation
             For Each pEntryKey In myLMKey64.GetSubKeyNames
                 Dim AddInInfo As New AddInEntry
                 AddInInfo.AddInName = pEntryKey ' registry location for addin name 
-                AddInInfo.ClassName = Registry.GetValue(eaHKLM64AddInKey & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
-                AddInInfo.SparxAddinLocation = cHKLM64
+                AddInInfo.ClassName = Registry.GetValue(eaHKLM64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
+                AddInInfo.SparxAddinLocation = AddInEntry.cHKLM64
                 my64KLMAddInEntries.Add(AddInInfo)
             Next
         End If
         Return my64KLMAddInEntries
     End Function
 
-    ''' <summary>
-    ''' AddIn entry summary
-    ''' </summary>
-    Private Class AddInEntry
-
-        '' AddIn Name | Class | Source | CLSID | Source | DLL
-        Property AddInName As String = ""
-        Property ClassName As String = "" ' Assembly.Class
-        Property SparxAddinLocation As String = "" ' Values are HKCU, HKLM, HKCU64, HKLM64
-
-
-    End Class
-
 End Class
 
+Friend Class AddInEntry
 
-''' <summary>
-''' AddIn entry details
-''' </summary>
-Friend Class AddInDetail
+    'Registry related strings defines the source of the Sparx AddIn key and OS which indicates where the class information should be located
+
+    ' 32-bit AddIns on 32-bit EA
+    Friend Const cHKCU32 As String = "HKCU32" ' 32-bit Addins on 32-bit OS 
+    Friend Const cHKLM32 As String = "HKLM32" ' 32-bit Addins on 32-bit OS
+
+    ' 32-bit AddIns on 64-bit OS
+    Friend Const cHKLM32Wow As String = "HKLM32Wow" ' 32-bit AddIn on 64-bit OS
+
+    ' 64-bit AddIns
+    Friend Const cHKCU64 As String = "HKCU64" ' 64-bit AddIn on 64-bit OS
+    Friend Const cHKLM64 As String = "HKLM64" ' 64-bit AddIn on 64-bit OS
+
+
 
     '' AddIn Name | Class | Source | CLSID | Source | DLL
     ''' <summary>
@@ -144,14 +198,17 @@ Friend Class AddInDetail
     ''' <value>
     ''' The AddIn Name
     ''' </value>
-    Property AddInName As String
+    Property AddInName As String = ""
     ''' <summary>
     ''' Gets or sets the class definition.
     ''' </summary>
     ''' <value>
     ''' The class name i.e. Assembly.Class
     ''' </value>
-    Property ClassDefinition As String
+    Property ClassName As String = "" ' Assembly.Class
+    Property SparxAddinLocation As String = "" ' Values are below
+
+
     ''' <summary>
     ''' Gets or sets the sparx entry.
     ''' </summary>
@@ -187,5 +244,6 @@ Friend Class AddInDetail
     ''' The DLL full file pathname
     ''' </value>
     Property DLL
+
 
 End Class

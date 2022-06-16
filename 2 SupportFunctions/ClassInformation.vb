@@ -1,8 +1,51 @@
-﻿Imports System.Reflection
+﻿' Copyright (C) 2022 Adrian LINCOLN, EXploringEA - All Rights Reserved
+'
+'   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
+'   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+'   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+'   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+'
+'    You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+' =============================================================================================================================================
+'
+
+Imports System.Reflection
 Imports Microsoft.Win32
 
 
 Public Class ClassInformation
+
+
+    ' Registry class locations
+    ''' <summary>
+    ''' HKCU Classes for 
+    ''' * 32-bit on 32-bit OS
+    ''' * 64-bit on 64-bit OS
+    ''' </summary>
+    Friend Const HKCU_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes"
+
+    '''' <summary>
+    '''' HKCU Classes for 
+    '''' * 32-bit on 64-bit OS
+    '''' </summary>
+    'Friend Const HKCUWOW_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\Wow6432Node"
+
+    ''' <summary>
+    ''' HKLM Classes
+    ''' * 32-bit on 32-bit OS
+    ''' * 64-bit on 64-bit OS
+    ''' </summary>
+    Friend Const HKLM_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes"
+
+
+    ''' <summary>
+    ''' HKLM Classes for 
+    ''' * 32-bit on 64-bit OS
+    ''' </summary>
+    Friend Const HKLMWow1_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node"
+    Friend Const HKLMWow2_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Classes"
+
 
     Property ClassSource As String = ""
     Property ClassID As String = ""
@@ -34,28 +77,36 @@ Public Class ClassInformation
 
         For Each loc As String In s
             Select Case loc
-                Case cHKCU32
+                ' 32-bit OS
+                Case AddInEntry.cHKCU32 ' 32-bit on 32-bit OS
                     ClassID = Registry.GetValue(HKCU_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
-                    ClassSource = cHKCU32
+                    ClassSource = AddInEntry.cHKCU32
                     If ClassID <> "" Then Return
-                Case cHKLM32Wow1
-                    ClassID = Registry.GetValue(HKLMWow1_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
-                    ClassSource = cHKLM32Wow1
-                    If ClassID <> "" Then Return
-                Case cHKLM32Wow2
-                    ClassID = Registry.GetValue(HKLMWow2_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
-                    ClassSource = cHKLM32Wow2
-                    If ClassID <> "" Then Return
-                Case cHKLM32
-                    ClassSource = cHKLM32
+
+                Case AddInEntry.cHKLM32 ' 32-bit on 32-bit OS
+                    ClassSource = AddInEntry.cHKLM32
                     ClassID = Registry.GetValue(HKLM_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
                     If ClassID <> "" Then Return
-                Case cHKCU64
-                    ClassSource = cHKCU64
+
+                    ' 64-bit OS
+                Case AddInEntry.cHKLM32Wow ' 32-bit on 64-bit OS
+                    ' There are 2 locations which can be inspected
+                    ClassID = Registry.GetValue(HKLMWow1_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
+                    If ClassID <> "" Then
+                        ClassSource = AddInEntry.cHKLM32Wow
+                        Return
+                    End If
+                    ClassID = Registry.GetValue(HKLMWow2_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
+                    If ClassID <> "" Then
+                        ClassSource = AddInEntry.cHKLM32Wow
+                        Return
+                    End If
+                Case AddInEntry.cHKCU64
+                    ClassSource = AddInEntry.cHKCU64
                     ClassID = Registry.GetValue(HKCU_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
                     If ClassID <> "" Then Return
-                Case cHKLM64
-                    ClassSource = cHKLM64
+                Case AddInEntry.cHKLM64
+                    ClassSource = AddInEntry.cHKLM64
                     ClassID = Registry.GetValue(HKLM_Classes & cBackSlash & pAddInName & cBackSlash & cCLSID, "", cNotFound)
                     If ClassID <> "" Then Return
                 Case Else
@@ -78,70 +129,41 @@ Public Class ClassInformation
             Dim _location As String = ""
             DLLSource = cNotFound
             Select Case ClassSource
-                Case cHKCU32
+                ' 32-bit OS
+                Case AddInEntry.cHKCU32
                     _location = HKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
                     Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
-                    If Filename IsNot Nothing Then
-                        DLLSource = cHKCU32
-                    ElseIf (Environment.Is64BitOperatingSystem) Then ' check in Wow6432 
-                        _location = HKCU_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
-                        Filename = Registry.GetValue(_location, cCodeBase, cNotSet)
-                        If Filename IsNot Nothing Then
-                            DLLSource = cHKCU32Wow
-                        Else
-                            _location = HKCU_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
-                            Filename = Registry.GetValue(_location, "", cNotSet)
-                            If Filename <> cNotSet Then DLLSource = "HKCU In ROOT"
-                        End If
-                    End If
 
-                Case cHKLM32
-                    '' location will depend on whether the AddIn is 32-bit or 64-bit
-                    'If pAddInInfo.SparxAddinLocation = cHKLM64 Or pAddInInfo.SparxAddinLocation = cHKCU64 Then
-                    '    _location = HKLMClasses & cBackSlash & cCLSID & cBackSlash & pClassID & cBackSlash & cInprocServer32
-                    'Else
-                    ' check HLKM depending on OS
-                    _location = If(Environment.Is64BitOperatingSystem, HKLM_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32,
-                                       HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
-                    ' End If
-                    Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
-                    If Filename IsNot Nothing Then ' found
-                        DLLSource = cHKLM32
-                    Else ' possibility that it's placed in root of key - have seen this with some classes
-                        _location = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
-                        Filename = Registry.GetValue(_location, "", cNotSet)
-                        If Filename IsNot Nothing Then DLLSource = "HKLM ROOT KEY"
-                    End If
+                    If Filename IsNot Nothing Then DLLSource = AddInEntry.cHKCU32
 
-                Case cHKLM32Wow
+                Case AddInEntry.cHKLM32 ' 32-bit on 32-bit OS
                     _location = HKLM_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
                     Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
-                    If Filename IsNot Nothing Then
-                        DLLSource = cHKLM32Wow
-                    Else
-                        _location = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
-                        Filename = Registry.GetValue(_location, "", cNotSet)
-                        If Filename IsNot Nothing Then DLLSource = "HKLM ROOT KEY"
-                    End If
+                    If Filename IsNot Nothing Then DLLSource = AddInEntry.cHKLM32
 
 
-                Case cHKCU64
+                Case AddInEntry.cHKLM32Wow ' 32-bit AddIn on 64-bit OS
+                    _location = HKLM_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
+                    Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
+                    If Filename IsNot Nothing Then DLLSource = AddInEntry.cHKLM32Wow
+
+
+                Case AddInEntry.cHKCU64
                     _location = HKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
                     Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
                     If Filename IsNot Nothing Then
-                        DLLSource = cHKCU64
+                        DLLSource = AddInEntry.cHKCU64
                     Else
                         _location = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
                         Filename = Registry.GetValue(_location, "", cNotSet)
                         If Filename IsNot Nothing Then DLLSource = "HKLM ROOT KEY"
                     End If
 
-
-                Case cHKLM64
+                Case AddInEntry.cHKLM64
                     _location = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
                     Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
                     If Filename IsNot Nothing Then
-                        DLLSource = cHKLM64
+                        DLLSource = AddInEntry.cHKLM64
                     Else
                         _location = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
                         Filename = Registry.GetValue(_location, "", cNotSet)
@@ -216,36 +238,30 @@ Public Class ClassInformation
     ' used by treeviewer
     ' function to get class information from the registry location and classID
     ' HIVE NEEDS TO be HKCU32, HKCU64
-    Friend Shared Function OLDgetClassInformation(pHIVE As String, pID As String) As ClassRegistryInformation
+    Friend Shared Function OLDgetClassInformation(pClassLocation As String, pID As String) As ClassRegistryInformation
         Dim myClassInfo As New ClassRegistryInformation
         Try
 
             Dim _keylocation As String = cNotSet
-            Select Case pHIVE
-                Case cHKCU32
+            Select Case pClassLocation
+                Case AddInEntry.cHKCU32
                     _keylocation = HKCU_Classes & cBackSlash & cCLSID & cBackSlash & pID
 
-                Case cHKLM32
+                Case AddInEntry.cHKLM32
                     _keylocation = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & pID
 
-                Case cHKLM32Wow
+                Case AddInEntry.cHKLM32Wow
                     _keylocation = HKLMWow2_Classes & cBackSlash & cCLSID & cBackSlash & pID
+                    If _keylocation = "" Then _keylocation = HKLMWow1_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pID
 
-                Case cHKLM32Wow1
-                    _keylocation = HKLMWow1_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pID
-
-                Case cHKLM32Wow2
-                    _keylocation = HKLMWow2_Classes & cBackSlash & cWow6432Node & cBackSlash & cCLSID & cBackSlash & pID
-
-
-                Case cHKCU64
+                Case AddInEntry.cHKCU64
                     _keylocation = HKCU_Classes & cBackSlash & cCLSID & cBackSlash & pID
-                Case cHKLM64
+                Case AddInEntry.cHKLM64
                     _keylocation = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & pID
                 Case Else
-                    Debug.Print("HIVE - " & pHIVE)
+                    Debug.Print("HIVE - " & pClassLocation)
             End Select
-            myClassInfo.HIVE = pHIVE
+            myClassInfo.HIVE = pClassLocation
             If _keylocation = cNotSet Then
                 myClassInfo.CodeBase = cNotSet
                 myClassInfo.Assembly = cNotSet

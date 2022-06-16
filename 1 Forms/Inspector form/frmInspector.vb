@@ -384,10 +384,10 @@ Partial Friend Class frmInspector
                 Dim mySS1 As ListViewItem = mySS.SelectedItems(0)
                 Dim myListViewSubItems As ListViewItem.ListViewSubItemCollection = mySS1.SubItems
                 ' launch entry detail form
-                Dim myEntryDetail As New AddInDetail
+                Dim myEntryDetail As New AddInEntry
                 myEntryDetail.AddInName = myListViewSubItems(0).Text
                 myEntryDetail.SparxEntry = myListViewSubItems(1).Text
-                myEntryDetail.ClassDefinition = myListViewSubItems(2).Text
+                myEntryDetail.ClassName = myListViewSubItems(2).Text
                 myEntryDetail.ClassSource = myListViewSubItems(3).Text
                 myEntryDetail.CLSID = myListViewSubItems(4).Text
                 myEntryDetail.CLSIDSource = myListViewSubItems(5).Text

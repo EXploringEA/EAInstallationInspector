@@ -1,4 +1,4 @@
-﻿' Copyright (C) 2015 - 2018 Adrian LINCOLN, EXploringEA - All Rights Reserved
+﻿' Copyright (C) 2015 - 2022 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -154,101 +154,104 @@ Partial Class frmInspector
             Select Case pParent.NodeType
 
 '1. Top level Sparx AddIn information
-                Case NodeType.SparxRoot ' this is the top level which captures information about the number of addins
-                    ' 32-bit
-                    myCUKey32 = Registry.CurrentUser.OpenSubKey(SparxKeys32) ' get SparxKeys for current user
+                Case NodeType.SparxRoot ' this is the top level which captures information for each group of addins
+                    ' 32-bit CU
+                    myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32) ' get 32-bit SparxKeys for current user
                     myNode = New NodeInfo(NodeType.HIVE, myCUKey32.GetSubKeyNames.Count)
-                    myNode.ClassNameLocation = cHKCUAddins32 ' "HKCU\Software\Sparx Systems\EAAddins"
-                    myNode.Name = cHKCUAddins32
+                    myNode.ClassNameLocation = AddInEntry.cHKCU32 ' "HKCU\Software\Sparx Systems\EAAddins"
+                    myNode.Name = AddInEntry.cHKCU32
                     myNodes.Add(myNode)
 
-                    myLMKey32 = Registry.LocalMachine.OpenSubKey(SparxKeysWOW32) '"SOFTWARE\WOW6432Node\Sparx Systems\EAAddins") 'SparxKeys)
+                    ' 32-bit LM
+                    myLMKey32 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeysWOW32) '"SOFTWARE\WOW6432Node\Sparx Systems\EAAddins") 'SparxKeys)
                     myNode = New NodeInfo(NodeType.HIVE, myLMKey32.GetSubKeyNames.Count)
 
                     If Environment.Is64BitOperatingSystem Then
-                        myNode.ClassNameLocation = cHKLMWowAddins32 ' "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins"
-                        myNode.Name = cHKLMWowAddins32
-                    Else
-                        myNode.ClassNameLocation = cHKLMAddins32 '"HLKM\SOFTWARE\Sparx Systems\EAAddins"
-                        myNode.Name = cHKLMAddins32
+                        myNode.ClassNameLocation = AddInEntry.cHKLM32Wow ' "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins"
+                        myNode.Name = AddInEntry.cHKLM32Wow
+                    Else ' for 32-bit system
+                        myNode.ClassNameLocation = AddInEntry.cHKLM32 '"HLKM\SOFTWARE\Sparx Systems\EAAddins"
+                        myNode.Name = AddInEntry.cHKLM32
                     End If
                     myNodes.Add(myNode)
 
                     ' 64bit Addins
+                    If Environment.Is64BitOperatingSystem Then
+                        myCUKey64 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys64) '"Software\Sparx Systems\EAAddins64") 'SparxKeys) ' get the sparx keys listing the addins for the current user
+                        myNode = New NodeInfo(NodeType.HIVE, myCUKey64.GetSubKeyNames.Count)
+                        myNode.ClassNameLocation = AddInEntry.cHKCU64 ' "HKCU\Software\Sparx Systems\EAAddins64"
+                        myNode.Name = AddInEntry.cHKCU64
+                        myNodes.Add(myNode)
 
-                    myCUKey64 = Registry.CurrentUser.OpenSubKey(SparxKeys64) '"Software\Sparx Systems\EAAddins64") 'SparxKeys) ' get the sparx keys listing the addins for the current user
-                    myNode = New NodeInfo(NodeType.HIVE, myCUKey64.GetSubKeyNames.Count)
-                    myNode.ClassNameLocation = cHKCUAddins64 ' "HKCU\Software\Sparx Systems\EAAddins64"
-                    myNode.Name = cHKCUAddins64
-                    myNodes.Add(myNode)
+                        myLMKey64 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys64) '"SOFTWARE\Sparx Systems\EAAddins64") 'SparxKeys)
+                        myNode = New NodeInfo(NodeType.HIVE, myLMKey32.GetSubKeyNames.Count)
+                        myNode.ClassNameLocation = AddInEntry.cHKLM64 '"HLKM\SOFTWARE\Sparx Systems\EAAddins64"
+                        myNode.Name = AddInEntry.cHKLM64
 
-                    myLMKey64 = Registry.LocalMachine.OpenSubKey(SparxKeys64) '"SOFTWARE\Sparx Systems\EAAddins64") 'SparxKeys)
-                    myNode = New NodeInfo(NodeType.HIVE, myLMKey32.GetSubKeyNames.Count)
-                    myNode.ClassNameLocation = cHKLMAddins64 '"HLKM\SOFTWARE\Sparx Systems\EAAddins64"
-                    myNode.Name = cHKLMAddins64
-
-                    myNodes.Add(myNode)
+                        myNodes.Add(myNode)
+                    End If
 
 '2. Individual References
                 Case NodeType.HIVE ' this gets the names and classes for the AddIns
                     ' we now need to get the content for each of the children
                     Select Case pParent.ClassNameLocation
-                        Case cHKCUAddins32 ' "HKCU\Software\Sparx Systems\EAAddins"
-                            myCUKey32 = Registry.CurrentUser.OpenSubKey(SparxKeys32)
+                        Case AddInEntry.cHKCU32 ' "HKCU\Software\Sparx Systems\EAAddins"
+                            myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32)
                             For Each pEntryKey In myCUKey32.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey.SparxEntryLocation = cHKCU32
-                                newKey.ClassNameLocation = eaHKCU32AddInKeys
-                                newKey.ClassName = Registry.GetValue(eaHKCU32AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
+                                newKey.SparxEntryLocation = AddInEntry.cHKCU32
+                                newKey.ClassNameLocation = AddInInformation.eaHKCU32AddInKeys
+                                newKey.ClassName = Registry.GetValue(AddInInformation.eaHKCU32AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey)
                             Next
 
-                        Case cHKLMWowAddins32 ' "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins" ' 64-bit systems
-                            myLMKey32 = Registry.LocalMachine.OpenSubKey(SparxKeysWOW32)
-                            myCUKey32 = Registry.CurrentUser.OpenSubKey(SparxKeys32)
+                        Case AddInEntry.cHKLM32
+                            myLMKey32 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys32)
 
                             For Each pEntryKey In myLMKey32.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey.SparxEntryLocation = cHKLM32
-                                newKey.ClassNameLocation = eaHKLM32AddInKey32
-                                newKey.ClassName = Registry.GetValue(eaHKLM32AddInKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
+                                newKey.SparxEntryLocation = AddInEntry.cHKLM32
+                                newKey.ClassNameLocation = AddInInformation.eaHKLM32AddInKeys
+                                newKey.ClassName = Registry.GetValue(AddInInformation.eaHKLM32AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey)
                             Next
 
-                        Case cHKLMAddins32  ' "HLKM\SOFTWARE\Sparx Systems\EAAddins" ' 32-bit systems
-                            myLMKey32 = Registry.LocalMachine.OpenSubKey(SparxKeys32)
-                            myCUKey32 = Registry.CurrentUser.OpenSubKey(SparxKeys32)
+
+                        Case AddInEntry.cHKLM32Wow ' "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins" ' 64-bit systems
+                            myLMKey32 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeysWOW32)
+                            ' myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32)
 
                             For Each pEntryKey In myLMKey32.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey.SparxEntryLocation = cHKLM32
-                                newKey.ClassNameLocation = eaHKLM32AddInKey32
-                                newKey.ClassName = Registry.GetValue(eaHKLM32AddInKey32 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
+                                newKey.SparxEntryLocation = AddInEntry.cHKLM32
+                                newKey.ClassNameLocation = AddInInformation.eaHKLM32AddInKey64
+                                newKey.ClassName = Registry.GetValue(AddInInformation.eaHKLM32AddInKey64 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey)
                             Next
 
                             '' HKCU and HKLM 64bit addins
-                        Case cHKCUAddins64 ' "HKCU\Software\Sparx Systems\EAAddins"
-                            myCUKey64 = Registry.CurrentUser.OpenSubKey(SparxKeys64)
+                        Case AddInEntry.cHKCU64 ' "HKCU\Software\Sparx Systems\EAAddins"
+                            myCUKey64 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys64)
                             For Each pEntryKey In myCUKey64.GetSubKeyNames
                                 Dim newKey64 As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey64.SparxEntryLocation = cHKCU64
-                                newKey64.ClassNameLocation = eaHKCU64AddInKey
-                                newKey64.ClassName = Registry.GetValue(eaHKCU64AddInKey & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
+                                newKey64.SparxEntryLocation = AddInInformation.eaHKCU64AddInKeys
+                                newKey64.ClassNameLocation = AddInInformation.eaHKCU64AddInKeys
+
+                                newKey64.ClassName = Registry.GetValue(AddInInformation.eaHKCU64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
                                 newKey64.Name = pEntryKey & " : " & newKey64.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey64)
                             Next
 
-                        Case cHKLMAddins64  ' "HLKM\SOFTWARE\Sparx Systems\EAAddins64" ' 64-bit systems
-                            myLMKey64 = Registry.LocalMachine.OpenSubKey(SparxKeys64)
+                        Case AddInEntry.cHKLM64  ' "HLKM\SOFTWARE\Sparx Systems\EAAddins64" ' 64-bit systems
+                            myLMKey64 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys64)
                             For Each pEntryKey In myLMKey64.GetSubKeyNames
                                 Dim newKey64 As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey64.SparxEntryLocation = cHKLM64
-                                newKey64.ClassNameLocation = eaHKLM64AddInKey
-                                newKey64.ClassName = Registry.GetValue(eaHKLM64AddInKey & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
+                                newKey64.SparxEntryLocation = AddInEntry.cHKLM64
+                                newKey64.ClassNameLocation = AddInInformation.eaHKLM64AddInKeys
+                                newKey64.ClassName = Registry.GetValue(AddInInformation.eaHKLM64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
                                 newKey64.Name = pEntryKey & " : " & newKey64.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey64)
                             Next
@@ -261,10 +264,10 @@ Partial Class frmInspector
                     ' if the source is HKCU
                     ' then look for CLSID in HKCU and only if not found then HKLM
 
-                    myCUKey32 = Registry.CurrentUser.OpenSubKey(SparxKeys32) '"Software\Sparx Systems\EAAddins"
-                    myLMKey32 = If(Environment.Is64BitOperatingSystem, Registry.LocalMachine.OpenSubKey(SparxKeysWOW32), Registry.LocalMachine.OpenSubKey(SparxKeys32))
-                    myCUKey64 = Registry.CurrentUser.OpenSubKey(SparxKeys64) '"Software\Sparx Systems\EAAddins64"
-                    myLMKey64 = Registry.LocalMachine.OpenSubKey(SparxKeys64)
+                    myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32) '"Software\Sparx Systems\EAAddins"
+                    myLMKey32 = If(Environment.Is64BitOperatingSystem, Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeysWOW32), Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys32))
+                    myCUKey64 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys64) '"Software\Sparx Systems\EAAddins64"
+                    myLMKey64 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys64)
 
                     myNode = Nothing
                     Dim CLSIDsrc As String = "" ' Source for classID Current User or Local Machine
@@ -272,59 +275,59 @@ Partial Class frmInspector
                     Dim myCLSID As String = "" ' The class ID
 
                     Select Case pParent.ClassNameLocation
-                        Case eaHKCU32AddInKeys
-                            myCLSIDLocation = HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                        Case AddInInformation.eaHKCU32AddInKeys
+                            myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKCU32
+                                CLSIDsrc = AddInEntry.cHKCU32
                             Else
-                                myCLSIDLocation = HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                                myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKLM32Wow ' Other locations??
+                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKLM32Wow ' Other locations??
                             End If
 
-                        Case cHKCUSparxAddinKeys64
-                            myCLSIDLocation = HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                        Case AddInInformation.eaHKCU64AddInKeys
+                            myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKCU64
+                                CLSIDsrc = AddInEntry.cHKCU64
                             Else
-                                myCLSIDLocation = HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                                myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKLM64
+                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKLM64
                             End If
 
 
-                        Case cHKLMSparxAddinKeys32
-                            myCLSIDLocation = HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                        Case AddInInformation.eaHKLM32AddInKeys
+                            myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKLM32
+                                CLSIDsrc = AddInEntry.cHKLM32
                             Else
-                                myCLSIDLocation = HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                                myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKCU32
+                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKCU32
                             End If
 
-                        Case cHKLMWowSparxAddinKeys32
-                            myCLSIDLocation = HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                        Case AddInInformation.eaHKLM32AddInKey64
+                            myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKLM32Wow
+                                CLSIDsrc = AddInEntry.cHKLM32Wow
                             Else
-                                myCLSIDLocation = HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                                myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKCU32
+                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKCU32
                             End If
-                        Case cHKLMSparxAddinKeys64
-                            myCLSIDLocation = HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                        Case AddInInformation.eaHKLM64AddInKeys
+                            myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                             myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
                             If myCLSID <> "" Then
-                                CLSIDsrc = cHKLM32
+                                CLSIDsrc = AddInEntry.cHKLM32
                             Else
-                                myCLSIDLocation = HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
+                                myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
                                 myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = cHKCU32
+                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKCU32
                             End If
                         Case Else
 #If DEBUG Then
@@ -335,15 +338,15 @@ Partial Class frmInspector
 
                     myNode = New NodeInfo(NodeType.CLSIDNode, 0) ' no children
                     Select Case CLSIDsrc
-                        Case cHKCU32
+                        Case AddInEntry.cHKCU32
                             myNode.Name = cHKCUCLSID & myCLSID
-                        Case cHKLM32
+                        Case AddInEntry.cHKLM32
                             myNode.Name = cHKLMCLSID & myCLSID
-                        Case cHKLM32Wow
+                        Case AddInEntry.cHKLM32Wow
                             myNode.Name = cHKLMWowCLSID & myCLSID
-                        Case cHKCU64
+                        Case AddInEntry.cHKCU64
                             myNode.Name = cHKCUCLSID & myCLSID
-                        Case cHKLM64
+                        Case AddInEntry.cHKLM64
                             myNode.Name = cHKLMCLSID & myCLSID
 
                     End Select
@@ -360,15 +363,15 @@ Partial Class frmInspector
                     ' Classname
                     myNode = New NodeInfo(NodeType.CLSIDNode_ClassName, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU32
+                        Case AddInEntry.cHKCU32
                             myNode.Name = cHKCUClassname & _ClassInformation.ClassName
-                        Case cHKLM32
+                        Case AddInEntry.cHKLM32
                             myNode.Name = cHKLMClassname & _ClassInformation.ClassName
-                        Case cHKLM32Wow
+                        Case AddInEntry.cHKLM32Wow
                             myNode.Name = cHKLMWowClassname & _ClassInformation.ClassName
-                        Case cHKCU64
+                        Case AddInEntry.cHKCU64
                             myNode.Name = cHKCUClassname & _ClassInformation.ClassName
-                        Case cHKLM64
+                        Case AddInEntry.cHKLM64
                             myNode.Name = cHKLMClassname & _ClassInformation.ClassName
                     End Select
                     myNode.CLSIDSrc = CLSIDsrc
@@ -387,15 +390,15 @@ Partial Class frmInspector
 
                     myNode = New NodeInfo(NodeType.CLSIDNode_CodeBase, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU32
+                        Case AddInEntry.cHKCU32
                             myNode.Name = cHKCUFilename & _filename
-                        Case cHKLM32
+                        Case AddInEntry.cHKLM32
                             myNode.Name = cHKLMFilename & _filename
-                        Case cHKLM32Wow
+                        Case AddInEntry.cHKLM32Wow
                             myNode.Name = cHKLMWowFilename & _filename
-                        Case cHKCU64
+                        Case AddInEntry.cHKCU64
                             myNode.Name = cHKCUFilename & _filename
-                        Case cHKLM64
+                        Case AddInEntry.cHKLM64
                             myNode.Name = cHKLMFilename & _filename
 
                     End Select
@@ -431,15 +434,15 @@ Partial Class frmInspector
                     End If
 
                     Select Case CLSIDsrc
-                        Case cHKCU32
+                        Case AddInEntry.cHKCU32
                             myNode.Name = cHKCUVersion & AssVersion
-                        Case cHKLM32
+                        Case AddInEntry.cHKLM32
                             myNode.Name = cHKLMVersion & AssVersion
-                        Case cHKLM32Wow
+                        Case AddInEntry.cHKLM32Wow
                             myNode.Name = cHKLMWowVersion & AssVersion
-                        Case cHKCU64
+                        Case AddInEntry.cHKCU64
                             myNode.Name = cHKCUVersion & AssVersion
-                        Case cHKLM64
+                        Case AddInEntry.cHKLM64
                             myNode.Name = cHKLMVersion & AssVersion
                     End Select
 
@@ -456,15 +459,15 @@ Partial Class frmInspector
                     ' Run time version
                     myNode = New NodeInfo(NodeType.CLSIDNode_RunTimeVersion, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU32
+                        Case AddInEntry.cHKCU32
                             myNode.Name = cHKCURuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case cHKLM32
+                        Case AddInEntry.cHKLM32
                             myNode.Name = cHKLMRuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case cHKLM32Wow
+                        Case AddInEntry.cHKLM32Wow
                             myNode.Name = cHKLMWowRuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case cHKCU64
+                        Case AddInEntry.cHKCU64
                             myNode.Name = cHKCURuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case cHKLM64
+                        Case AddInEntry.cHKLM64
                             myNode.Name = cHKLMRuntimeVersion & _ClassInformation.RunTimeVersion
                     End Select
                     myNode.CLSIDSrc = CLSIDsrc
@@ -473,15 +476,15 @@ Partial Class frmInspector
                     ' ProgID
                     myNode = New NodeInfo(NodeType.CLSIDNode_ProgID, 0)
                     Select Case CLSIDsrc
-                        Case cHKCU32
+                        Case AddInEntry.cHKCU32
                             myNode.Name = cHKCUProgID & _ClassInformation.ProgID
-                        Case cHKLM32
+                        Case AddInEntry.cHKLM32
                             myNode.Name = cHKLMProgID & _ClassInformation.ProgID
-                        Case cHKLM32Wow
+                        Case AddInEntry.cHKLM32Wow
                             myNode.Name = cHKLMWowProgID & _ClassInformation.ProgID
-                        Case cHKCU64
+                        Case AddInEntry.cHKCU64
                             myNode.Name = cHKCUProgID & _ClassInformation.ProgID
-                        Case cHKLM64
+                        Case AddInEntry.cHKLM64
                             myNode.Name = cHKLMProgID & _ClassInformation.ProgID
                     End Select
                     myNode.ClassName = _ClassInformation.ClassName

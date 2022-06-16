@@ -1,4 +1,4 @@
-﻿' Copyright (C) 2015 - 2018 Adrian LINCOLN, EXploringEA - All Rights Reserved
+﻿' Copyright (C) 2015 - 2022 Adrian LINCOLN, EXploringEA - All Rights Reserved
 '
 '   This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by
 '   the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -118,9 +118,6 @@ Module SupportFunctions
     ' * Red – indicates that CLSID and DLL are specified in different registry Key Sections
     ' * Yellow – means that the DLL path is not set so cannot be found
 
-
-
-
     ''' <summary>
     ''' Routine to:
     ''' * Look for the class related to addin entries for both 32 and 64 bit classes
@@ -137,30 +134,16 @@ Module SupportFunctions
     ''' </remarks>
     Sub Get3264AddInClassDetailsAndPopulateListview(plv As ListView)
 
-        ' we get the entries for each area in the registry containing Sparx AddIn entries 32/64-bit
+        ' Get the entries for each area in the registry containing Sparx AddIn entries 32/64-bit
 
-        ' Check 32-bit HKCU where we would expect the classes to be:
-        ' * 32-bit system HKCU then we check HKLM and HKLMWOW6432Node
-        ' * We don't expect entries in HKCUWOW6432Node
-        '
-
-        ' 2. Find the CLSID in the registry from the Classname - for 32-bit OS we expect to be in HKCU and for 64-bit OS in HKCU\WOW6432
-        ' if a 32-bit system then the entry would be in HKLM classes else for 64-bit it would be in WOW
-        ' 32-bit HLCU:HKLM
-        ' 64-bit HKCUWOW:HKLMWOW1:HKLMWOW2
-
-        ' TODO
-        ' TODO  GetCLASSID change paramewter to AddiN entry and get that fucntion to get DLLfile informario
-        ' TODO Check conflict with ClassInformaiton function
         Dim AI As New AddInInformation
 
-
-        For Each AddInEntry In AI.getListof32BitHKCUAddinEntries() ' 32-bit EA entries for current user
-            Dim _RowItem As ListViewItem = plv.Items.Add(AddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(AddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(AddInEntry.ClassName) ' class string
+        For Each CurrentAddInEntry In AI.getListof32BitHKCUAddinEntries() ' 32-bit EA entries for current user
+            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
+            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
+            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
             Dim _C As New ClassInformation
-            _C.GetClassInformation(AddInEntry.ClassName, {cHKCU32, cHKLM32Wow1, cHKLM32Wow2, cHKLM32})
+            _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKCU32, AddInEntry.cHKLM32})
             Try
                 ' Add information to table
                 _RowItem.SubItems.Add(_C.ClassSource) ' location from which the CLSID is found
@@ -175,16 +158,16 @@ Module SupportFunctions
         Next
 
 
-        For Each AddInEntry In AI.getListof32BitHKLMAddinEntries() ' 32-bit EA entries for local machine
+        For Each CurrentAddInEntry In AI.getListof32BitHKLMAddinEntries() ' 32-bit EA entries for local machine
             ' 1. Output the AddInInformation - name, classname and sparx location
-            Dim _RowItem As ListViewItem = plv.Items.Add(AddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(AddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(AddInEntry.ClassName) ' class string
+            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
+            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
+            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
             Dim _C As New ClassInformation
             If Environment.Is64BitOperatingSystem Then
-                _C.GetClassInformation(AddInEntry.ClassName, {cHKLM32Wow1, cHKLM32Wow2, cHKLM32})
+                _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKLM32Wow, AddInEntry.cHKLM32})
             Else
-                _C.GetClassInformation(AddInEntry.ClassName, {cHKLM32, cHKCU32})
+                _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKLM32, AddInEntry.cHKCU32})
             End If
             Try
                 ' Add information to table
@@ -200,13 +183,13 @@ Module SupportFunctions
         Next
 
         ' 64-bit HKCU
-        For Each AddInEntry In AI.getListof64BitHKCUAddinEntries() ' 64-bit EA entries for current user
+        For Each CurrentAddInEntry In AI.getListof64BitHKCUAddinEntries() ' 64-bit EA entries for current user
             ' 1. Output the AddInInformation - name, classname and sparx location
-            Dim _RowItem As ListViewItem = plv.Items.Add(AddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(AddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(AddInEntry.ClassName) ' class string
+            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
+            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
+            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
             Dim _C As New ClassInformation
-            _C.GetClassInformation(AddInEntry.ClassName, {cHKCU64, cHKLM64})
+            _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKCU64, AddInEntry.cHKLM64})
             Try
                 ' Add information to table
                 _RowItem.SubItems.Add(_C.ClassSource) ' location from which the CLSID is found
@@ -221,13 +204,13 @@ Module SupportFunctions
         Next
 
         ' 64-bit HKLM
-        For Each AddInEntry In AI.getListof64BitHKLMAddinEntries() ' 64-bit EA entries for Local machine
+        For Each CurrentAddInEntry In AI.getListof64BitHKLMAddinEntries() ' 64-bit EA entries for Local machine
             ' 1. Output the AddInInformation - name, classname and sparx location
-            Dim _RowItem As ListViewItem = plv.Items.Add(AddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(AddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(AddInEntry.ClassName) ' class string
+            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
+            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
+            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
             Dim _C As New ClassInformation
-            _C.GetClassInformation(AddInEntry.ClassName, {cHKLM64, cHKCU64})
+            _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKLM64, AddInEntry.cHKCU64})
             Try
                 ' Add information to table
                 _RowItem.SubItems.Add(_C.ClassSource) ' location from which the CLSID is found
