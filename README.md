@@ -16,4 +16,4 @@ A pre-built .exe and help file are provided under in folders below the root.
 
 NOTE: This code is released under the terms of the GPL3 licence agreement and is used at yoru own risk.
 
-For more information about the EA Installation Inspector and AddIn Installation errors check out - http://tools.exploringea.co.uk/index.php?n=EaInspector.Overview
+For more information about the EA Installation Inspector and AddIn Installation errors check out - https://exploringea.co.uk/index.php/EaInspector/Overview.html
