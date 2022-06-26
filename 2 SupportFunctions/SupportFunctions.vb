@@ -33,13 +33,14 @@ Module SupportFunctions
 
     ' List view 
     ' set the relative widths of the columns
-    Friend Const AddInNameWidth As Integer = 4
-    Friend Const Classwidth As Integer = 3
-    Friend Const srcWidth As Integer = 2
-    Friend Const CLSIDWidth As Integer = 5
-    Friend Const DLLVersionWidth As Integer = 2
-    Friend Const DLLWidth As Integer = 10
-
+    Private Const AddInNameWidth As Integer = 4
+    Private Const SparxKeySRCWidth As Integer = 3
+    Private Const Classnamewidth As Integer = 9
+    Private Const CLSIDWidth As Integer = 11
+    Private Const ClassSrcWidth As Integer = 7
+    Private Const DLLSRCWidth As Integer = 3
+    Private Const DLLVersionWidth As Integer = 3
+    Private Const DLLWidth As Integer = 8
 
     ''' <summary>
     ''' init the list view headers
@@ -54,24 +55,15 @@ Module SupportFunctions
             plv.Visible = True
             plv.View = View.Details
             plv.GridLines = True
-            Dim width As Integer = plv.Width
-            width = width / 40
             Dim colHeading = plv.Columns.Add("AddIn Name")
-            colHeading.Width = width * AddInNameWidth
             colHeading = plv.Columns.Add("Sparx key")
-            colHeading.Width = width * Classwidth
             colHeading = plv.Columns.Add("Class (Assembly name)")
-            colHeading.Width = width * Classwidth
-            colHeading = plv.Columns.Add("Source")
-            colHeading.Width = width * srcWidth
             colHeading = plv.Columns.Add(cCLSID)
-            colHeading.Width = width * CLSIDWidth
-            colHeading = plv.Columns.Add("Source")
-            colHeading.Width = width * srcWidth
+            colHeading = plv.Columns.Add("ClassID Source")
+            colHeading = plv.Columns.Add("DLL Source")
             colHeading = plv.Columns.Add("DLL version")
-            colHeading.Width = width * DLLVersionWidth
-            colHeading = plv.Columns.Add("DLL")
-            colHeading.Width = width * DLLWidth
+            colHeading = plv.Columns.Add("DLL filename")
+            setWidths(plv)
 
         Catch ex As Exception
 
@@ -91,14 +83,14 @@ Module SupportFunctions
             Else
                 width = w
             End If
-            width = width / (AddInNameWidth + Classwidth + srcWidth + CLSIDWidth + srcWidth + DLLVersionWidth + DLLWidth)
+            width = width / (AddInNameWidth + SparxKeySRCWidth + Classnamewidth + CLSIDWidth + ClassSrcWidth + DLLSRCWidth + DLLVersionWidth + DLLWidth)
             If mylv.Columns.Count < 7 Then Return
             mylv.Columns.Item(0).Width = width * AddInNameWidth
-            mylv.Columns.Item(1).Width = width * srcWidth
-            mylv.Columns.Item(2).Width = width * Classwidth
-            mylv.Columns.Item(3).Width = width * srcWidth
-            mylv.Columns.Item(4).Width = width * CLSIDWidth
-            mylv.Columns.Item(5).Width = width * srcWidth
+            mylv.Columns.Item(1).Width = width * SparxKeySRCWidth
+            mylv.Columns.Item(2).Width = width * Classnamewidth
+            mylv.Columns.Item(3).Width = width * CLSIDWidth
+            mylv.Columns.Item(4).Width = width * ClassSrcWidth
+            mylv.Columns.Item(5).Width = width * DLLSRCWidth
             mylv.Columns.Item(6).Width = width * DLLVersionWidth
             mylv.Columns.Item(7).Width = width * DLLWidth
 
@@ -108,6 +100,35 @@ Module SupportFunctions
     End Sub
 
 
+    ''' <summary>
+    ''' Routine to populate the Sparx AddIn Information
+    ''' </summary>
+    ''' <param name="_Rowitem"></param>
+    ''' <param name="CurrentAddInEntry"></param>
+    Sub AddEntrySparxInformation(_Rowitem As ListViewItem, CurrentAddInEntry As AddInEntry)
+        _Rowitem.Text = CurrentAddInEntry.AddInName ' add the addin name to list
+        _Rowitem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
+        _Rowitem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
+    End Sub
+
+
+    ''' <summary>
+    ''' Routine to populate the Class Information
+    ''' </summary>
+    ''' <param name="pRowItem"></param>
+    ''' <param name="pClassInformation"></param>
+    Sub AddEntryClassInformation(pRowItem As ListViewItem, pClassInformation As ClassInformation)
+        Try
+            pRowItem.SubItems.Add(pClassInformation.ClassID) ' add the CLSID
+            pRowItem.SubItems.Add(pClassInformation.ClassSource) ' location from which the CLSID is found
+            pRowItem.SubItems.Add(pClassInformation.DLLSource) ' DLLSource indicates where the src add the source of the class information
+            pRowItem.SubItems.Add(pClassInformation.DLLVersion)
+            pRowItem.SubItems.Add(pClassInformation.Filename)
+            pRowItem.BackColor = pClassInformation.Colour
+        Catch ex As Exception
+            MsgBox("Init the registry list exception - " & ex.ToString)
+        End Try
+    End Sub
 
 
 
@@ -135,23 +156,15 @@ Module SupportFunctions
     Sub Get3264AddInClassDetailsAndPopulateListview(plv As ListView)
 
         ' Get the entries for each area in the registry containing Sparx AddIn entries 32/64-bit
+        ' Need to consider the fact that although the Sparx key may indicate 32bit or 64-bit it cannot be assumed that the class exists.
 
         Dim AI As New AddInInformation
-
         For Each CurrentAddInEntry In AI.getListof32BitHKCUAddinEntries() ' 32-bit EA entries for current user
-            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
-            Dim _C As New ClassInformation
-            _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKCU32, AddInEntry.cHKLM32})
+            Dim _RowItem As New ListViewItem
             Try
-                ' Add information to table
-                _RowItem.SubItems.Add(_C.ClassSource) ' location from which the CLSID is found
-                _RowItem.SubItems.Add(_C.ClassID) ' add the CLSID
-                _RowItem.SubItems.Add(_C.DLLSource) ' DLLSource indicates where the src add the source of the class information
-                _RowItem.SubItems.Add(_C.Version)
-                _RowItem.SubItems.Add(_C.Filename)
-                _RowItem.BackColor = _C.Colour
+                AddEntrySparxInformation(_RowItem, CurrentAddInEntry)
+                AddEntryClassInformation(_RowItem, New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKCU32))
+                plv.Items.Add(_RowItem)
             Catch ex As Exception
                 MsgBox("Init the registry list exception - " & ex.ToString)
             End Try
@@ -159,24 +172,11 @@ Module SupportFunctions
 
 
         For Each CurrentAddInEntry In AI.getListof32BitHKLMAddinEntries() ' 32-bit EA entries for local machine
-            ' 1. Output the AddInInformation - name, classname and sparx location
-            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
-            Dim _C As New ClassInformation
-            If Environment.Is64BitOperatingSystem Then
-                _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKLM32Wow, AddInEntry.cHKLM32})
-            Else
-                _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKLM32, AddInEntry.cHKCU32})
-            End If
+            Dim _RowItem As New ListViewItem
             Try
-                ' Add information to table
-                _RowItem.SubItems.Add(_C.ClassSource) ' location from which the CLSID is found
-                _RowItem.SubItems.Add(_C.ClassID) ' add the CLSID
-                _RowItem.SubItems.Add(_C.DLLSource) ' DLLSource indicates where the src add the source of the class information
-                _RowItem.SubItems.Add(_C.Version)
-                _RowItem.SubItems.Add(_C.Filename)
-                _RowItem.BackColor = _C.Colour
+                AddEntrySparxInformation(_RowItem, CurrentAddInEntry)
+                AddEntryClassInformation(_RowItem, New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKLM32))
+                plv.Items.Add(_RowItem)
             Catch ex As Exception
                 MsgBox("Init the registry list exception - " & ex.ToString)
             End Try
@@ -184,41 +184,24 @@ Module SupportFunctions
 
         ' 64-bit HKCU
         For Each CurrentAddInEntry In AI.getListof64BitHKCUAddinEntries() ' 64-bit EA entries for current user
-            ' 1. Output the AddInInformation - name, classname and sparx location
-            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
-            Dim _C As New ClassInformation
-            _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKCU64, AddInEntry.cHKLM64})
+            Dim _RowItem As New ListViewItem
             Try
-                ' Add information to table
-                _RowItem.SubItems.Add(_C.ClassSource) ' location from which the CLSID is found
-                _RowItem.SubItems.Add(_C.ClassID) ' add the CLSID
-                _RowItem.SubItems.Add(_C.DLLSource) ' DLLSource indicates where the src add the source of the class information
-                _RowItem.SubItems.Add(_C.Version)
-                _RowItem.SubItems.Add(_C.Filename)
-                _RowItem.BackColor = _C.Colour
+                AddEntrySparxInformation(_RowItem, CurrentAddInEntry)
+                AddEntryClassInformation(_RowItem, New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKCU64))
+                plv.Items.Add(_RowItem)
             Catch ex As Exception
                 MsgBox("Init the registry list exception - " & ex.ToString)
             End Try
+
         Next
 
         ' 64-bit HKLM
         For Each CurrentAddInEntry In AI.getListof64BitHKLMAddinEntries() ' 64-bit EA entries for Local machine
-            ' 1. Output the AddInInformation - name, classname and sparx location
-            Dim _RowItem As ListViewItem = plv.Items.Add(CurrentAddInEntry.AddInName) ' add the addin name to list
-            _RowItem.SubItems.Add(CurrentAddInEntry.SparxAddinLocation) ' sparx ref
-            _RowItem.SubItems.Add(CurrentAddInEntry.ClassName) ' class string
-            Dim _C As New ClassInformation
-            _C.GetClassInformation(CurrentAddInEntry.ClassName, {AddInEntry.cHKLM64, AddInEntry.cHKCU64})
+            Dim _RowItem As New ListViewItem
             Try
-                ' Add information to table
-                _RowItem.SubItems.Add(_C.ClassSource) ' location from which the CLSID is found
-                _RowItem.SubItems.Add(_C.ClassID) ' add the CLSID
-                _RowItem.SubItems.Add(_C.DLLSource) ' DLLSource indicates where the src add the source of the class information
-                _RowItem.SubItems.Add(_C.Version)
-                _RowItem.SubItems.Add(_C.Filename)
-                _RowItem.BackColor = _C.Colour
+                AddEntrySparxInformation(_RowItem, CurrentAddInEntry)
+                AddEntryClassInformation(_RowItem, New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKLM64))
+                plv.Items.Add(_RowItem)
             Catch ex As Exception
                 MsgBox("Init the registry list exception - " & ex.ToString)
             End Try
@@ -258,6 +241,10 @@ Module SupportFunctions
 
     End Function
 
+    ''' <summary>
+    ''' Initialise the query tab
+    ''' </summary>
+    ''' <param name="plv"></param>
     Friend Sub init_lvquery(plv As ListView)
         Try
             plv.Columns.Clear()

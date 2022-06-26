@@ -13,13 +13,42 @@ Imports System.IO
 
 Partial Friend Class frmInspector
 #Region "Context menu support functions"
-    Private Sub RunQuery(_pram As String)
+    ' queries for classes
+    ' HKCR\classname
+    ' HKCU\software\classes - Computer\HKEY_CURRENT_USER\SOFTWARE\classes\classname
+    ' HKLM\software\classes - Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Classes
+
+    Private Sub RunQueryForClassname()
         Try
-            ' create queries - then schedule
-            Dim cmd As String = "reg query HKLM\SOFTWARE\CLASSES /reg:32 /s /f " & _pram
-            _Query.addQuery(cmd)
-            cmd = "reg query HKCU\SOFTWARE\CLASSES /reg:32 /s /f " & _pram
-            _Query.addQuery(cmd)
+            Dim _location As String = ""
+            Dim cmd As String = ""
+
+            ' Create location for source
+            'Select Case currentLocation
+            ' get sources and interate through them
+            For Each src As String In util.CSVArrayListConversion.convertCSV2Array(currentCLSIDLocation)
+
+                Select Case src
+                    Case AddInEntry.cHKCR64, AddInEntry.cHKCR32
+                        _location = "HKCR\ "
+
+                    Case AddInEntry.cHKCU64, AddInEntry.cHKCU32
+                        _location = "HKCU\SOFTWARE\CLASSES\ "
+
+                    Case AddInEntry.cHKLM64, AddInEntry.cHKLM32
+                        _location = "HKCU\SOFTWARE\CLASSES\ "
+
+                    Case AddInEntry.cHKCU32
+                        _location = "HKCU\SOFTWARE\CLASSES\WOW6432Node\CLSID "
+                    Case Else
+                        MsgBox("")
+                End Select
+
+
+                cmd = "reg query " & _location & " /s /f " & _Classname
+                _Query.addQuery(cmd)
+
+            Next
 
 
         Catch ex As Exception
@@ -29,6 +58,117 @@ Partial Friend Class frmInspector
         End Try
 
     End Sub
+
+    ' queries for ClassID
+    ' HKCR64  Computer\HKEY_CLASSES_ROOT\CLSID
+    ' HKCR32  Computer\HKEY_CLASSES_ROOT\WOW6432Node\CLSID
+    ' HKCU64  Computer\HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID
+    ' HKCU32  Computer\HKEY_CURRENT_USER\SOFTWARE\Classes\Wow6432Node\CLSID
+    ' HKLM64  Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\
+    ' HKLM32  Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID
+
+
+    Private Sub RunQueryForClassID()
+        Try
+            Dim _location As String = ""
+            Dim cmd As String = ""
+
+            ' Create location for source
+            'Select Case currentLocation
+            ' get sources and interate through them
+            For Each src As String In util.CSVArrayListConversion.convertCSV2Array(currentCLSIDLocation)
+
+                Select Case src
+                    Case AddInEntry.cHKCR64, AddInEntry.cHKCR32
+                        _location = "HKCR\CLSID "
+
+                    Case AddInEntry.cHKCU64
+                        _location = "HKCU\SOFTWARE\CLASSES\CLSID "
+
+                    Case AddInEntry.cHKLM64
+                        _location = "HKCU\SOFTWARE\CLASSES\CLSID "
+
+                    Case AddInEntry.cHKCU32
+                        _location = "HKCU\SOFTWARE\CLASSES\WOW6432Node\CLSID "
+
+                    Case AddInEntry.cHKLM32
+                        _location = "HKLM\SOFTWARE\CLASSES\WOW6432Node\CLSID "
+
+                    Case Else
+                        MsgBox("")
+                End Select
+
+
+                cmd = "reg query " & _location & " /s /f " & _classID
+                _Query.addQuery(cmd)
+
+            Next
+
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+
+    End Sub
+    Private Sub RunQueryForFilename()
+        Try
+            If currentFilename = "" Then Return
+
+            Dim _location As String = ""
+            Dim cmd As String = ""
+
+            ' Create location for source
+            'Select Case currentLocation
+            ' get sources and interate through them
+            For Each src As String In util.CSVArrayListConversion.convertCSV2Array(currentCLSIDLocation)
+
+                Select Case src
+                    Case AddInEntry.cHKCR64, AddInEntry.cHKCR32
+                        _location = "HKCR\CLSID "
+
+                    Case AddInEntry.cHKCU64
+                        _location = "HKCU\SOFTWARE\CLASSES\CLSID "
+
+                    Case AddInEntry.cHKLM64
+                        _location = "HKCU\SOFTWARE\CLASSES\CLSID "
+
+                    Case AddInEntry.cHKCU32
+                        _location = "HKCU\SOFTWARE\CLASSES\WOW6432Node\CLSID "
+
+                    Case AddInEntry.cHKLM32
+                        _location = "HKLM\SOFTWARE\CLASSES\WOW6432Node\CLSID "
+
+                    Case Else
+                        MsgBox("")
+                End Select
+
+
+                cmd = "reg query " & _location & " /s /f " & currentFilename
+                _Query.addQuery(cmd)
+
+            Next
+
+
+
+            'If currentFilename <> "" Then
+            '    ' create queries - then schedule
+            '    Dim cmd As String = "reg query HKLM\SOFTWARE\CLASSES /s /f " & currentFilename
+            '    _Query.addQuery(cmd)
+            '    cmd = "reg query HKCU\SOFTWARE\CLASSES  /s /f " & currentFilename
+            '    _Query.addQuery(cmd)
+            'End If
+
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+
+    End Sub
+
+
+
 
 
 

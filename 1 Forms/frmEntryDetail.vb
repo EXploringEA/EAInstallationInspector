@@ -94,7 +94,10 @@ Friend Class frmEntryDetail
             'filename = filename.Replace("/", "\")
             'filename = _f
             If File.Exists(_filename) Then
-                Dim assembly As Assembly = assembly.LoadFrom(_filename)
+                'Dim ass As AssemblyName = AssemblyName.GetAssemblyName(_filename)
+                'Version = ass.Version.ToString
+
+                Dim assembly As Assembly = Assembly.LoadFrom(_filename)
                 Dim types As Type() = assembly.GetTypes()
                 '   Dim s As String = " List of types " & vbCrLf
                 Dim _ListOfTypes As New ArrayList

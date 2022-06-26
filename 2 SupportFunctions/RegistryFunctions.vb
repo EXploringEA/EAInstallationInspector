@@ -16,7 +16,25 @@ Imports Microsoft.Win32
 Public Class RegistryFunctions
 
 
+    ' This function will return the ClassID
+    '
+    Function returnClassID(pHive As String, pClassName As String) As KeyEventArgs
 
+        Select Case pHive
+            Case AddInEntry.cHKCU32
+            Case AddInEntry.cHKCU64
+            Case AddInEntry.cHKLM32
+            Case AddInEntry.cHKLM64
+
+
+
+        End Select
+
+        '_location = "HKEY_CLASSES_ROOT\Wow6432Node" & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
+        'Filename = Registry.GetValue(_location, cCodeBase, cNotSet) 'using the class try to find the DLL path
+        'If Filename IsNot Nothing Then DLLSource = AddInEntry.cHKCR32
+
+    End Function
 
     ' NOT USED
     ''' <summary>
