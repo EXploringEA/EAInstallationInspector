@@ -11,8 +11,7 @@ The aim has been to provide a version that includes basic features and then upda
 Please let me know if any issues found
 
 A pre-built .exe and help file are provided under in folders below the root.  
-* V6 contains the previous 32-bit only version.
-* V7 contains the initial 32-bit/64-bit 
+* V7.002 contains the current 32-bit/64-bit 
 
 NOTE: This code is released under the terms of the GPL3 licence agreement and is used at yoru own risk.
 
