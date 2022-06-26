@@ -19,6 +19,14 @@ Imports System.IO
 
 Public Class Query
 
+
+    ' colours used for output
+    Private cQueryRowColorDefault As Color = Color.White
+    Private cQueryRowColorNew As Color = Color.Yellow
+    Private cQueryRowColorComplete As Color = Color.SpringGreen
+    Private cQueryRowWarning As Color = Color.Orange
+
+
     Private _CmdQueue As New Queue ' the command queue
     Private _logfilename As String = "" ' name of single log file
     Private _lvResults As ListView = Nothing ' results listview 
@@ -145,7 +153,7 @@ Public Class Query
                     _tbQueryActive.Visible = True
                     ' _theQueryInstance._btnQueryActive.Visible = True
                     bw.WorkerSupportsCancellation = True
-               
+
                     bw.RunWorkerAsync(_Args)
                     _result = True ' indicates that all started
                 End If

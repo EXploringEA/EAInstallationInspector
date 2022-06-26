@@ -127,7 +127,7 @@ Public Class AddInInformation
                 Dim AddInInfo As New AddInEntry
                 AddInInfo.AddInName = pEntryKey ' registry location for addin name 
                 AddInInfo.ClassName = Registry.GetValue(eaHKLM32AddInKey64 & cBackSlash & pEntryKey, "", cNotSet)
-                AddInInfo.SparxAddinLocation = If(Environment.Is64BitOperatingSystem, AddInEntry.cHKLM32Wow, AddInEntry.cHKLM32)
+                AddInInfo.SparxAddinLocation = AddInEntry.cHKLM32 ' If(Environment.Is64BitOperatingSystem, AddInEntry.cHKLM32Wow, AddInEntry.cHKLM32)
                 my32HKLMAddInEntries.Add(AddInInfo)
             Next
         End If
@@ -178,18 +178,20 @@ Friend Class AddInEntry
 
     'Registry related strings defines the source of the Sparx AddIn key and OS which indicates where the class information should be located
 
+    Friend Const cHKCR32 As String = "HKCR32"
+    Friend Const cHKCR64 As String = "HKCR64"
+    '  Friend Const cHKCR As String = "HKCR" ' set when not clear which 
+
     ' 32-bit AddIns on 32-bit EA
     Friend Const cHKCU32 As String = "HKCU32" ' 32-bit Addins on 32-bit OS 
     Friend Const cHKLM32 As String = "HKLM32" ' 32-bit Addins on 32-bit OS
 
     ' 32-bit AddIns on 64-bit OS
-    Friend Const cHKLM32Wow As String = "HKLM32Wow" ' 32-bit AddIn on 64-bit OS
+    Friend Const cHKLM32Wow As String = "HKLM32Wow" ' 32-bit AddIn on 64-bit OS ?? NT SURE WE NEED THIS as the Sparx key is detached from the class registration
 
     ' 64-bit AddIns
     Friend Const cHKCU64 As String = "HKCU64" ' 64-bit AddIn on 64-bit OS
     Friend Const cHKLM64 As String = "HKLM64" ' 64-bit AddIn on 64-bit OS
-
-
 
     '' AddIn Name | Class | Source | CLSID | Source | DLL
     ''' <summary>

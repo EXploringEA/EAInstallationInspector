@@ -49,6 +49,8 @@ Partial Friend Class frmInspector
             logger.logger = New logger("EAInspectorLog")
 #End If
 
+            Me.Text = "EA Installation Inspector Version " & My.Application.Info.Version.ToString
+
             LinkLabel1.Links.Add(0, 15, "http://Exploringea.com")
             init_lv(lvListOfAddIns) ' set up the list view
             setWidths(lvListOfAddIns) ' set list view column widths
@@ -83,21 +85,8 @@ Partial Friend Class frmInspector
 
             '
             checkDebugFrameworkConfig()
-            '
-            'Dim _DebugConfigFilename As String = _installPath & "\EA.Exe.config"
-            'If _DebugConfigFilename <> _installPath AndAlso File.Exists(_DebugConfigFilename) Then
-            '    btDebugFramework.BackColor = Color.SpringGreen
-            '    btDebugFramework.Enabled = True
-            'Else
-            '    btDebugFramework.BackColor = Color.Gray
-            '    btDebugFramework.Enabled = False
-            'End If
 
-            'GetAddInClassDetailsAndPopulateListview(lvListOfAddIns)
             Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns)
-
-
-
 
             ' initialise the registry tree and create node for SPARX Addin
             Browser.Nodes.Clear()
@@ -252,6 +241,10 @@ Partial Friend Class frmInspector
                 s += _filename & vbCrLf
                 s += ass.ToString
                 If MsgBox(s, MsgBoxStyle.YesNo, "Register DLL for current user") = MsgBoxResult.Yes Then
+                    ' will need to determine  if 32-bit or 64-bit and then use the appropriate version of RegAsm
+                    ' Also the run time framework - so need to get this from the DLL assembly
+                    ' And then run the command with admin rights
+
                     ' register DLL Current User
                     '       Dim batchcontent As String = "C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\RegAsm.exe" ".\bin\Debug\MyAddIn.dll" /codebase
 
@@ -388,9 +381,9 @@ Partial Friend Class frmInspector
                 myEntryDetail.AddInName = myListViewSubItems(0).Text
                 myEntryDetail.SparxEntry = myListViewSubItems(1).Text
                 myEntryDetail.ClassName = myListViewSubItems(2).Text
-                myEntryDetail.ClassSource = myListViewSubItems(3).Text
-                myEntryDetail.CLSID = myListViewSubItems(4).Text
-                myEntryDetail.CLSIDSource = myListViewSubItems(5).Text
+                myEntryDetail.ClassSource = myListViewSubItems(4).Text ' Check the HIVE in which tyhe assembly is defined
+                myEntryDetail.CLSID = myListViewSubItems(3).Text
+                myEntryDetail.CLSIDSource = myListViewSubItems(5).Text ' Class ID source normally HKCR
                 myEntryDetail.DLL = myListViewSubItems(7).Text
                 Dim myDetail As New frmEntryDetail(myEntryDetail)
                 myDetail.ShowDialog()
@@ -475,21 +468,21 @@ Partial Friend Class frmInspector
                     Cursor = Cursors.WaitCursor
 
                     If _q.HKLM Then
-                        cmd = "reg query HKLM\SOFTWARE\CLASSES /reg:32 /s /f " & _DLLname
+                        cmd = "reg query HKLM\SOFTWARE\CLASSES  /s /f " & _DLLname
                         _Query.addQuery(cmd)
                     End If
                     If _q.HKCU Then
-                        cmd = "reg query HKCU\SOFTWARE\CLASSES /reg:32 /s /f " & _DLLname
+                        cmd = "reg query HKCU\SOFTWARE\CLASSES  /s /f " & _DLLname
                         _Query.addQuery(cmd)
                     End If
 
                 ElseIf _q.Command <> "" Then
                     If _q.HKLM Then
-                        cmd = "reg query HKLM\SOFTWARE\CLASSES /reg:32 /s /f " & _q.Command
+                        cmd = "reg query HKLM\SOFTWARE\CLASSES  /s /f " & _q.Command
                         _Query.addQuery(cmd)
                     End If
                     If _q.HKCU Then
-                        cmd = "reg query HKCU\SOFTWARE\CLASSES /reg:32 /s /f " & _q.Command
+                        cmd = "reg query HKCU\SOFTWARE\CLASSES  /s /f " & _q.Command
                         _Query.addQuery(cmd)
                     End If
                 End If

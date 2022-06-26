@@ -430,7 +430,7 @@ Partial Class frmInspector
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmInspector"
-        Me.Text = "EA Installation Inspector Version 7.0Alpha_C"
+        Me.Text = "EA Installation Inspector Version 7.0"
         Me.tabControl.ResumeLayout(False)
         Me.tabListOfAddins.ResumeLayout(False)
         Me.tabRegistryTree.ResumeLayout(False)

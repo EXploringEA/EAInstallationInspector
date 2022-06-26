@@ -15,7 +15,7 @@ Partial Friend Class frmInspector
     Private Sub DisplayFileInformation()
         Try
             ' pop up window of filename information
-            Dim _fileInfo = My.Computer.FileSystem.GetFileInfo(_filename)
+            Dim _fileInfo = My.Computer.FileSystem.GetFileInfo(currentFilePath & cBackSlash & currentFilename)
             Dim s As String = "Fileinfo : " & _filename & vbCrLf & vbCrLf
             s += "Full name: " & _fileInfo.FullName & vbCrLf & vbCrLf
             s += "Last accessed: " & _fileInfo.LastAccessTime.ToLongDateString & vbCrLf & vbCrLf
@@ -32,53 +32,24 @@ Partial Friend Class frmInspector
     End Sub
 
 
-    ' queries should run in background
-    Private Sub RunQueryForFilename()
-        Try
-            RunQuery(_filename)
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
+    '    ' queries should run in background
+    '    Private Sub RunQueryForFilename()
+    '        Try
+    '            If currentFilename <> "" Then RunQuery(currentFilename)
 
-    End Sub
+    '        Catch ex As Exception
+    '#If DEBUG Then
+    '            Debug.Print(ex.ToString)
+    '#End If
+    '        End Try
 
-    Private Sub RunQueryForClassID()
-        Try
-            RunQuery(_classID)
+    '    End Sub
 
 
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-
-    End Sub
-
-    Private Sub RunQueryForClassname()
-        Try
-            '   RunQuery(_Classname)
-            ' create queries - then schedule
-            Dim cmd As String = "reg query HKLM\SOFTWARE\Classes /reg:32 /s /f " & _Classname
-            _Query.addQuery(cmd)
-            cmd = "reg query HKCU\SOFTWARE\Classes /reg:32 /s /f " & _Classname
-            _Query.addQuery(cmd)
-
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-
-    End Sub
 
     Private Sub RunQueryForProgID()
         Try
-            RunQuery(_ProgID)
-
+            Debug.Print("RunQueryForProgID IsNot NotImplemented")
         Catch ex As Exception
 #If DEBUG Then
             Debug.Print(ex.ToString)

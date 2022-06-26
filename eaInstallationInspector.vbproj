@@ -136,6 +136,7 @@
     <Compile Include="1 Forms\Inspector form\frmInspector.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="2 SupportFunctions\CSVArrayListConversion.vb" />
     <Compile Include="2 SupportFunctions\logger.vb" />
     <Compile Include="2 SupportFunctions\RegistryFunctions.vb" />
     <Compile Include="4 Treeview\NodeInfo.vb" />
@@ -190,7 +191,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="3 Resources\eaInstallationInspectorInformationV7.pdf" />
-    <None Include="3 Resources\eaInstallationInspectorInformationV7.rtf" />
     <None Include="app.config" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>

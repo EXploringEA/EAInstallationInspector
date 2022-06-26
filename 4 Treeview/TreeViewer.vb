@@ -9,13 +9,32 @@
 '    You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ' =============================================================================================================================================
 
-Imports System.Threading
 Imports System.ComponentModel
 Imports Microsoft.Win32
-Imports System.Reflection
-Imports System.IO
+
 
 Partial Class frmInspector
+
+
+    Friend Const cNodeCLSID As String = "CLSID = "
+    Friend Const cNodeClassname As String = "Classname = "
+    Friend Const cNodeClassSources As String = "Class sources = "
+    Friend Const cNodeDLLFilename As String = "DLL Filename = "
+    Friend Const cNodeDLLVersion As String = "DLL Version = "
+    Friend Const cNodeRuntimeVersion As String = "Runtime version = "
+    Friend Const cNodeProgID As String = "ProgId = "
+
+    Private Shared _64bitSystem As Boolean = False
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        ' keep a flag for type of system
+        If Environment.Is64BitOperatingSystem Then _64bitSystem = True
+
+    End Sub
     ''' <summary>
     ''' Handles the after expand to launch - this results in creating a background thread to do the processing
     ''' setting up the DoWork method and the workercompleted method
@@ -221,7 +240,6 @@ Partial Class frmInspector
 
                         Case AddInEntry.cHKLM32Wow ' "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins" ' 64-bit systems
                             myLMKey32 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeysWOW32)
-                            ' myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32)
 
                             For Each pEntryKey In myLMKey32.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
@@ -237,7 +255,7 @@ Partial Class frmInspector
                             myCUKey64 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys64)
                             For Each pEntryKey In myCUKey64.GetSubKeyNames
                                 Dim newKey64 As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
-                                newKey64.SparxEntryLocation = AddInInformation.eaHKCU64AddInKeys
+                                newKey64.SparxEntryLocation = AddInEntry.cHKCU64
                                 newKey64.ClassNameLocation = AddInInformation.eaHKCU64AddInKeys
 
                                 newKey64.ClassName = Registry.GetValue(AddInInformation.eaHKCU64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
@@ -263,237 +281,61 @@ Partial Class frmInspector
                     ' we use the class name
                     ' if the source is HKCU
                     ' then look for CLSID in HKCU and only if not found then HKLM
+                    Dim _C As New ClassInformation(pParent.ClassName, pParent.SparxEntryLocation)
 
-                    myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32) '"Software\Sparx Systems\EAAddins"
-                    myLMKey32 = If(Environment.Is64BitOperatingSystem, Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeysWOW32), Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys32))
-                    myCUKey64 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys64) '"Software\Sparx Systems\EAAddins64"
-                    myLMKey64 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys64)
-
-                    myNode = Nothing
-                    Dim CLSIDsrc As String = "" ' Source for classID Current User or Local Machine
-                    Dim myCLSIDLocation As String = "" ' location of CLSID
-                    Dim myCLSID As String = "" ' The class ID
-
-                    Select Case pParent.ClassNameLocation
-                        Case AddInInformation.eaHKCU32AddInKeys
-                            myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                            myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                            If myCLSID <> "" Then
-                                CLSIDsrc = AddInEntry.cHKCU32
-                            Else
-                                myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                                myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKLM32Wow ' Other locations??
-                            End If
-
-                        Case AddInInformation.eaHKCU64AddInKeys
-                            myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                            myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                            If myCLSID <> "" Then
-                                CLSIDsrc = AddInEntry.cHKCU64
-                            Else
-                                myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                                myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKLM64
-                            End If
-
-
-                        Case AddInInformation.eaHKLM32AddInKeys
-                            myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                            myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                            If myCLSID <> "" Then
-                                CLSIDsrc = AddInEntry.cHKLM32
-                            Else
-                                myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                                myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKCU32
-                            End If
-
-                        Case AddInInformation.eaHKLM32AddInKey64
-                            myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                            myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                            If myCLSID <> "" Then
-                                CLSIDsrc = AddInEntry.cHKLM32Wow
-                            Else
-                                myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                                myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKCU32
-                            End If
-                        Case AddInInformation.eaHKLM64AddInKeys
-                            myCLSIDLocation = ClassInformation.HKLM_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                            myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                            If myCLSID <> "" Then
-                                CLSIDsrc = AddInEntry.cHKLM32
-                            Else
-                                myCLSIDLocation = ClassInformation.HKCU_Classes & cBackSlash & pParent.ClassName & cBackSlash & cCLSID
-                                myCLSID = Registry.GetValue(myCLSIDLocation, "", cNotSet) ' get the CLSID
-                                If myCLSID <> "" Then CLSIDsrc = AddInEntry.cHKCU32
-                            End If
-                        Case Else
-#If DEBUG Then
-                            Debug.Print("Treeview Class information unhandled classname " & pParent.ClassNameLocation)
-#End If
-
-                    End Select
-
+                    ' Classname
                     myNode = New NodeInfo(NodeType.CLSIDNode, 0) ' no children
-                    Select Case CLSIDsrc
-                        Case AddInEntry.cHKCU32
-                            myNode.Name = cHKCUCLSID & myCLSID
-                        Case AddInEntry.cHKLM32
-                            myNode.Name = cHKLMCLSID & myCLSID
-                        Case AddInEntry.cHKLM32Wow
-                            myNode.Name = cHKLMWowCLSID & myCLSID
-                        Case AddInEntry.cHKCU64
-                            myNode.Name = cHKCUCLSID & myCLSID
-                        Case AddInEntry.cHKLM64
-                            myNode.Name = cHKLMCLSID & myCLSID
-
-                    End Select
-                    myNode.CLSIDSrc = CLSIDsrc
-                    myNode.CLSID = myCLSID
-                    myNode.CLSIDLocation = myCLSIDLocation
+                    myNode.Name = cNodeClassname & _C.AddInName
+                    myNode.CLSIDSrc = _C.ClassSource 'CLSIDsrc
+                    myNode.CLSID = _C.ClassID 'myCLSID
+                    myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
                     myNode.ClassName = pParent.ClassName
                     myNode.ClassNameLocation = pParent.ClassNameLocation
                     myNodes.Add(myNode)
 
-
-                    Dim _ClassInformation As ClassRegistryInformation = ClassInformation.OLDgetClassInformation(CLSIDsrc, myCLSID)
-
-                    ' Classname
+                    ' CLSID
                     myNode = New NodeInfo(NodeType.CLSIDNode_ClassName, 0)
-                    Select Case CLSIDsrc
-                        Case AddInEntry.cHKCU32
-                            myNode.Name = cHKCUClassname & _ClassInformation.ClassName
-                        Case AddInEntry.cHKLM32
-                            myNode.Name = cHKLMClassname & _ClassInformation.ClassName
-                        Case AddInEntry.cHKLM32Wow
-                            myNode.Name = cHKLMWowClassname & _ClassInformation.ClassName
-                        Case AddInEntry.cHKCU64
-                            myNode.Name = cHKCUClassname & _ClassInformation.ClassName
-                        Case AddInEntry.cHKLM64
-                            myNode.Name = cHKLMClassname & _ClassInformation.ClassName
-                    End Select
-                    myNode.CLSIDSrc = CLSIDsrc
-                    myNode.ClassName = _ClassInformation.ClassName
+                    myNode.Name = cNodeCLSID & _C.ClassID
+                    myNode.CLSIDSrc = _C.ClassSource 'CLSIDsrc
+                    myNode.ClassName = _C.AddInName '_ClassInformation.ClassName
                     myNode.ClassNameLocation = pParent.ClassNameLocation
-                    myNode.CLSID = myCLSID
-                    myNode.CLSIDLocation = myCLSIDLocation
+                    myNode.CLSID = _C.ClassID 'myCLSID
+                    myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
                     myNodes.Add(myNode)
 
 
-                    Dim _filename As String = _ClassInformation.CodeBase ' BUt this doesn't handle the case where the file is not in
-                    If Strings.Left(_filename, fileprefixlength) = cFilePrefix Then _filename = Strings.Right(_filename, _filename.Length - fileprefixlength)
-
-                    'Class ID
-
-
-                    myNode = New NodeInfo(NodeType.CLSIDNode_CodeBase, 0)
-                    Select Case CLSIDsrc
-                        Case AddInEntry.cHKCU32
-                            myNode.Name = cHKCUFilename & _filename
-                        Case AddInEntry.cHKLM32
-                            myNode.Name = cHKLMFilename & _filename
-                        Case AddInEntry.cHKLM32Wow
-                            myNode.Name = cHKLMWowFilename & _filename
-                        Case AddInEntry.cHKCU64
-                            myNode.Name = cHKCUFilename & _filename
-                        Case AddInEntry.cHKLM64
-                            myNode.Name = cHKLMFilename & _filename
-
-                    End Select
-                    myNode.Filename = Path.GetFileName(_filename)
-                    If _filename <> "" Then _filename = _filename.Replace("/", "\")
-                    myNode.FilePathName = _filename
-
-                    myNode.ClassName = _ClassInformation.ClassName
+                    ' CLSID
+                    myNode = New NodeInfo(NodeType.CLSIDNode_ClassName, 0)
+                    myNode.Name = cNodeClassSources & _C.ClassSource
+                    myNode.CLSIDSrc = _C.ClassSource 'CLSIDsrc
+                    myNode.ClassName = _C.AddInName '_ClassInformation.ClassName
                     myNode.ClassNameLocation = pParent.ClassNameLocation
-                    myNode.CLSID = myCLSID
-                    myNode.CLSIDSrc = CLSIDsrc
-                    myNode.CLSIDLocation = myCLSIDLocation
+                    myNode.CLSID = _C.ClassID 'myCLSID
+                    myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
                     myNodes.Add(myNode)
 
                     ' Filename
+                    myNode = New NodeInfo(NodeType.CLSIDNode_CodeBase, 0)
+                    myNode.Name = CNodeDLLFilename & _C.Filename
+                    myNode.FilePathName = _C.Filename '_filename
+                    myNode.ClassName = _C.AddInName '.ClassName
+                    myNode.ClassNameLocation = pParent.ClassNameLocation
+                    myNode.CLSID = _C.ClassID
+                    myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
+                    myNodes.Add(myNode)
 
+                    ' version
                     myNode = New NodeInfo(NodeType.CLSIDNode_Version, 0)
-                    Dim AssVersion As String = "Unable to identify"
-                    If _filename <> cNotSet And _filename IsNot Nothing Then
-
-                        Try
-                            Dim ass As AssemblyName = AssemblyName.GetAssemblyName(_filename)
-
-
-                            ' Dim ass As Assembly = Assembly.LoadFile(_filename)
-                            AssVersion = ass.Version.ToString() ' ass.GetName().Version.ToString
-                        Catch ex As Exception
-#If DEBUG Then
-                            Debug.Print("Treeviewer assembly load failure " & ex.ToString)
-#End If
-                        End Try
-
-                    End If
-
-                    Select Case CLSIDsrc
-                        Case AddInEntry.cHKCU32
-                            myNode.Name = cHKCUVersion & AssVersion
-                        Case AddInEntry.cHKLM32
-                            myNode.Name = cHKLMVersion & AssVersion
-                        Case AddInEntry.cHKLM32Wow
-                            myNode.Name = cHKLMWowVersion & AssVersion
-                        Case AddInEntry.cHKCU64
-                            myNode.Name = cHKCUVersion & AssVersion
-                        Case AddInEntry.cHKLM64
-                            myNode.Name = cHKLMVersion & AssVersion
-                    End Select
-
-
-                    myNode.ClassName = _ClassInformation.ClassName
-                    myNode.ClassNameLocation = pParent.ClassNameLocation
-                    myNode.CLSID = myCLSID
-                    myNode.CLSIDSrc = CLSIDsrc
-                    myNode.CLSIDLocation = myCLSIDLocation
-                    myNode.Filename = Path.GetFileName(_filename)
-                    myNode.FilePathName = _filename
+                    myNode.Name = cNodeDLLVersion & _C.DLLVersion
+                    myNode.CLSIDSrc = _C.ClassID
                     myNodes.Add(myNode)
 
-                    ' Run time version
+                    ' Can we get run time version of the DLL
                     myNode = New NodeInfo(NodeType.CLSIDNode_RunTimeVersion, 0)
-                    Select Case CLSIDsrc
-                        Case AddInEntry.cHKCU32
-                            myNode.Name = cHKCURuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case AddInEntry.cHKLM32
-                            myNode.Name = cHKLMRuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case AddInEntry.cHKLM32Wow
-                            myNode.Name = cHKLMWowRuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case AddInEntry.cHKCU64
-                            myNode.Name = cHKCURuntimeVersion & _ClassInformation.RunTimeVersion
-                        Case AddInEntry.cHKLM64
-                            myNode.Name = cHKLMRuntimeVersion & _ClassInformation.RunTimeVersion
-                    End Select
-                    myNode.CLSIDSrc = CLSIDsrc
+                    myNode.Name = cNodeRuntimeVersion & _C.RunTimeVersion
+                    myNode.CLSIDSrc = _C.ClassID
                     myNodes.Add(myNode)
 
-                    ' ProgID
-                    myNode = New NodeInfo(NodeType.CLSIDNode_ProgID, 0)
-                    Select Case CLSIDsrc
-                        Case AddInEntry.cHKCU32
-                            myNode.Name = cHKCUProgID & _ClassInformation.ProgID
-                        Case AddInEntry.cHKLM32
-                            myNode.Name = cHKLMProgID & _ClassInformation.ProgID
-                        Case AddInEntry.cHKLM32Wow
-                            myNode.Name = cHKLMWowProgID & _ClassInformation.ProgID
-                        Case AddInEntry.cHKCU64
-                            myNode.Name = cHKCUProgID & _ClassInformation.ProgID
-                        Case AddInEntry.cHKLM64
-                            myNode.Name = cHKLMProgID & _ClassInformation.ProgID
-                    End Select
-                    myNode.ClassName = _ClassInformation.ClassName
-                    myNode.ClassNameLocation = pParent.ClassNameLocation
-                    myNode.CLSID = myCLSID
-                    myNode.CLSIDSrc = CLSIDsrc
-                    myNode.CLSIDLocation = myCLSIDLocation
-                    myNode.ProgID = _ClassInformation.ProgID
-                    myNodes.Add(myNode)
 
                 Case Else
 #If DEBUG Then

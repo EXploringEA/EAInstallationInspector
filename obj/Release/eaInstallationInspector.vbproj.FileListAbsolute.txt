@@ -1,0 +1,16 @@
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Release\eaInstallationInspector.exe.config
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Release\eaInstallationInspector.exe
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Release\eaInstallationInspector.pdb
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\bin\Release\eaInstallationInspector.xml
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.frmEntryDetail.resources
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.frmHelp.resources
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.frmQuery.resources
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.frmInspector.resources
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.frmListOfClasses.resources
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.Resources.resources
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.vbproj.GenerateResource.cache
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.vbproj.CoreCompileInputs.cache
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.exe
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.xml
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.pdb
+C:\Users\EXploringEA\Documents\GitHub\EAInstallationInspector\obj\Release\eaInstallationInspector.vbproj.AssemblyReference.cache
