@@ -8,7 +8,7 @@ For more information review the document **eaInstallationInspectorInformationV7.
 Current release is V7.0.0.2 26JUN2022 - this release includes support for the 64-but version of EA and is evolving as more of the utility is tested.
 The aim has been to provide a version that includes basic features and then update as more refinements are identified in relation to making it useful for both 32-bit and 64-bit work.
 
-Please let me know if any issues found
+I will be tinkering with the code over the next few weeks as it is tested more and if you find any issues or have suggestions on potential improvements please let me know.
 
 A pre-built .exe and help file are provided under in folders below the root.  
 * V7.002 contains the current 32-bit/64-bit 
