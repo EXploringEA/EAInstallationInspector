@@ -9,23 +9,39 @@
 '    You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ' =============================================================================================================================================
 
+Imports System.IO
+Imports System.Reflection
+
 Partial Friend Class frmInspector
 #Region "Handlers"
 
     Private Sub DisplayFileInformation()
         Try
             ' pop up window of filename information
+            Dim s As String = "File does not exist: " & currentFilename
             Dim _fileInfo = My.Computer.FileSystem.GetFileInfo(currentFilePath & cBackSlash & currentFilename)
-            Dim s As String = "Fileinfo : " & _filename & vbCrLf & vbCrLf
+
+            If Not File.Exists(_fileInfo.FullName) Then Return
+            s = "Fileinfo : " & currentFilename & vbCrLf & vbCrLf
+            Try
+                Dim ass As AssemblyName = AssemblyName.GetAssemblyName(_fileInfo.FullName)
+                s += "Version: " & ass.Version.ToString & vbCrLf
+                s += "Processor architecture: " & ass.ProcessorArchitecture.ToString & vbCrLf & vbCrLf
+            Catch ex As Exception
+                s += "Failed to get assembly information for: " & currentFilename & vbCrLf
+
+            End Try
+
             s += "Full name: " & _fileInfo.FullName & vbCrLf & vbCrLf
+            s += "Created: " & _fileInfo.CreationTime.ToLongDateString & vbCrLf
             s += "Last accessed: " & _fileInfo.LastAccessTime.ToLongDateString & vbCrLf & vbCrLf
-            '  s += "Length " & _fileInfo.Length & vbCrLf
-            s += "Directory: " & _fileInfo.DirectoryName & vbCrLf & vbCrLf
-            '   MsgBox(s, MsgBoxStyle.OkOnly, "File information " & _filename)
-            MessageBox.Show(s, "File information " & _filename, MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Catch ex As Exception
+                '  s += "Length " & _fileInfo.Length & vbCrLf
+                s += "Directory: " & _fileInfo.DirectoryName & vbCrLf & vbCrLf
+                '   MsgBox(s, MsgBoxStyle.OkOnly, "File information " & _filename)
+                MessageBox.Show(s, "File information " & _filename, MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Catch ex As Exception
 #If DEBUG Then
-            Debug.Print(ex.ToString)
+                Debug.Print(ex.ToString)
 #End If
         End Try
 
