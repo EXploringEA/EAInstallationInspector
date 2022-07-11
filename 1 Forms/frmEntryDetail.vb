@@ -38,18 +38,23 @@ Friend Class frmEntryDetail
 
             tbDLL.Text = pEntryDetail.DLL
             _DLLFilename = pEntryDetail.DLL
-            Dim _filename As String = Path.GetFullPath(_DLLFilename)
+            If _DLLFilename <> "" Then
+                Dim _filename As String = _DLLFilename
 
-            ' Get the DLL file details
-            If File.Exists(_filename) Then
-                ' either fileName or fileName2 works for me.
-                Dim fvi As FileVersionInfo = FileVersionInfo.GetVersionInfo(_filename)
-                ' now this fvi has all the properties for the FileVersion information.
-                tbDLLVersion.Text = fvi.FileVersion ' but other useful properties exist too.
-                Dim _DLLDate As DateTime = File.GetLastWriteTime(_filename)
-                tbDLLDate.Text = _DLLDate.ToString
+                If Not File.Exists(_filename) Then
+                    tbDLL.Text = "FILE DOES NOT EXIST"
+                Else
+                    tbDLL.Text = _filename
+                    _filename = Path.GetFullPath(_filename)
+                    ' Get the DLL file details
+                    Dim fvi As FileVersionInfo = FileVersionInfo.GetVersionInfo(_filename)
+                    ' now this fvi has all the properties for the FileVersion information.
+                    tbDLLVersion.Text = fvi.FileVersion ' but other useful properties exist too.
+                    Dim _DLLDate As DateTime = File.GetLastWriteTime(_filename)
+                    tbDLLDate.Text = _DLLDate.ToString
+                End If
             Else
-                tbDLLVersion.Text = "FILE DOES NOT EXIST"
+                tbDLL.Text = "FILE DOES NOT EXIST"
             End If
 
         Catch ex As Exception
@@ -58,6 +63,23 @@ Friend Class frmEntryDetail
 #End If
         End Try
     End Sub
+    Private Function cleanFilename(pFilename As String) As String
+        Try
+            Dim start As Integer = Strings.InStr(pFilename, cFilePrefix)
+            Dim _r As String = Strings.Right(pFilename, Len(pFilename) - fileprefixlength - start + 1)
+            ' remove all after last \
+            Dim _end As Integer = Strings.InStrRev(_r, cForwardSlash)
+
+            Dim _f1 As String = Strings.RTrim(_r)
+            _f1 = Strings.Replace(_f1, cForwardSlash, cBackSlash)
+            Return _f1
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+
+    End Function
     ''' <summary>
     ''' Handles the Click event of the btClose control.
     ''' </summary>
