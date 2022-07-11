@@ -41,7 +41,7 @@ Partial Friend Class frmInspector
                     Case AddInEntry.cHKCU32
                         _location = "HKCU\SOFTWARE\CLASSES\WOW6432Node\CLSID "
                     Case Else
-                        MsgBox("")
+                        MsgBox("Class not found ")
                 End Select
 
 
@@ -148,16 +148,6 @@ Partial Friend Class frmInspector
                 _Query.addQuery(cmd)
 
             Next
-
-
-
-            'If currentFilename <> "" Then
-            '    ' create queries - then schedule
-            '    Dim cmd As String = "reg query HKLM\SOFTWARE\CLASSES /s /f " & currentFilename
-            '    _Query.addQuery(cmd)
-            '    cmd = "reg query HKCU\SOFTWARE\CLASSES  /s /f " & currentFilename
-            '    _Query.addQuery(cmd)
-            'End If
 
         Catch ex As Exception
 #If DEBUG Then

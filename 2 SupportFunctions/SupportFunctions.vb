@@ -123,7 +123,7 @@ Module SupportFunctions
             pRowItem.SubItems.Add(pClassInformation.ClassSource) ' location from which the CLSID is found
             pRowItem.SubItems.Add(pClassInformation.DLLSource) ' DLLSource indicates where the src add the source of the class information
             pRowItem.SubItems.Add(pClassInformation.DLLVersion)
-            pRowItem.SubItems.Add(pClassInformation.Filename)
+            pRowItem.SubItems.Add(pClassInformation.DisplayFilename)
             pRowItem.BackColor = pClassInformation.Colour
         Catch ex As Exception
             MsgBox("Init the registry list exception - " & ex.ToString)

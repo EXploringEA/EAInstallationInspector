@@ -316,8 +316,8 @@ Partial Class frmInspector
 
                     ' Filename
                     myNode = New NodeInfo(NodeType.CLSIDNode_CodeBase, 0)
-                    myNode.Name = CNodeDLLFilename & _C.Filename
-                    myNode.FilePathName = _C.Filename '_filename
+                    myNode.Name = cNodeDLLFilename & _C.DisplayFilename
+                    myNode.FilePathName = _C.DisplayFilename '_filename
                     myNode.ClassName = _C.AddInName '.ClassName
                     myNode.ClassNameLocation = pParent.ClassNameLocation
                     myNode.CLSID = _C.ClassID

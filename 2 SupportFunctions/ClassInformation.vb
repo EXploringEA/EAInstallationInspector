@@ -10,6 +10,7 @@
 ' =============================================================================================================================================
 '
 
+Imports System.IO
 Imports System.Reflection
 Imports Microsoft.Win32
 
@@ -45,7 +46,15 @@ Public Class ClassInformation
     ' run time version for DLL
     Property RunTimeVersion As String = ""
     ' Filename as captured from HKCR
-    Property Filename As String = ""
+    Private Property Filename As String = ""
+    Property DisplayFilename As String
+        Get
+            Return cleanFilename(Filename)
+        End Get
+        Set(value As String)
+
+        End Set
+    End Property
     Property ThreadingModel As String = ""
     Property AssemblyAsString As String = ""
 
@@ -146,6 +155,7 @@ Public Class ClassInformation
             Case AddInEntry.cHKCU32
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
+                    Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCR32
                     populateClassInformation()
                     Dim c As String = CheckHKCU32()
@@ -157,6 +167,7 @@ Public Class ClassInformation
             Case AddInEntry.cHKLM32
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
+                    Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCR32
                     populateClassInformation()
                     Dim c As String = CheckHKLM32()
@@ -168,6 +179,7 @@ Public Class ClassInformation
             Case AddInEntry.cHKCU64
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
+                    Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCR64
                     populateClassInformation()
                     Dim c As String = CheckHKCU()
@@ -179,6 +191,7 @@ Public Class ClassInformation
             Case AddInEntry.cHKLM64
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
+                    Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCR64
                     populateClassInformation()
                     Dim c As String = CheckHKLM()
@@ -190,7 +203,7 @@ Public Class ClassInformation
             Case Else
                 MsgBox("Unable to get class ID for " & AddInName & " Source " & AddInSource)
         End Select
-
+        '      If ClassID <> "" Then Colour = Color.Pink
 
         Return
     End Sub
@@ -204,7 +217,6 @@ Public Class ClassInformation
 
         If _location <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            _filename = cleanFilename(_filename)
             If _filename = Filename Then
                 Debug.Print("CheckHKCU32() same filename")
                 Return AddInEntry.cHKCU32
@@ -228,7 +240,6 @@ Public Class ClassInformation
         End If
         If _location <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            _filename = cleanFilename(_filename)
             If _filename = Filename Then
                 Debug.Print("CheckHKLM32() same filename")
                 Return AddInEntry.cHKLM32
@@ -244,7 +255,6 @@ Public Class ClassInformation
         Dim _location As String = HKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
         If RegistryLocation <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            _filename = cleanFilename(_filename)
             If _filename = Filename Then
                 Debug.Print("CheckHKCU() same filename")
                 Return AddInEntry.cHKCU64
@@ -259,7 +269,6 @@ Public Class ClassInformation
 
         If RegistryLocation <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            _filename = cleanFilename(_filename)
             If _filename = Filename Then
                 Debug.Print("CheckHKLM() same filename")
                 Return AddInEntry.cHKLM64
@@ -292,10 +301,14 @@ Public Class ClassInformation
         Try
             If RegistryLocation <> "" Then
                 Filename = Registry.GetValue(RegistryLocation, cCodeBase, cNotSet) 'using the class try to find the DLL path
+                If Filename = "" Or Filename = cNotSet Then
+                    Filename = Registry.GetValue(RegistryLocation, "", cNotSet)
+                End If
                 If Filename IsNot Nothing Then getDLLAssembly()
                 RunTimeVersion = Registry.GetValue(RegistryLocation, cRuntimeVersion, cNotSet)
                 ThreadingModel = Registry.GetValue(RegistryLocation, cThreadingModel, cNotSet)
                 AssemblyAsString = Registry.GetValue(RegistryLocation, cAssembly, cNotSet)
+
             End If
 
 
@@ -310,16 +323,19 @@ Public Class ClassInformation
 
         Dim _filename As String = Filename
         If _filename IsNot Nothing And _filename <> cNotSet Then
-            If Strings.Left(_filename, fileprefixlength) = cFilePrefix Then _filename = Strings.Right(_filename, _filename.Length - fileprefixlength)
-            Try
-                Dim ass As AssemblyName = AssemblyName.GetAssemblyName(_filename)
-                DLLVersion = ass.Version.ToString
-            Catch ex As Exception
-                DLLVersion = "Unable to determine"
-            End Try
-            If _filename <> "" Then _filename = _filename.Replace("/", "\")
-            Filename = _filename
-            ' now depending on where items were found flag accordingly
+            If File.Exists(_filename) Then
+                If Strings.Left(_filename, fileprefixlength) = cFilePrefix Then _filename = Strings.Right(_filename, _filename.Length - fileprefixlength)
+                Try
+                    Dim ass As AssemblyName = AssemblyName.GetAssemblyName(_filename)
+                    DLLVersion = ass.Version.ToString
+                Catch ex As Exception
+                    DLLVersion = "Unable to determine"
+                End Try
+                If _filename <> "" Then _filename = _filename.Replace("/", "\")
+                Filename = _filename
+                ' now depending on where items were found flag accordingly
+            End If
+
             If ClassSource <> DLLSource Then
                 Colour = Color.Red
             ElseIf Filename = cNotSet Then
@@ -327,11 +343,13 @@ Public Class ClassInformation
             Else
                 Colour = If(DLLexists(Filename), Color.LightGreen, Color.Cyan)  ' File does not exist
             End If
+            '         Colour = Color.Pink
 
         End If
 
     End Sub
-
+    ' was used to ensure the comparison between filenames was fair - however all entries that are checked are from registry so unless we need to 
+    ' use the address other than checking OK to leave raw
     Private Function cleanFilename(_Filename As String) As String
 
         If Strings.Left(_Filename, fileprefixlength) = cFilePrefix Then _Filename = Strings.Right(_Filename, _Filename.Length - fileprefixlength)
