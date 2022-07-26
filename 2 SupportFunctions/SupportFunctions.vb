@@ -77,27 +77,53 @@ Module SupportFunctions
     Friend Sub setWidths(plv As ListView, Optional w As Integer = 0)
         Try
             Dim mylv As ListView = plv
-            Dim width As Integer = 1
-            If w < 1 Then
-                width = mylv.Width
-            Else
-                width = w
+            If Not My.Settings.WidthSettings Then
+                '    mylv.Columns.Item(0).Width = My.Settings.Col0
+                '    mylv.Columns.Item(1).Width = My.Settings.Col1
+                '    mylv.Columns.Item(2).Width = My.Settings.Col2
+                '    mylv.Columns.Item(3).Width = My.Settings.Col3
+                '    mylv.Columns.Item(4).Width = My.Settings.Col4
+                '    mylv.Columns.Item(5).Width = My.Settings.Col5
+                '    mylv.Columns.Item(6).Width = My.Settings.Col6
+                '    mylv.Columns.Item(7).Width = My.Settings.Col7
+
+                'Else
+
+                Dim width As Integer = 1
+                If w < 1 Then
+                    width = mylv.Width
+                Else
+                    width = w
+                End If
+                width = width / (AddInNameWidth + SparxKeySRCWidth + Classnamewidth + CLSIDWidth + ClassSrcWidth + DLLSRCWidth + DLLVersionWidth + DLLWidth)
+                If mylv.Columns.Count < 7 Then Return
+                My.Settings.Col0 = width * AddInNameWidth
+                My.Settings.Col1 = width * SparxKeySRCWidth
+                My.Settings.Col2 = width * Classnamewidth
+                My.Settings.Col3 = width * CLSIDWidth
+                My.Settings.Col4 = width * ClassSrcWidth
+                My.Settings.Col5 = width * DLLSRCWidth
+                My.Settings.Col6 = width * DLLVersionWidth
+                My.Settings.Col7 = width * DLLWidth
+                My.Settings.WidthSettings = True
+                My.Settings.Save()
             End If
-            width = width / (AddInNameWidth + SparxKeySRCWidth + Classnamewidth + CLSIDWidth + ClassSrcWidth + DLLSRCWidth + DLLVersionWidth + DLLWidth)
-            If mylv.Columns.Count < 7 Then Return
-            mylv.Columns.Item(0).Width = width * AddInNameWidth
-            mylv.Columns.Item(1).Width = width * SparxKeySRCWidth
-            mylv.Columns.Item(2).Width = width * Classnamewidth
-            mylv.Columns.Item(3).Width = width * CLSIDWidth
-            mylv.Columns.Item(4).Width = width * ClassSrcWidth
-            mylv.Columns.Item(5).Width = width * DLLSRCWidth
-            mylv.Columns.Item(6).Width = width * DLLVersionWidth
-            mylv.Columns.Item(7).Width = width * DLLWidth
+
+            mylv.Columns.Item(0).Width = My.Settings.Col0
+            mylv.Columns.Item(1).Width = My.Settings.Col1
+            mylv.Columns.Item(2).Width = My.Settings.Col2
+            mylv.Columns.Item(3).Width = My.Settings.Col3
+            mylv.Columns.Item(4).Width = My.Settings.Col4
+            mylv.Columns.Item(5).Width = My.Settings.Col5
+            mylv.Columns.Item(6).Width = My.Settings.Col6
+            mylv.Columns.Item(7).Width = My.Settings.Col7
+
 
         Catch ex As Exception
 
         End Try
     End Sub
+
 
 
     ''' <summary>

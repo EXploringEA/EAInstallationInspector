@@ -66,8 +66,8 @@ Public Class ClassInformation
 
 
     Friend Const cHKCR_ClassesRoot As String = "HKEY_CLASSES_ROOT\"
-    Friend Const cHKCR_ClassesRootWow32CLSID As String = "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\"
-    Friend Const cHKCR_ClassesRootCLSID As String = "HKEY_CLASSES_ROOT\CLSID\"
+    'Friend Const cHKCR_ClassesRootWow32CLSID As String = "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\"
+    ' Friend Const cHKCR_ClassesRootCLSID As String = "HKEY_CLASSES_ROOT\CLSID\"
 
     ' Registry class locations
     ''' <summary>
@@ -75,33 +75,37 @@ Public Class ClassInformation
     ''' * 32-bit on 32-bit OS
     ''' * 64-bit on 64-bit OS
     ''' </summary>
-    Friend Const HKCU_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes"
+    Friend Const cHKCU_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes"
+    Friend Const cHKCU_ClassesCLSID As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\"
+    Friend Const cHKCUWOW_ClassesCLSID As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\Wow6432Node\CLSID\"
+
 
     '''' <summary>
     '''' HKCU Classes for 
     '''' * 32-bit on 64-bit OS
     '''' </summary>
-    Friend Const HKCUWOW_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\Wow6432Node"
+    Friend Const cHKCUWOW_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\Wow6432Node"
 
     ''' <summary>
     ''' HKLM Classes
     ''' * 32-bit on 32-bit OS
     ''' * 64-bit on 64-bit OS
     ''' </summary>
-    Friend Const HKLM_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes"
-
+    Friend Const cHKLM_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes"
+    Friend Const cHKLM_ClassesCLSID As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\"
 
     ''' <summary>
     ''' HKLM Classes for 
     ''' * 32-bit on 64-bit OS
     ''' </summary>
-    Friend Const HKLMWow1_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node"
-    Friend Const HKLMWow2_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Classes"
+    Friend Const cHKLMWow1_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node"
+    Friend Const cHKLMWow2_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Classes"
+    Friend Const cHKLMWow_ClassesCLSID As String = "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Classes\CLSID\"
 
 
 
 
-    Friend OS64Bit As Boolean = False
+    Private OS64Bit As Boolean = False
     ''' <summary>
     ''' Constructor used to save Sparx information and get the class ID
     ''' </summary>
@@ -136,11 +140,10 @@ Public Class ClassInformation
     ''' Returns the classID based on the Classname from the HKEY_CLASSES_ROOT
     ''' This hive is a merge of the others so will produce a classID for a classname regardless if it is 32-bit or 64-bit
     ''' Within HKCR there are CLSID entries and on 64-bit systems WOW6432NODE CLSID
-    ''' Hence it is possibke to determing if there are 32, 64 or 2 classes
+    ''' The classID is then used to check in the relevant hives starting with that where the Sparx entry is defined and then if not found checked in the other HIVE
+    ''' NOTE: 32-biut and 64-bit are treated separately
     ''' </summary>
-
     Private Sub getClassID()
-
 
         ClassSource = ""
         ClassID = ""
@@ -156,11 +159,9 @@ Public Class ClassInformation
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     Colour = Color.Pink
-                    ClassSource = AddInEntry.cHKCR32
-                    populateClassInformation()
-                    Dim c As String = CheckHKCU32()
-                    If c <> "" Then ClassSource += "," & c
-                    c = CheckHKLM32()
+                    ClassSource = AddInEntry.cHKCU32
+                    populateClassInformation(AddInEntry.cHKCU32)
+                    Dim c As String = CheckHKLM32()
                     If c <> "" Then ClassSource += "," & c
                 End If
 
@@ -168,11 +169,9 @@ Public Class ClassInformation
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     Colour = Color.Pink
-                    ClassSource = AddInEntry.cHKCR32
-                    populateClassInformation()
-                    Dim c As String = CheckHKLM32()
-                    If c <> "" Then ClassSource += "," & c
-                    c = CheckHKCU32()
+                    ClassSource = AddInEntry.cHKLM32
+                    populateClassInformation(AddInEntry.cHKLM32)
+                    Dim c As String = CheckHKCU32()
                     If c <> "" Then ClassSource += "," & c
                 End If
                     '64-bit addins
@@ -180,11 +179,9 @@ Public Class ClassInformation
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     Colour = Color.Pink
-                    ClassSource = AddInEntry.cHKCR64
-                    populateClassInformation()
-                    Dim c As String = CheckHKCU()
-                    If c <> "" Then ClassSource += "," & c
-                    c = CheckHKLM()
+                    ClassSource = AddInEntry.cHKCU64
+                    populateClassInformation(AddInEntry.cHKCU64)
+                    Dim c As String = CheckHKLM()
                     If c <> "" Then ClassSource += "," & c
 
                 End If
@@ -192,13 +189,10 @@ Public Class ClassInformation
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     Colour = Color.Pink
-                    ClassSource = AddInEntry.cHKCR64
-                    populateClassInformation()
-                    Dim c As String = CheckHKLM()
+                    ClassSource = AddInEntry.cHKLM64
+                    populateClassInformation(AddInEntry.cHKLM64)
+                    Dim c As String = CheckHKCU()
                     If c <> "" Then ClassSource += "," & c
-                    c = CheckHKCU()
-                    If c <> "" Then ClassSource += "," & c
-
                 End If
             Case Else
                 MsgBox("Unable to get class ID for " & AddInName & " Source " & AddInSource)
@@ -212,12 +206,14 @@ Public Class ClassInformation
     ''' </summary>
     ''' <returns>HKCR if yes else ""</returns>
     Private Function CheckHKCU32() As String
-        Dim _location As String = IIf(OS64Bit, HKCUWOW_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32,
-                               HKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
+        Dim _location As String = IIf(OS64Bit, cHKCUWOW_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32,
+                               cHKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
 
         If _location <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            If _filename = Filename Then
+            If _filename <> "" And Filename = "" Then
+                populateClassInformation(AddInEntry.cHKCU32)
+            ElseIf _filename = Filename Then
                 Debug.Print("CheckHKCU32() same filename")
                 Return AddInEntry.cHKCU32
             Else
@@ -232,31 +228,37 @@ Public Class ClassInformation
     ''' <returns>HKLM if yes else ""</returns>
     Private Function CheckHKLM32()
         ' there are 2 locations for WOW6432 in HKLM - it is believed they mirror each other but not sure so check both
-        Dim _location As String = IIf(OS64Bit, HKLMWow1_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32,
-                       HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
+        Dim _location As String = IIf(OS64Bit, cHKLMWow1_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32,
+                       cHKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
         If _location = "" Then ' try other location
-            _location = IIf(OS64Bit, HKLMWow2_Classes & cBackSlash & ClassID & cBackSlash & cInprocServer32,
-                       HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
+            _location = IIf(OS64Bit, cHKLMWow2_Classes & cBackSlash & ClassID & cBackSlash & cInprocServer32,
+                       cHKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
         End If
         If _location <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            If _filename = Filename Then
+            If _filename <> "" And Filename = "" Then
+                populateClassInformation(AddInEntry.cHKLM32)
+            ElseIf _filename = Filename Then
                 Debug.Print("CheckHKLM32() same filename")
                 Return AddInEntry.cHKLM32
             Else
                 Debug.Print("HKCR " & Filename & "HKCU Filename= " & _filename)
             End If
+
         End If
         Return ""
     End Function
 
 
     Private Function CheckHKCU() As String
-        Dim _location As String = HKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
+        Dim _location As String = cHKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
         If RegistryLocation <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            If _filename = Filename Then
-                Debug.Print("CheckHKCU() same filename")
+
+            If _filename <> "" And Filename = "" Then
+                populateClassInformation(AddInEntry.cHKCU64)
+            ElseIf _filename = Filename Then
+                Debug.Print("CheckHKCU64() same filename")
                 Return AddInEntry.cHKCU64
             Else
                 Debug.Print("HKCR " & Filename & "HKCU Filename= " & _filename)
@@ -265,12 +267,15 @@ Public Class ClassInformation
         Return ""
     End Function
     Private Function CheckHKLM() As String
-        Dim _location As String = HKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
+        Dim _location As String = cHKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
 
         If RegistryLocation <> "" Then
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            If _filename = Filename Then
-                Debug.Print("CheckHKLM() same filename")
+
+            If _filename <> "" And Filename = "" Then
+                populateClassInformation(AddInEntry.cHKLM64)
+            ElseIf _filename = Filename Then
+                Debug.Print("CheckHKLM64() same filename")
                 Return AddInEntry.cHKLM64
             Else
                 Debug.Print("HKCR " & Filename & "HKCU Filename= " & _filename)
@@ -280,18 +285,39 @@ Public Class ClassInformation
 
     End Function
 
-    ' use the classID to get the details if there is a 32-bit class
-    ' information extracted from HKCR - so only 32-bit or 64-bit
-    Private Sub populateClassInformation()
-        Select Case ClassSource
-            Case AddInEntry.cHKCR32
-                RegistryLocation = IIf(OS64Bit, cHKCR_ClassesRootWow32CLSID & ClassID & cBackSlash & cInprocServer32,
-                               cHKCR_ClassesRootCLSID & ClassID & cBackSlash & cInprocServer32)
-                DLLSource = AddInEntry.cHKCR32
+    ''' <summary>
+    ''' use the classID to get the details if there is a 32-bit class
+    ''' information extracted from HKCU or HKLM - so only 32-bit or 64-bit
+    ''' </summary>
+    ''' <param name="pSource">This must be one of cHKCU32, cHKLM32, cHKCU64,cHKLM64</param>
+    Private Sub populateClassInformation(pSource As String)
+        Select Case pSource
+            'Case AddInEntry.cHKCR32
+            '    RegistryLocation = IIf(OS64Bit, cHKCR_ClassesRootWow32CLSID & ClassID & cBackSlash & cInprocServer32,
+            '                   cHKCR_ClassesRootCLSID & ClassID & cBackSlash & cInprocServer32)
+            '    DLLSource = AddInEntry.cHKCR32
 
-            Case AddInEntry.cHKCR64
-                RegistryLocation = cHKCR_ClassesRootCLSID & ClassID & cBackSlash & cInprocServer32
-                DLLSource = AddInEntry.cHKCR64
+            'Case AddInEntry.cHKCR64
+            '    RegistryLocation = cHKCR_ClassesRootCLSID & ClassID & cBackSlash & cInprocServer32
+            '    DLLSource = AddInEntry.cHKCR64
+
+            Case AddInEntry.cHKCU32 ' get information from HKCU
+                RegistryLocation = IIf(OS64Bit, cHKCUWOW_ClassesCLSID & ClassID & cBackSlash & cInprocServer32,
+                        cHKCU_ClassesCLSID & ClassID & cBackSlash & cInprocServer32)
+                DLLSource = AddInEntry.cHKCU32
+
+            Case AddInEntry.cHKLM32 ' get information from HKLM
+                RegistryLocation = IIf(OS64Bit, cHKLMWow_ClassesCLSID & ClassID & cBackSlash & cInprocServer32,
+                      cHKLM_ClassesCLSID & ClassID & cBackSlash & cInprocServer32)
+                DLLSource = AddInEntry.cHKLM32
+
+            Case AddInEntry.cHKCU64 ' get information from HKCU
+                RegistryLocation = cHKCU_ClassesCLSID & ClassID & cBackSlash & cInprocServer32
+                DLLSource = AddInEntry.cHKCU64
+
+            Case AddInEntry.cHKLM64 ' get information from HKLM
+                RegistryLocation = cHKLM_ClassesCLSID & ClassID & cBackSlash & cInprocServer32
+                DLLSource = AddInEntry.cHKLM64
 
             Case Else
                 DLLSource = cNotFound
@@ -318,10 +344,13 @@ Public Class ClassInformation
 
     End Sub
 
-    ' Get information for DLL file
+    ''' <summary>
+    ''' Get information for DLL file
+    ''' </summary>
     Private Sub getDLLAssembly()
 
-        Dim _filename As String = Filename
+        Dim _filename As String = cleanFilename(Filename)
+
         If _filename IsNot Nothing And _filename <> cNotSet Then
             If File.Exists(_filename) Then
                 If Strings.Left(_filename, fileprefixlength) = cFilePrefix Then _filename = Strings.Right(_filename, _filename.Length - fileprefixlength)

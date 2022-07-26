@@ -38,6 +38,8 @@ Partial Friend Class frmInspector
 
     Friend _Query As Query = Nothing
 
+    Private _loaded As Boolean = False
+
     ''' <summary>
     ''' Handles the Load event of the frmInspector control - which retrieves and presents the information for EA AddIns
     ''' </summary>
@@ -90,14 +92,18 @@ Partial Friend Class frmInspector
 
             ' initialise the registry tree and create node for SPARX Addin
             Browser.Nodes.Clear()
-            Dim ModelNode As NodeInfo = New NodeInfo(NodeType.SparxRoot, 2)
+            Dim ModelNode As New NodeInfo(NodeType.SparxRoot, 2)
             ModelNode.Name = "SPARX AddIns"
             startTree(ModelNode)
 
             _Query = Query.InitQuery(tabControl, lvQuery, tbQueryMessage, tbQueryActive, btStopQueryActive)
             ' initialise the query tab results list view
             init_lvquery(lvQuery)
+            ' have to save the window NOT the listview
+            If My.Settings.WindowWidth > 200 Then Me.Width = My.Settings.WindowWidth
+            If My.Settings.WindowHeight > 200 Then Me.Height = My.Settings.WindowHeight
 
+            _loaded = True
 
 #If DEBUG Then
             If logger.logger IsNot Nothing Then logger.logger.log("Form loaded")
@@ -180,7 +186,7 @@ Partial Friend Class frmInspector
     Private Sub btCopy_Click(sender As Object, e As EventArgs) Handles btCopy.Click
         Try
             Dim gfx As Graphics = Me.CreateGraphics()
-            Dim bmp As Bitmap = New Bitmap(Me.Width, Me.Height)
+            Dim bmp As New Bitmap(Me.Width, Me.Height)
             Me.DrawToBitmap(bmp, New Rectangle(0, 0, Me.Width, Me.Height))
             My.Computer.Clipboard.SetImage(bmp)
         Catch ex As Exception
@@ -326,10 +332,7 @@ Partial Friend Class frmInspector
     Private Sub btRefresh_Click(sender As Object, e As EventArgs) Handles btRefresh.Click
         Try
             checkDebugFrameworkConfig()
-
-
             lvListOfAddIns.Items.Clear()
-            '            GetAddInClassDetailsAndPopulateListview(lvListOfAddIns)
             Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns)
         Catch ex As Exception
 #If DEBUG Then
@@ -345,6 +348,8 @@ Partial Friend Class frmInspector
     ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     Private Sub lvListOfAddIns_SizeChanged(sender As Object, e As EventArgs) Handles lvListOfAddIns.SizeChanged
         Try
+            If Not _loaded Then Return
+
             If TypeOf sender Is ListView Then
                 Dim lv As ListView = sender
                 If lv.Columns.Count < 1 Then Return ' prior to initialisation don't need to do anything 
@@ -355,6 +360,44 @@ Partial Friend Class frmInspector
                 Next
                 lv.Columns(7).Width = lv.Width - col05width
 
+                My.Settings.Col0 = lv.Columns(0).Width
+                My.Settings.Col1 = lv.Columns(1).Width
+                My.Settings.Col2 = lv.Columns(2).Width
+                My.Settings.Col3 = lv.Columns(3).Width
+                My.Settings.Col4 = lv.Columns(4).Width
+                My.Settings.Col5 = lv.Columns(5).Width
+                My.Settings.Col6 = lv.Columns(6).Width
+                My.Settings.Col7 = lv.Columns(7).Width
+                My.Settings.WidthSettings = True
+
+                My.Settings.Save()
+            End If
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+    End Sub
+
+    ' ONLY need to use this after initialisation
+
+    Private Sub lvListOfAddIns_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles lvListOfAddIns.ColumnWidthChanged
+        Try
+            If Not _loaded Then Return
+
+            If TypeOf sender Is ListView Then
+                Dim lv As ListView = sender
+
+                My.Settings.Col0 = lv.Columns(0).Width
+                My.Settings.Col1 = lv.Columns(1).Width
+                My.Settings.Col2 = lv.Columns(2).Width
+                My.Settings.Col3 = lv.Columns(3).Width
+                My.Settings.Col4 = lv.Columns(4).Width
+                My.Settings.Col5 = lv.Columns(5).Width
+                My.Settings.Col6 = lv.Columns(6).Width
+                My.Settings.Col7 = lv.Columns(7).Width
+                My.Settings.WidthSettings = True
+                My.Settings.Save()
             End If
         Catch ex As Exception
 #If DEBUG Then
@@ -573,5 +616,16 @@ Partial Friend Class frmInspector
         End If
     End Sub
 
+    Private Sub frmInspector_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
+        Try
+            If _loaded Then
+                My.Settings.WindowHeight = Me.Height
+                My.Settings.WindowWidth = Me.Width
+                My.Settings.Save()
 
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
 End Class
