@@ -53,6 +53,150 @@ Namespace My
                 Return defaultInstance
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property WidthSettings() As Boolean
+            Get
+                Return CType(Me("WidthSettings"),Boolean)
+            End Get
+            Set
+                Me("WidthSettings") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col1() As Integer
+            Get
+                Return CType(Me("Col1"),Integer)
+            End Get
+            Set
+                Me("Col1") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col2() As Integer
+            Get
+                Return CType(Me("Col2"),Integer)
+            End Get
+            Set
+                Me("Col2") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col3() As Integer
+            Get
+                Return CType(Me("Col3"),Integer)
+            End Get
+            Set
+                Me("Col3") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col4() As Integer
+            Get
+                Return CType(Me("Col4"),Integer)
+            End Get
+            Set
+                Me("Col4") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col5() As Integer
+            Get
+                Return CType(Me("Col5"),Integer)
+            End Get
+            Set
+                Me("Col5") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col6() As Integer
+            Get
+                Return CType(Me("Col6"),Integer)
+            End Get
+            Set
+                Me("Col6") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col7() As Integer
+            Get
+                Return CType(Me("Col7"),Integer)
+            End Get
+            Set
+                Me("Col7") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Col0() As Integer
+            Get
+                Return CType(Me("Col0"),Integer)
+            End Get
+            Set
+                Me("Col0") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property WindowWidth() As Integer
+            Get
+                Return CType(Me("WindowWidth"),Integer)
+            End Get
+            Set
+                Me("WindowWidth") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property WindowHeight() As Integer
+            Get
+                Return CType(Me("WindowHeight"),Integer)
+            End Get
+            Set
+                Me("WindowHeight") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property DllFolder() As String
+            Get
+                Return CType(Me("DllFolder"),String)
+            End Get
+            Set
+                Me("DllFolder") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

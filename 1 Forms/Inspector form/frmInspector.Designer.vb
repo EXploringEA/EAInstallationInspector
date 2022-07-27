@@ -66,6 +66,7 @@ Partial Class frmInspector
         Me.tbVersion64 = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.btLegend = New System.Windows.Forms.Button()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -82,6 +83,7 @@ Partial Class frmInspector
         Me.lvListOfAddIns.Name = "lvListOfAddIns"
         Me.lvListOfAddIns.Size = New System.Drawing.Size(1108, 341)
         Me.lvListOfAddIns.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.lvListOfAddIns, "List of Addins - ordered 32bit HKCU - HKLM then 64-bit by HKCU - HKLM")
         Me.lvListOfAddIns.UseCompatibleStateImageBehavior = False
         '
         'Label1
@@ -100,6 +102,7 @@ Partial Class frmInspector
         Me.tbOS.ReadOnly = True
         Me.tbOS.Size = New System.Drawing.Size(100, 20)
         Me.tbOS.TabIndex = 2
+        Me.ToolTip1.SetToolTip(Me.tbOS, "Type of operating system")
         '
         'Label2
         '
@@ -117,6 +120,7 @@ Partial Class frmInspector
         Me.tbVersion32.ReadOnly = True
         Me.tbVersion32.Size = New System.Drawing.Size(100, 20)
         Me.tbVersion32.TabIndex = 4
+        Me.ToolTip1.SetToolTip(Me.tbVersion32, "EA Version")
         '
         'Label3
         '
@@ -134,6 +138,7 @@ Partial Class frmInspector
         Me.tbLocation32.ReadOnly = True
         Me.tbLocation32.Size = New System.Drawing.Size(610, 20)
         Me.tbLocation32.TabIndex = 6
+        Me.ToolTip1.SetToolTip(Me.tbLocation32, "Installation location of 32-bit EA ")
         '
         'btHelp
         '
@@ -198,9 +203,9 @@ Partial Class frmInspector
         'btDebugFramework
         '
         Me.btDebugFramework.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btDebugFramework.Location = New System.Drawing.Point(391, 487)
+        Me.btDebugFramework.Location = New System.Drawing.Point(484, 488)
         Me.btDebugFramework.Name = "btDebugFramework"
-        Me.btDebugFramework.Size = New System.Drawing.Size(142, 22)
+        Me.btDebugFramework.Size = New System.Drawing.Size(77, 22)
         Me.btDebugFramework.TabIndex = 19
         Me.btDebugFramework.Text = "EA debug config"
         Me.ToolTip1.SetToolTip(Me.btDebugFramework, "EA.exe.config present if green," & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Press to display contents of file" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "to view order" &
@@ -221,6 +226,7 @@ Partial Class frmInspector
         Me.tabControl.SelectedIndex = 0
         Me.tabControl.Size = New System.Drawing.Size(1120, 371)
         Me.tabControl.TabIndex = 12
+        Me.ToolTip1.SetToolTip(Me.tabControl, "Select tabs to see contents in list form or treeview or with a custom query")
         '
         'tabListOfAddins
         '
@@ -254,6 +260,7 @@ Partial Class frmInspector
         Me.Browser.Name = "Browser"
         Me.Browser.Size = New System.Drawing.Size(1108, 341)
         Me.Browser.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.Browser, "Treeview version based on Sparx addin key entires")
         '
         'tabQueryRegistry
         '
@@ -279,6 +286,7 @@ Partial Class frmInspector
         Me.lvQuery.Name = "lvQuery"
         Me.lvQuery.Size = New System.Drawing.Size(1112, 345)
         Me.lvQuery.TabIndex = 0
+        Me.ToolTip1.SetToolTip(Me.lvQuery, "Output from queries")
         Me.lvQuery.UseCompatibleStateImageBehavior = False
         '
         'ColumnHeader1
@@ -337,6 +345,7 @@ Partial Class frmInspector
         Me.tbQueryMessage.Name = "tbQueryMessage"
         Me.tbQueryMessage.Size = New System.Drawing.Size(610, 20)
         Me.tbQueryMessage.TabIndex = 16
+        Me.ToolTip1.SetToolTip(Me.tbQueryMessage, "Currently active registry query")
         Me.tbQueryMessage.Visible = False
         '
         'tbQueryActive
@@ -351,6 +360,7 @@ Partial Class frmInspector
         Me.tbQueryActive.TabIndex = 17
         Me.tbQueryActive.Text = "Query active"
         Me.tbQueryActive.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.tbQueryActive, "Indication  of an active registry query - runs in backgroud")
         Me.tbQueryActive.Visible = False
         '
         'btStopQueryActive
@@ -372,6 +382,7 @@ Partial Class frmInspector
         Me.tbLocation64.Name = "tbLocation64"
         Me.tbLocation64.Size = New System.Drawing.Size(610, 20)
         Me.tbLocation64.TabIndex = 20
+        Me.ToolTip1.SetToolTip(Me.tbLocation64, "Installation location of 64-bit EA ")
         '
         'tbVersion64
         '
@@ -379,6 +390,7 @@ Partial Class frmInspector
         Me.tbVersion64.Name = "tbVersion64"
         Me.tbVersion64.Size = New System.Drawing.Size(100, 20)
         Me.tbVersion64.TabIndex = 21
+        Me.ToolTip1.SetToolTip(Me.tbVersion64, "EA Version")
         '
         'Label4
         '
@@ -388,6 +400,7 @@ Partial Class frmInspector
         Me.Label4.Size = New System.Drawing.Size(80, 13)
         Me.Label4.TabIndex = 22
         Me.Label4.Text = "EA 64 Location"
+        Me.ToolTip1.SetToolTip(Me.Label4, "Installation location of 32-bit EA ")
         '
         'Label5
         '
@@ -398,12 +411,25 @@ Partial Class frmInspector
         Me.Label5.TabIndex = 23
         Me.Label5.Text = "EA 64 version"
         '
+        'btLegend
+        '
+        Me.btLegend.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btLegend.Location = New System.Drawing.Point(397, 486)
+        Me.btLegend.Name = "btLegend"
+        Me.btLegend.Size = New System.Drawing.Size(75, 23)
+        Me.btLegend.TabIndex = 24
+        Me.btLegend.Text = "Legend"
+        Me.ToolTip1.SetToolTip(Me.btLegend, "Display a legend for the List of AddIns colours")
+        Me.btLegend.UseVisualStyleBackColor = True
+        Me.btLegend.Visible = False
+        '
         'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
         Me.ClientSize = New System.Drawing.Size(1160, 520)
+        Me.Controls.Add(Me.btLegend)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.tbVersion64)
@@ -471,4 +497,5 @@ Partial Class frmInspector
     Friend WithEvents tbVersion64 As TextBox
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
+    Friend WithEvents btLegend As Button
 End Class

@@ -32,14 +32,18 @@ Partial Friend Class frmInspector
                 _Classname = _Node.ClassName
                 _classID = _Node.CLSID
 
+
+
                 ' create a new context menu
                 Dim mnuDGContextMenu As New ContextMenu()
                 ' filename
                 If _Node.Name.Contains(cNodeDLLFilename) Then '
+                    _FileDirectory = ""
                     currentFilePath = Path.GetDirectoryName(_Node.FilePathName)
                     currentFilename = Path.GetFileName(_Node.FilePathName)
-
+                    _FileDirectory = currentFilePath
                     Dim mnuItemOpenDLLLocation As New MenuItem("Open file location in explorer: " & currentFilePath)
+
                     mnuDGContextMenu.MenuItems.Add(mnuItemOpenDLLLocation)
                     AddHandler mnuItemOpenDLLLocation.Click, AddressOf OpenFullFilenameWithExplorer
                     Dim mnuFilenameInfo As New MenuItem("File info : " & currentFilename)
@@ -52,32 +56,32 @@ Partial Friend Class frmInspector
 
                 'classname
                 If _Node.Name.Contains(cNodeClassname) Then '
-                    _Classname = _Node.ClassName
-                    Dim mnuClassnameCheck As New MenuItem("Classname query : " & _Classname)
-                    AddHandler mnuClassnameCheck.Click, AddressOf RunQueryForClassname
-                    mnuDGContextMenu.MenuItems.Add(mnuClassnameCheck)
+                        _Classname = _Node.ClassName
+                        Dim mnuClassnameCheck As New MenuItem("Classname query : " & _Classname)
+                        AddHandler mnuClassnameCheck.Click, AddressOf RunQueryForClassname
+                        mnuDGContextMenu.MenuItems.Add(mnuClassnameCheck)
+                    End If
+
+                    'Class ID
+                    If _Node.Name.Contains(cNodeCLSID) Then '
+                        _classID = _Node.CLSID
+                        Dim mnuCLSIDCheck As New MenuItem("Class ID query : " & _classID)
+                        AddHandler mnuCLSIDCheck.Click, AddressOf RunQueryForClassID
+                        mnuDGContextMenu.MenuItems.Add(mnuCLSIDCheck)
+                    End If
+
+                    'Prog ID
+                    If _Node.Name.Contains(cNodeProgID) Then '
+                        _ProgID = _Node.ProgID
+                        Dim mnuProgIDCheck As New MenuItem("Prog ID query : " & _ProgID)
+                        AddHandler mnuProgIDCheck.Click, AddressOf RunQueryForProgID
+                        mnuDGContextMenu.MenuItems.Add(mnuProgIDCheck)
+                    End If
+
+                    ' display context menu
+                    mnuDGContextMenu.Show(sender, New Point(e.Location.X, e.Location.Y))
+
                 End If
-
-                'Class ID
-                If _Node.Name.Contains(cNodeCLSID) Then '
-                    _classID = _Node.CLSID
-                    Dim mnuCLSIDCheck As New MenuItem("Class ID query : " & _classID)
-                    AddHandler mnuCLSIDCheck.Click, AddressOf RunQueryForClassID
-                    mnuDGContextMenu.MenuItems.Add(mnuCLSIDCheck)
-                End If
-
-                'Prog ID
-                If _Node.Name.Contains(cNodeProgID) Then '
-                    _ProgID = _Node.ProgID
-                    Dim mnuProgIDCheck As New MenuItem("Prog ID query : " & _ProgID)
-                    AddHandler mnuProgIDCheck.Click, AddressOf RunQueryForProgID
-                    mnuDGContextMenu.MenuItems.Add(mnuProgIDCheck)
-                End If
-
-                ' display context menu
-                mnuDGContextMenu.Show(sender, New Point(e.Location.X, e.Location.Y))
-
-            End If
 
         Catch ex As Exception
 #If DEBUG Then

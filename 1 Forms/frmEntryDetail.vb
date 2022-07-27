@@ -78,7 +78,7 @@ Friend Class frmEntryDetail
             Debug.Print(ex.ToString)
 #End If
         End Try
-
+        Return pFilename
     End Function
     ''' <summary>
     ''' Handles the Click event of the btClose control.
@@ -97,11 +97,11 @@ Friend Class frmEntryDetail
     Private Sub btCopyDetailToClipboard_Click(sender As Object, e As EventArgs) Handles btCopyDetailToClipboard.Click
         Try
             Dim gfx As Graphics = Me.CreateGraphics()
-            Dim bmp As Bitmap = New Bitmap(Me.Width, Me.Height)
+            Dim bmp As New Bitmap(Me.Width, Me.Height)
             Me.DrawToBitmap(bmp, New Rectangle(0, 0, Me.Width, Me.Height))
             My.Computer.Clipboard.SetImage(bmp)
         Catch ex As Exception
-#If DEBUG Then
+#If DEBUG Then'
             Debug.Print(ex.ToString)
 #End If
         End Try
@@ -110,25 +110,64 @@ Friend Class frmEntryDetail
 
     Private Sub btDLLDetail_Click(sender As Object, e As EventArgs) Handles btDLLDetail.Click
         Try
+            If _DLLFilename = "" Then
+                MsgBox("No DLL file defined", MsgBoxStyle.Exclamation, "No DLL")
+                Return
+            End If
+
             Dim _filename As String = Path.GetFullPath(_DLLFilename)
 
-            'Dim filename As String = _DLLFilename.Replace("file:///", "")
-            'filename = filename.Replace("/", "\")
-            'filename = _f
+            '
+            '   _filename = "C:\Users\EXploringEA\Downloads\dlls\E002_ASimpleEAMenu.DLL"
+            '   _filename = "eaDocXAddIn.eaDocX_Addin"
             If File.Exists(_filename) Then
-                'Dim ass As AssemblyName = AssemblyName.GetAssemblyName(_filename)
-                'Version = ass.Version.ToString
+                Dim filecontents As Byte()
+                Debug.Print("DLL Detail: " & _filename)
+                Dim assembly As Assembly = Nothing
+                Dim myDllClass As Object = Nothing
+                Try
+                    '   checkDLL(_filename)
+                    '  assembly = Assembly.ReflectionOnlyLoadFrom(_filename)
+                    assembly = Assembly.LoadFrom(_filename)
+                    'filecontents = File.ReadAllBytes(_filename)
+                    'assembly = Assembly.Load(filecontents) 'File.ReadAllBytes(_filename))
+                    myDllClass = assembly.CreateInstance(tbAssemblyName.Text)
+                    Dim s As String = "-----"
+                    s += myDllClass.GetType.ToString
+                    Debug.Print(s)
+                Catch bifex As BadImageFormatException
+                    MsgBox("Bad image format exception - which indicates that the DLL may not be a valid assembly at least in terms of loading by the EA Installation Inspector " _
+                           & "it could be due to the DLL being compiler with a later version of the CLR (.NET framework) than this tool. " & vbCrLf _
+                           & "NOTE: it may be this tool failing to load rather than your addin failing !" & vbCrLf _
+                           & "-----------------" & vbCrLf _
+                           & "Windows exception message below which may gives some clues " _
+                           & bifex.ToString, MsgBoxStyle.Exclamation, "Bad Image format exception")
+                    Return
+                Catch fnfex As FileNotFoundException
+                    MsgBox("File Not found - could be that referenced dll's by your addin aren't present: " & fnfex.ToString, MsgBoxStyle.Exclamation, "File not found exception")
+                    Return
+                Catch flex As FileLoadException
+                    MsgBox("File not found - could be that referenced dll's by your addin aren't present: " & flex.ToString, MsgBoxStyle.Exclamation, "File Load Exception")
+                    Return
+                Catch ex As Exception
+                    MsgBox("Exception: " & ex.ToString, MsgBoxStyle.Exclamation, "Other exceptions")
+                    assembly = Nothing
+                End Try
+                If assembly IsNot Nothing Then
 
-                Dim assembly As Assembly = Assembly.LoadFrom(_filename)
-                Dim types As Type() = assembly.GetTypes()
-                '   Dim s As String = " List of types " & vbCrLf
-                Dim _ListOfTypes As New ArrayList
-                For Each t As Type In types
-                    _ListOfTypes.Add(t)
-                Next
-                '  MsgBox(s, MsgBoxStyle.OkOnly, "List of public methods for DLL")
-                Dim frmMethods As New frmListOfClasses(_ListOfTypes)
-                frmMethods.ShowDialog()
+                    Dim types As Type() = assembly.GetTypes()
+                    '   Dim s As String = " List of types " & vbCrLf
+                    Dim _ListOfTypes As New ArrayList
+                    For Each t As Type In types
+                        _ListOfTypes.Add(t)
+                    Next
+                    '  MsgBox(s, MsgBoxStyle.OkOnly, "List of public methods for DLL")
+                    Dim frmMethods As New frmListOfClasses(_ListOfTypes)
+                    frmMethods.ShowDialog()
+                Else
+                    MsgBox("Sorry not available as unable to load assembly for " & vbCrLf & _filename, vbExclamation, "Assembly Information Not Available")
+                End If
+
             Else
                 MessageBox.Show("File " & _filename & " does not exist")
             End If
@@ -137,8 +176,22 @@ Friend Class frmEntryDetail
 #If DEBUG Then
             Debug.Print(ex.ToString)
 #End If
-            MessageBox.Show("Error accessing information " & vbCrLf & "(see detail below for some, but not all, the explanation): - " & vbCrLf & "====================================" _
-                            & vbCrLf & ex.ToString)
+            MsgBox("Error accessing information " & vbCrLf & "(see detail below for some, but not all, the explanation): - " & vbCrLf & "====================================" _
+                            & vbCrLf & ex.ToString, vbExclamation, "DLL Detail Not Available")
         End Try
     End Sub
+
+    Private Sub checkDLL(pfilename As String)
+        Dim DynamicDomain As AppDomain
+        ' Dim _filename As String = cleanFilename(Filename)
+        Try
+            DynamicDomain = AppDomain.CreateDomain("DynamicDomain")
+            Dim DynClass As Object = DynamicDomain.CreateInstanceFromAndUnwrap("C:\Program Files (x86)\E002\E002_ASimpleEAMenu.DLL", "E002_ASimpleEAMenu.ASimpleEAMenu")
+            '     Dim MethodInfo As MethodInfo = DynClass.getTypes
+            If DynamicDomain IsNot Nothing Then AppDomain.Unload(DynamicDomain)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
 End Class
