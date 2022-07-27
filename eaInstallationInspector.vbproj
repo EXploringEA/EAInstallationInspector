@@ -13,7 +13,7 @@
     <AssemblyName>eaInstallationInspector</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
   </PropertyGroup>
@@ -151,6 +151,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="5 Tab queries\Query.vb" />
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Assembly\Resolver.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

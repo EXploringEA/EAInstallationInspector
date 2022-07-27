@@ -185,6 +185,18 @@ Namespace My
                 Me("WindowHeight") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property DllFolder() As String
+            Get
+                Return CType(Me("DllFolder"),String)
+            End Get
+            Set
+                Me("DllFolder") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

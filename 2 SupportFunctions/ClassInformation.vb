@@ -415,14 +415,22 @@ Public Class ClassInformation
     End Function
 
     ' function uses the properies of the entry to define the colour that should be set
+    ' precendence of colours
+    ' SPARX present
+    ' CLASSID
+    ' ?loads
+    ' Mismatched HIVES
+    ' DLL exists
+    ' DLL wrong location
+
     Friend Function getLineColour() As Color
-        Dim c As Color = Color.Pink
+        Dim c As Color = Color.White
         Try
             If Not SparxKeyExists Then Return Color.Red
-            If Not ClassIDExists Then Return Color.LightBlue
-            If MismatchedHives Then Return Color.Yellow
-            If Not DLLExistsInSpecifiedLocation Then Return Color.Cyan
-            Return Color.LightGreen
+            If Not ClassIDExists Then Return Color.HotPink
+            If MismatchedHives Then Return Color.Wheat
+            If Not DLLExistsInSpecifiedLocation Then Return Color.Pink
+            Return Color.Lime
 
         Catch ex As Exception
 

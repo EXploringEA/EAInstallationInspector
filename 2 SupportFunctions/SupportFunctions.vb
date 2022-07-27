@@ -78,23 +78,14 @@ Module SupportFunctions
         Try
             Dim mylv As ListView = plv
             If Not My.Settings.WidthSettings Then
-                '    mylv.Columns.Item(0).Width = My.Settings.Col0
-                '    mylv.Columns.Item(1).Width = My.Settings.Col1
-                '    mylv.Columns.Item(2).Width = My.Settings.Col2
-                '    mylv.Columns.Item(3).Width = My.Settings.Col3
-                '    mylv.Columns.Item(4).Width = My.Settings.Col4
-                '    mylv.Columns.Item(5).Width = My.Settings.Col5
-                '    mylv.Columns.Item(6).Width = My.Settings.Col6
-                '    mylv.Columns.Item(7).Width = My.Settings.Col7
-
-                'Else
-
                 Dim width As Integer = 1
-                If w < 1 Then
-                    width = mylv.Width
-                Else
-                    width = w
-                End If
+                'If w < 1 Then
+                '    width = mylv.Width
+                'Else
+                '    width = w
+                'End If
+                width = IIf(w < 1, width = mylv.Width, w)
+
                 width = width / (AddInNameWidth + SparxKeySRCWidth + Classnamewidth + CLSIDWidth + ClassSrcWidth + DLLSRCWidth + DLLVersionWidth + DLLWidth)
                 If mylv.Columns.Count < 7 Then Return
                 My.Settings.Col0 = width * AddInNameWidth

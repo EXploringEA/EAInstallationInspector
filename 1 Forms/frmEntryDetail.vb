@@ -78,7 +78,7 @@ Friend Class frmEntryDetail
             Debug.Print(ex.ToString)
 #End If
         End Try
-
+        Return pFilename
     End Function
     ''' <summary>
     ''' Handles the Click event of the btClose control.
@@ -110,7 +110,10 @@ Friend Class frmEntryDetail
 
     Private Sub btDLLDetail_Click(sender As Object, e As EventArgs) Handles btDLLDetail.Click
         Try
-            If _DLLFilename = "" Then Return
+            If _DLLFilename = "" Then
+                MsgBox("No DLL file defined", MsgBoxStyle.Exclamation, "No DLL")
+                Return
+            End If
 
             Dim _filename As String = Path.GetFullPath(_DLLFilename)
 
@@ -121,13 +124,33 @@ Friend Class frmEntryDetail
                 Dim filecontents As Byte()
                 Debug.Print("DLL Detail: " & _filename)
                 Dim assembly As Assembly = Nothing
+                Dim myDllClass As Object = Nothing
                 Try
                     '   checkDLL(_filename)
-                    ' assembly = Assembly.ReflectionOnlyLoadFrom(_filename)
-                    'assembly = Assembly.LoadFrom(_filename)
-                    filecontents = File.ReadAllBytes(_filename)
-                    assembly = Assembly.Load(filecontents) 'File.ReadAllBytes(_filename))
+                    '  assembly = Assembly.ReflectionOnlyLoadFrom(_filename)
+                    assembly = Assembly.LoadFrom(_filename)
+                    'filecontents = File.ReadAllBytes(_filename)
+                    'assembly = Assembly.Load(filecontents) 'File.ReadAllBytes(_filename))
+                    myDllClass = assembly.CreateInstance(tbAssemblyName.Text)
+                    Dim s As String = "-----"
+                    s += myDllClass.GetType.ToString
+                    Debug.Print(s)
+                Catch bifex As BadImageFormatException
+                    MsgBox("Bad image format exception - which indicates that the DLL may not be a valid assembly at least in terms of loading by the EA Installation Inspector " _
+                           & "it could be due to the DLL being compiler with a later version of the CLR (.NET framework) than this tool. " & vbCrLf _
+                           & "NOTE: it may be this tool failing to load rather than your addin failing !" & vbCrLf _
+                           & "-----------------" & vbCrLf _
+                           & "Windows exception message below which may gives some clues " _
+                           & bifex.ToString, MsgBoxStyle.Exclamation, "Bad Image format exception")
+                    Return
+                Catch fnfex As FileNotFoundException
+                    MsgBox("File Not found - could be that referenced dll's by your addin aren't present: " & fnfex.ToString, MsgBoxStyle.Exclamation, "File not found exception")
+                    Return
+                Catch flex As FileLoadException
+                    MsgBox("File not found - could be that referenced dll's by your addin aren't present: " & flex.ToString, MsgBoxStyle.Exclamation, "File Load Exception")
+                    Return
                 Catch ex As Exception
+                    MsgBox("Exception: " & ex.ToString, MsgBoxStyle.Exclamation, "Other exceptions")
                     assembly = Nothing
                 End Try
                 If assembly IsNot Nothing Then

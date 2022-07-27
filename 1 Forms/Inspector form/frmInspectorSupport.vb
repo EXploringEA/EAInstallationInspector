@@ -204,6 +204,7 @@ Partial Friend Class frmInspector
         Return True
     End Function
 
+
     Private Sub OpenFullFilenameWithExplorer()
         Try
             If Directory.Exists(_FileDirectory) Then
