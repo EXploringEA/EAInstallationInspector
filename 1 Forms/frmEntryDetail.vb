@@ -122,6 +122,7 @@ Friend Class frmEntryDetail
                 Debug.Print("DLL Detail: " & _filename)
                 Dim assembly As Assembly = Nothing
                 Try
+                    '   checkDLL(_filename)
                     ' assembly = Assembly.ReflectionOnlyLoadFrom(_filename)
                     'assembly = Assembly.LoadFrom(_filename)
                     filecontents = File.ReadAllBytes(_filename)
@@ -156,4 +157,18 @@ Friend Class frmEntryDetail
                             & vbCrLf & ex.ToString, vbExclamation, "DLL Detail Not Available")
         End Try
     End Sub
+
+    Private Sub checkDLL(pfilename As String)
+        Dim DynamicDomain As AppDomain
+        ' Dim _filename As String = cleanFilename(Filename)
+        Try
+            DynamicDomain = AppDomain.CreateDomain("DynamicDomain")
+            Dim DynClass As Object = DynamicDomain.CreateInstanceFromAndUnwrap("C:\Program Files (x86)\E002\E002_ASimpleEAMenu.DLL", "E002_ASimpleEAMenu.ASimpleEAMenu")
+            '     Dim MethodInfo As MethodInfo = DynClass.getTypes
+            If DynamicDomain IsNot Nothing Then AppDomain.Unload(DynamicDomain)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
 End Class

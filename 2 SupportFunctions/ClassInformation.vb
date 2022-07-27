@@ -26,6 +26,19 @@ Public Class ClassInformation
     Private Const cThreadingModel As String = "ThreadingModel"
 
 
+    'Private Const ColorDefault As Color = Color.Pink
+    'Private Const Color_NoClassID As Color = Color.Magenta
+    'Private Const Color_MismatchedHives As Color = Color.Yellow
+
+    'Classification of issues
+    ' use booleans to flag 
+    Private SparxKeyExists As Boolean = False
+    Private ClassIDExists As Boolean = False
+    Private DLLPathExists As Boolean = False
+    Private MismatchedHives As Boolean = False
+    Private DLLExistsInSpecifiedLocation As Boolean = False
+
+
     Property ClassSource As String = ""
 
 
@@ -61,7 +74,7 @@ Public Class ClassInformation
     ' Location of key in registry
     Property RegistryLocation As String = ""
     ' Colour used to indicate status 
-    Property Colour As Color = Color.Magenta
+    ' Property Colour As Color = Color.Magenta
 
 
 
@@ -115,6 +128,7 @@ Public Class ClassInformation
         AddInName = pAddInName
         AddInSource = pAddInSource
         If Environment.Is64BitOperatingSystem Then OS64Bit = True
+        If AddInSource <> "" Then SparxKeyExists = True
         getClassID()
         Debug.Print("Addin " & AddInName & " Class ID = " & ClassID)
     End Sub
@@ -158,7 +172,8 @@ Public Class ClassInformation
             Case AddInEntry.cHKCU32
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
-                    Colour = Color.Pink
+                    ClassIDExists = True
+                    ' Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCU32
                     populateClassInformation(AddInEntry.cHKCU32)
                     Dim c As String = CheckHKLM32()
@@ -168,7 +183,8 @@ Public Class ClassInformation
             Case AddInEntry.cHKLM32
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
-                    Colour = Color.Pink
+                    ClassIDExists = True
+                    '  Colour = Color.Pink
                     ClassSource = AddInEntry.cHKLM32
                     populateClassInformation(AddInEntry.cHKLM32)
                     Dim c As String = CheckHKCU32()
@@ -178,7 +194,8 @@ Public Class ClassInformation
             Case AddInEntry.cHKCU64
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
-                    Colour = Color.Pink
+                    ClassIDExists = True
+                    '  Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCU64
                     populateClassInformation(AddInEntry.cHKCU64)
                     Dim c As String = CheckHKLM()
@@ -188,7 +205,8 @@ Public Class ClassInformation
             Case AddInEntry.cHKLM64
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
-                    Colour = Color.Pink
+                    ' Colour = Color.Pink
+                    ClassIDExists = True
                     ClassSource = AddInEntry.cHKLM64
                     populateClassInformation(AddInEntry.cHKLM64)
                     Dim c As String = CheckHKCU()
@@ -292,15 +310,6 @@ Public Class ClassInformation
     ''' <param name="pSource">This must be one of cHKCU32, cHKLM32, cHKCU64,cHKLM64</param>
     Private Sub populateClassInformation(pSource As String)
         Select Case pSource
-            'Case AddInEntry.cHKCR32
-            '    RegistryLocation = IIf(OS64Bit, cHKCR_ClassesRootWow32CLSID & ClassID & cBackSlash & cInprocServer32,
-            '                   cHKCR_ClassesRootCLSID & ClassID & cBackSlash & cInprocServer32)
-            '    DLLSource = AddInEntry.cHKCR32
-
-            'Case AddInEntry.cHKCR64
-            '    RegistryLocation = cHKCR_ClassesRootCLSID & ClassID & cBackSlash & cInprocServer32
-            '    DLLSource = AddInEntry.cHKCR64
-
             Case AddInEntry.cHKCU32 ' get information from HKCU
                 RegistryLocation = IIf(OS64Bit, cHKCUWOW_ClassesCLSID & ClassID & cBackSlash & cInprocServer32,
                         cHKCU_ClassesCLSID & ClassID & cBackSlash & cInprocServer32)
@@ -360,23 +369,21 @@ Public Class ClassInformation
                 Catch ex As Exception
                     DLLVersion = "Unable to determine"
                 End Try
-                If _filename <> "" Then _filename = _filename.Replace("/", "\")
-                Filename = _filename
+                'If _filename <> "" Then _filename = _filename.Replace("/", "\")
+                Filename = cleanFilename(_filename)
+
                 ' now depending on where items were found flag accordingly
             End If
 
-            If ClassSource <> DLLSource Then
-                Colour = Color.Red
-            ElseIf Filename = cNotSet Then
-                Colour = Color.Yellow
-            Else
-                Colour = If(DLLexists(Filename), Color.LightGreen, Color.Cyan)  ' File does not exist
-            End If
-            '         Colour = Color.Pink
+            MismatchedHives = ClassSource <> DLLSource
+            DLLPathExists = IIf(Filename = cNotSet, False, True)
+            If DLLPathExists Then DLLExistsInSpecifiedLocation = DLLexists(Filename)
 
         End If
 
     End Sub
+
+
     ' was used to ensure the comparison between filenames was fair - however all entries that are checked are from registry so unless we need to 
     ' use the address other than checking OK to leave raw
     Private Function cleanFilename(_Filename As String) As String
@@ -407,6 +414,21 @@ Public Class ClassInformation
         Return False
     End Function
 
+    ' function uses the properies of the entry to define the colour that should be set
+    Friend Function getLineColour() As Color
+        Dim c As Color = Color.Pink
+        Try
+            If Not SparxKeyExists Then Return Color.Red
+            If Not ClassIDExists Then Return Color.LightBlue
+            If MismatchedHives Then Return Color.Yellow
+            If Not DLLExistsInSpecifiedLocation Then Return Color.Cyan
+            Return Color.LightGreen
+
+        Catch ex As Exception
+
+        End Try
+        Return Color.Red
+    End Function
 
 End Class
 

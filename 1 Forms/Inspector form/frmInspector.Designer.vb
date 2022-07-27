@@ -66,6 +66,7 @@ Partial Class frmInspector
         Me.tbVersion64 = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.btLegend = New System.Windows.Forms.Button()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -198,9 +199,9 @@ Partial Class frmInspector
         'btDebugFramework
         '
         Me.btDebugFramework.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btDebugFramework.Location = New System.Drawing.Point(391, 487)
+        Me.btDebugFramework.Location = New System.Drawing.Point(484, 488)
         Me.btDebugFramework.Name = "btDebugFramework"
-        Me.btDebugFramework.Size = New System.Drawing.Size(142, 22)
+        Me.btDebugFramework.Size = New System.Drawing.Size(77, 22)
         Me.btDebugFramework.TabIndex = 19
         Me.btDebugFramework.Text = "EA debug config"
         Me.ToolTip1.SetToolTip(Me.btDebugFramework, "EA.exe.config present if green," & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Press to display contents of file" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "to view order" &
@@ -221,6 +222,7 @@ Partial Class frmInspector
         Me.tabControl.SelectedIndex = 0
         Me.tabControl.Size = New System.Drawing.Size(1120, 371)
         Me.tabControl.TabIndex = 12
+        Me.ToolTip1.SetToolTip(Me.tabControl, "Display registry contents in tree structure")
         '
         'tabListOfAddins
         '
@@ -398,12 +400,24 @@ Partial Class frmInspector
         Me.Label5.TabIndex = 23
         Me.Label5.Text = "EA 64 version"
         '
+        'btLegend
+        '
+        Me.btLegend.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btLegend.Location = New System.Drawing.Point(397, 486)
+        Me.btLegend.Name = "btLegend"
+        Me.btLegend.Size = New System.Drawing.Size(75, 23)
+        Me.btLegend.TabIndex = 24
+        Me.btLegend.Text = "Legend"
+        Me.btLegend.UseVisualStyleBackColor = True
+        Me.btLegend.Visible = False
+        '
         'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
         Me.ClientSize = New System.Drawing.Size(1160, 520)
+        Me.Controls.Add(Me.btLegend)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.tbVersion64)
@@ -471,4 +485,5 @@ Partial Class frmInspector
     Friend WithEvents tbVersion64 As TextBox
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
+    Friend WithEvents btLegend As Button
 End Class

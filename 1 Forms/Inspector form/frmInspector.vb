@@ -102,6 +102,7 @@ Partial Friend Class frmInspector
             ' have to save the window NOT the listview
             If My.Settings.WindowWidth > 200 Then Me.Width = My.Settings.WindowWidth
             If My.Settings.WindowHeight > 200 Then Me.Height = My.Settings.WindowHeight
+            btLegend.Visible = True
 
             _loaded = True
 
@@ -148,10 +149,11 @@ Partial Friend Class frmInspector
             btnCheckDLL.Visible = False
             lbQuery.Visible = False
             tbQueryMessage.Visible = False
-
+            btLegend.Visible = False
 
             Select Case tabControl.SelectedIndex
                 Case cListOfAddinsTab
+                    btLegend.Visible = True
                 Case cTreeViewListOfAddinsTab
                 Case cQueryTab
                     BtnQuery.Visible = True
@@ -628,4 +630,21 @@ Partial Friend Class frmInspector
 
         End Try
     End Sub
+
+    'Private Sub tabControl_MouseHover(sender As Object, e As EventArgs) Handles tabControl.MouseHover
+    '    Debug.Print("line")
+    '    If TypeOf sender Is TabControl Then
+    '        Dim s As TabControl = DirectCast(sender, TabControl)
+    '        Dim t As String = s.SelectedTab.Name
+
+
+    '        btLegend.Visible = (t = "tabListOfAddins")
+
+
+    '    End If
+    'End Sub
+
+    'Private Sub lvListOfAddIns_MouseHover(sender As Object, e As EventArgs) Handles lvListOfAddIns.MouseHover
+    '    Debug.Print("lv")
+    'End Sub
 End Class

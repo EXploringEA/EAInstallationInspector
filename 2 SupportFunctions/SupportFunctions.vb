@@ -150,7 +150,7 @@ Module SupportFunctions
             pRowItem.SubItems.Add(pClassInformation.DLLSource) ' DLLSource indicates where the src add the source of the class information
             pRowItem.SubItems.Add(pClassInformation.DLLVersion)
             pRowItem.SubItems.Add(pClassInformation.DisplayFilename)
-            pRowItem.BackColor = pClassInformation.Colour
+            pRowItem.BackColor = pClassInformation.getLineColour()
         Catch ex As Exception
             MsgBox("Init the registry list exception - " & ex.ToString)
         End Try
@@ -188,8 +188,10 @@ Module SupportFunctions
         For Each CurrentAddInEntry In AI.getListof32BitHKCUAddinEntries() ' 32-bit EA entries for current user
             Dim _RowItem As New ListViewItem
             Try
+
                 AddEntrySparxInformation(_RowItem, CurrentAddInEntry)
                 AddEntryClassInformation(_RowItem, New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKCU32))
+
                 plv.Items.Add(_RowItem)
             Catch ex As Exception
                 MsgBox("Init the registry list exception - " & ex.ToString)
