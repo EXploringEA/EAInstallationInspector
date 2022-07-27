@@ -13,7 +13,7 @@ I continue to tinker with the code over the next few weeks as it is tested more 
 Please NOTE: that the colours for indicating the condition of an AddIn has changed.  See https://exploringea.co.uk/tools/index.php/EaInspector/EaInspector.html for details - I'll try and keep the site updated - the documents are lagging behind at the moment,
 
 A pre-built .exe and help file are provided under in folders below the root.  
-* V7.006 contains the current 32-bit/64-bit 
+* V7.006 contains the current version which supports 32-bit/64-bit AddIns
 
 NOTE: This code is released under the terms of the GPL3 licence agreement and is used at yoru own risk.
 
