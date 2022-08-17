@@ -11,7 +11,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("eaInstallationInspector V7")>
 <Assembly: AssemblyDescription("EA AddIn Registry Inspector")> 
 <Assembly: AssemblyCompany("EXploringEA.com")>
-<Assembly: AssemblyProduct("eaInstallationInspector - 25JUL2022")>
+<Assembly: AssemblyProduct("eaInstallationInspector - 17AUG2022")>
 <Assembly: AssemblyCopyright("Copyright © EXploringEA.com 2014-2022")>
 <Assembly: AssemblyTrademark("")> 
 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("7.0.0.6")>
-<Assembly: AssemblyFileVersion("7.0.0.6")>
+<Assembly: AssemblyVersion("7.0.0.7")>
+<Assembly: AssemblyFileVersion("7.0.0.7")>

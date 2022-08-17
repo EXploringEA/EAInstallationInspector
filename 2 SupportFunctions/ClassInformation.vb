@@ -26,9 +26,7 @@ Public Class ClassInformation
     Private Const cThreadingModel As String = "ThreadingModel"
 
 
-    'Private Const ColorDefault As Color = Color.Pink
-    'Private Const Color_NoClassID As Color = Color.Magenta
-    'Private Const Color_MismatchedHives As Color = Color.Yellow
+
 
     'Classification of issues
     ' use booleans to flag 
@@ -73,10 +71,6 @@ Public Class ClassInformation
 
     ' Location of key in registry
     Property RegistryLocation As String = ""
-    ' Colour used to indicate status 
-    ' Property Colour As Color = Color.Magenta
-
-
 
     Friend Const cHKCR_ClassesRoot As String = "HKEY_CLASSES_ROOT\"
     'Friend Const cHKCR_ClassesRootWow32CLSID As String = "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\"
@@ -173,7 +167,6 @@ Public Class ClassInformation
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     ClassIDExists = True
-                    ' Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCU32
                     populateClassInformation(AddInEntry.cHKCU32)
                     Dim c As String = CheckHKLM32()
@@ -184,7 +177,6 @@ Public Class ClassInformation
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     ClassIDExists = True
-                    '  Colour = Color.Pink
                     ClassSource = AddInEntry.cHKLM32
                     populateClassInformation(AddInEntry.cHKLM32)
                     Dim c As String = CheckHKCU32()
@@ -195,7 +187,6 @@ Public Class ClassInformation
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     ClassIDExists = True
-                    '  Colour = Color.Pink
                     ClassSource = AddInEntry.cHKCU64
                     populateClassInformation(AddInEntry.cHKCU64)
                     Dim c As String = CheckHKLM()
@@ -205,7 +196,6 @@ Public Class ClassInformation
             Case AddInEntry.cHKLM64
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
-                    ' Colour = Color.Pink
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKLM64
                     populateClassInformation(AddInEntry.cHKLM64)
@@ -215,8 +205,6 @@ Public Class ClassInformation
             Case Else
                 MsgBox("Unable to get class ID for " & AddInName & " Source " & AddInSource)
         End Select
-        '      If ClassID <> "" Then Colour = Color.Pink
-
         Return
     End Sub
     ''' <summary>

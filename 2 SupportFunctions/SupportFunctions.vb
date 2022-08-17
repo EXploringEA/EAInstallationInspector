@@ -84,7 +84,7 @@ Module SupportFunctions
                 'Else
                 '    width = w
                 'End If
-                width = IIf(w < 1, width = mylv.Width, w)
+                width = IIf(w < 2, mylv.Width, w)
 
                 width = width / (AddInNameWidth + SparxKeySRCWidth + Classnamewidth + CLSIDWidth + ClassSrcWidth + DLLSRCWidth + DLLVersionWidth + DLLWidth)
                 If mylv.Columns.Count < 7 Then Return
