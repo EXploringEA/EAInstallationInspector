@@ -1,6 +1,6 @@
 # EAInstallationInspector
 
-Source code for the [EXploringEA.com's]([http://EXploringEA.com](https://exploringea.co.uk/tools/index.php/EAInspector/EAInspector.html "EXploringEA") EA Installation Inspector 
+Source code for the [http://EXploringEA.com]: https://exploringea.co.uk/tools/index.php/EAInspector/EAInspector.html EA Installation Inspector 
 
 This is a windows application which displays registry entries associated with Sparxsystems EA Addins.
 
