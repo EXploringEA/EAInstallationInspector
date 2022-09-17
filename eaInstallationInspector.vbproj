@@ -126,6 +126,12 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="1 Forms\frmLegend.Designer.vb">
+      <DependentUpon>frmLegend.vb</DependentUpon>
+    </Compile>
+    <Compile Include="1 Forms\frmLegend.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="1 Forms\frmListOfClasses.Designer.vb">
       <DependentUpon>frmListOfClasses.vb</DependentUpon>
     </Compile>
@@ -208,6 +214,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="1 Forms\frmHelp.resx">
       <DependentUpon>frmHelp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="1 Forms\frmLegend.resx">
+      <DependentUpon>frmLegend.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="1 Forms\frmQuery.resx">
       <DependentUpon>frmQuery.vb</DependentUpon>

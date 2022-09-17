@@ -631,6 +631,12 @@ Partial Friend Class frmInspector
         End Try
     End Sub
 
+    Private Sub btLegend_Click(sender As Object, e As EventArgs) Handles btLegend.Click
+        Dim a As New frmLegend
+        a.Show()
+
+    End Sub
+
     'Private Sub tabControl_MouseHover(sender As Object, e As EventArgs) Handles tabControl.MouseHover
     '    Debug.Print("line")
     '    If TypeOf sender Is TabControl Then

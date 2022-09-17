@@ -55,18 +55,18 @@ Partial Class frmInspector
         Me.tabQueryRegistry = New System.Windows.Forms.TabPage()
         Me.lvQuery = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.tbQueryMessage = New System.Windows.Forms.TextBox()
+        Me.tbQueryActive = New System.Windows.Forms.TextBox()
+        Me.tbLocation64 = New System.Windows.Forms.TextBox()
+        Me.tbVersion64 = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.btLegend = New System.Windows.Forms.Button()
         Me.BtnQuery = New System.Windows.Forms.Button()
         Me.btnClearQueryWindow = New System.Windows.Forms.Button()
         Me.btnRegisterDLL = New System.Windows.Forms.Button()
         Me.lbQuery = New System.Windows.Forms.Label()
-        Me.tbQueryMessage = New System.Windows.Forms.TextBox()
-        Me.tbQueryActive = New System.Windows.Forms.TextBox()
         Me.btStopQueryActive = New System.Windows.Forms.Button()
-        Me.tbLocation64 = New System.Windows.Forms.TextBox()
-        Me.tbVersion64 = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.btLegend = New System.Windows.Forms.Button()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -293,6 +293,68 @@ Partial Class frmInspector
         '
         Me.ColumnHeader1.Width = 2000
         '
+        'tbQueryMessage
+        '
+        Me.tbQueryMessage.Location = New System.Drawing.Point(417, 71)
+        Me.tbQueryMessage.Name = "tbQueryMessage"
+        Me.tbQueryMessage.Size = New System.Drawing.Size(610, 20)
+        Me.tbQueryMessage.TabIndex = 16
+        Me.ToolTip1.SetToolTip(Me.tbQueryMessage, "Currently active registry query")
+        Me.tbQueryMessage.Visible = False
+        '
+        'tbQueryActive
+        '
+        Me.tbQueryActive.BackColor = System.Drawing.Color.Yellow
+        Me.tbQueryActive.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbQueryActive.ForeColor = System.Drawing.Color.Red
+        Me.tbQueryActive.Location = New System.Drawing.Point(1032, 69)
+        Me.tbQueryActive.Name = "tbQueryActive"
+        Me.tbQueryActive.ReadOnly = True
+        Me.tbQueryActive.Size = New System.Drawing.Size(102, 22)
+        Me.tbQueryActive.TabIndex = 17
+        Me.tbQueryActive.Text = "Query active"
+        Me.tbQueryActive.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.ToolTip1.SetToolTip(Me.tbQueryActive, "Indication  of an active registry query - runs in backgroud")
+        Me.tbQueryActive.Visible = False
+        '
+        'tbLocation64
+        '
+        Me.tbLocation64.Location = New System.Drawing.Point(417, 32)
+        Me.tbLocation64.Name = "tbLocation64"
+        Me.tbLocation64.Size = New System.Drawing.Size(610, 20)
+        Me.tbLocation64.TabIndex = 20
+        Me.ToolTip1.SetToolTip(Me.tbLocation64, "Installation location of 64-bit EA ")
+        '
+        'tbVersion64
+        '
+        Me.tbVersion64.Location = New System.Drawing.Point(228, 30)
+        Me.tbVersion64.Name = "tbVersion64"
+        Me.tbVersion64.Size = New System.Drawing.Size(100, 20)
+        Me.tbVersion64.TabIndex = 21
+        Me.ToolTip1.SetToolTip(Me.tbVersion64, "EA Version")
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(334, 34)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(80, 13)
+        Me.Label4.TabIndex = 22
+        Me.Label4.Text = "EA 64 Location"
+        Me.ToolTip1.SetToolTip(Me.Label4, "Installation location of 32-bit EA ")
+        '
+        'btLegend
+        '
+        Me.btLegend.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btLegend.Location = New System.Drawing.Point(397, 486)
+        Me.btLegend.Name = "btLegend"
+        Me.btLegend.Size = New System.Drawing.Size(75, 23)
+        Me.btLegend.TabIndex = 24
+        Me.btLegend.Text = "Legend"
+        Me.ToolTip1.SetToolTip(Me.btLegend, "Display a legend for the List of AddIns colours")
+        Me.btLegend.UseVisualStyleBackColor = True
+        Me.btLegend.Visible = False
+        '
         'BtnQuery
         '
         Me.BtnQuery.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -339,30 +401,6 @@ Partial Class frmInspector
         Me.lbQuery.Text = "Query info"
         Me.lbQuery.Visible = False
         '
-        'tbQueryMessage
-        '
-        Me.tbQueryMessage.Location = New System.Drawing.Point(417, 71)
-        Me.tbQueryMessage.Name = "tbQueryMessage"
-        Me.tbQueryMessage.Size = New System.Drawing.Size(610, 20)
-        Me.tbQueryMessage.TabIndex = 16
-        Me.ToolTip1.SetToolTip(Me.tbQueryMessage, "Currently active registry query")
-        Me.tbQueryMessage.Visible = False
-        '
-        'tbQueryActive
-        '
-        Me.tbQueryActive.BackColor = System.Drawing.Color.Yellow
-        Me.tbQueryActive.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbQueryActive.ForeColor = System.Drawing.Color.Red
-        Me.tbQueryActive.Location = New System.Drawing.Point(1032, 69)
-        Me.tbQueryActive.Name = "tbQueryActive"
-        Me.tbQueryActive.ReadOnly = True
-        Me.tbQueryActive.Size = New System.Drawing.Size(102, 22)
-        Me.tbQueryActive.TabIndex = 17
-        Me.tbQueryActive.Text = "Query active"
-        Me.tbQueryActive.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.ToolTip1.SetToolTip(Me.tbQueryActive, "Indication  of an active registry query - runs in backgroud")
-        Me.tbQueryActive.Visible = False
-        '
         'btStopQueryActive
         '
         Me.btStopQueryActive.BackColor = System.Drawing.Color.Yellow
@@ -376,32 +414,6 @@ Partial Class frmInspector
         Me.btStopQueryActive.UseVisualStyleBackColor = False
         Me.btStopQueryActive.Visible = False
         '
-        'tbLocation64
-        '
-        Me.tbLocation64.Location = New System.Drawing.Point(417, 32)
-        Me.tbLocation64.Name = "tbLocation64"
-        Me.tbLocation64.Size = New System.Drawing.Size(610, 20)
-        Me.tbLocation64.TabIndex = 20
-        Me.ToolTip1.SetToolTip(Me.tbLocation64, "Installation location of 64-bit EA ")
-        '
-        'tbVersion64
-        '
-        Me.tbVersion64.Location = New System.Drawing.Point(228, 30)
-        Me.tbVersion64.Name = "tbVersion64"
-        Me.tbVersion64.Size = New System.Drawing.Size(100, 20)
-        Me.tbVersion64.TabIndex = 21
-        Me.ToolTip1.SetToolTip(Me.tbVersion64, "EA Version")
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(334, 34)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(80, 13)
-        Me.Label4.TabIndex = 22
-        Me.Label4.Text = "EA 64 Location"
-        Me.ToolTip1.SetToolTip(Me.Label4, "Installation location of 32-bit EA ")
-        '
         'Label5
         '
         Me.Label5.AutoSize = True
@@ -410,18 +422,6 @@ Partial Class frmInspector
         Me.Label5.Size = New System.Drawing.Size(73, 13)
         Me.Label5.TabIndex = 23
         Me.Label5.Text = "EA 64 version"
-        '
-        'btLegend
-        '
-        Me.btLegend.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btLegend.Location = New System.Drawing.Point(397, 486)
-        Me.btLegend.Name = "btLegend"
-        Me.btLegend.Size = New System.Drawing.Size(75, 23)
-        Me.btLegend.TabIndex = 24
-        Me.btLegend.Text = "Legend"
-        Me.ToolTip1.SetToolTip(Me.btLegend, "Display a legend for the List of AddIns colours")
-        Me.btLegend.UseVisualStyleBackColor = True
-        Me.btLegend.Visible = False
         '
         'frmInspector
         '
