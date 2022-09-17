@@ -6,7 +6,7 @@ This is a windows application which displays registry entries associated with Sp
 
 For more information review the document **eaInstallationInspectorInformationV7007.pdf** located under the resources directory.
 
-Current release is V7.0.0.7 17AUG2022 - this release includes support for the 64-bit version of EA and is evolving as more of the utility is tested.
+Current release is V7.0.0.8 17SEP2022 - this release adds a pop-up legend dialog and includes support for the 64-bit version of EA and is evolving as more of the utility is tested.
 
 The aim has been to provide a version that includes basic features and then update as more refinements are identified in relation to making it useful for both 32-bit and 64-bit work.
 
