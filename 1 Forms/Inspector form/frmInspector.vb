@@ -19,6 +19,84 @@ Imports System.Reflection
 ''' <seealso cref="System.Windows.Forms.Form" />
 Partial Friend Class frmInspector
 
+    ' This button will check EA app
+    ' Get classID
+    ' determine the Inprocserver x86 or 64 
+    ' set the color green to the background of the of the selected EA version
+    Private Sub btEAApp_Click(sender As Object, e As EventArgs) Handles btEAApp.Click
+        checkEACOMServerLocation()
+
+        '        Try
+        '            Dim EA_ClassID = Registry.GetValue("HKEY_CLASSES_ROOT\EA.App\CLSID", "", cNotSet)
+        '            Dim EA_LocalServer As String = "HKEY_CLASSES_ROOT\CLSID\" & EA_ClassID & "\LocalServer32"
+        '            Dim EA_Location As String = Registry.GetValue(EA_LocalServer, "", cNotSet)
+        '            ' EA_Location
+        '            tbVersion32.BackColor = Color.White
+        '            tbVersion64.BackColor = Color.White
+        '            tbLocation32.BackColor = Color.White
+        '            tbLocation64.BackColor = Color.White
+
+        '            If EA_Location <> "" Then
+        '                If EA_Location.Contains("x86") Then
+        '                    tbVersion32.BackColor = Color.SpringGreen
+        '                    tbLocation32.BackColor = Color.SpringGreen
+        '                    ' 32bit
+        '                Else
+        '                    ' 64bit
+        '                    tbVersion64.BackColor = Color.SpringGreen
+        '                    tbLocation64.BackColor = Color.SpringGreen
+        '                End If
+        '            Else
+        '                tbVersion32.BackColor = Color.White
+        '                tbVersion64.BackColor = Color.White
+
+        '                ' not installed
+        '            End If
+        '            Dim b = EA_Location
+        '        Catch ex As Exception
+        '#If DEBUG Then
+        '            Debug.Print(ex.ToString)
+        '#End If
+        '        End Try
+    End Sub
+
+
+    Private Sub checkEACOMServerLocation()
+        Try
+            Dim EA_ClassID = Registry.GetValue("HKEY_CLASSES_ROOT\EA.App\CLSID", "", cNotSet) 'get the classID for EA.App - is the same for 32-bit and 64-bit
+            Dim EACOMServer64 As Boolean = True
+            Dim Akey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\WOW6432Node\CLSID\" & EA_ClassID) ' & "\adrian")
+            Dim Ak1 = Akey.OpenSubKey("InprocServer32")
+            If Not Ak1 Is Nothing Then
+                Dim vk1 = Ak1.GetValue("CodeBase")
+                If vk1.contains("86") Then EACOMServer64 = False
+            End If
+
+            ' now set the back colors
+            tbVersion32.BackColor = Color.White
+            tbVersion64.BackColor = Color.White
+            tbLocation32.BackColor = Color.White
+            tbLocation64.BackColor = Color.White
+
+            If tbLocation32.Text <> "" Or tbLocation64.Text <> "" Then
+                If EACOMServer64 Then
+                    ' 64bit
+                    tbVersion64.BackColor = Color.SpringGreen
+                    tbLocation64.BackColor = Color.SpringGreen
+                Else
+                    ' 32bit
+                    tbVersion32.BackColor = Color.SpringGreen
+                    tbLocation32.BackColor = Color.SpringGreen
+                End If
+            End If
+
+
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+    End Sub
 #Region "Main form events"
 
 
@@ -83,6 +161,8 @@ Partial Friend Class frmInspector
             Dim _EAVersion64 As String = Registry.GetValue(EAHKCU64, "Version", "")
             If _EAVersion64 = "" Then _EAVersion64 = Registry.GetValue(EAHKLM64, "Version", "")
             tbVersion64.Text = _EAVersion64
+
+            checkEACOMServerLocation()
 
 
             '
@@ -636,6 +716,8 @@ Partial Friend Class frmInspector
         a.Show()
 
     End Sub
+
+
 
     'Private Sub tabControl_MouseHover(sender As Object, e As EventArgs) Handles tabControl.MouseHover
     '    Debug.Print("line")

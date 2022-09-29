@@ -67,6 +67,7 @@ Partial Class frmInspector
         Me.lbQuery = New System.Windows.Forms.Label()
         Me.btStopQueryActive = New System.Windows.Forms.Button()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.btEAApp = New System.Windows.Forms.Button()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -203,7 +204,7 @@ Partial Class frmInspector
         'btDebugFramework
         '
         Me.btDebugFramework.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btDebugFramework.Location = New System.Drawing.Point(484, 488)
+        Me.btDebugFramework.Location = New System.Drawing.Point(589, 481)
         Me.btDebugFramework.Name = "btDebugFramework"
         Me.btDebugFramework.Size = New System.Drawing.Size(77, 22)
         Me.btDebugFramework.TabIndex = 19
@@ -382,7 +383,7 @@ Partial Class frmInspector
         'btnRegisterDLL
         '
         Me.btnRegisterDLL.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnRegisterDLL.Location = New System.Drawing.Point(538, 486)
+        Me.btnRegisterDLL.Location = New System.Drawing.Point(577, 499)
         Me.btnRegisterDLL.Margin = New System.Windows.Forms.Padding(2)
         Me.btnRegisterDLL.Name = "btnRegisterDLL"
         Me.btnRegisterDLL.Size = New System.Drawing.Size(116, 23)
@@ -423,12 +424,23 @@ Partial Class frmInspector
         Me.Label5.TabIndex = 23
         Me.Label5.Text = "EA 64 version"
         '
+        'btEAApp
+        '
+        Me.btEAApp.Location = New System.Drawing.Point(487, 487)
+        Me.btEAApp.Name = "btEAApp"
+        Me.btEAApp.Size = New System.Drawing.Size(75, 23)
+        Me.btEAApp.TabIndex = 25
+        Me.btEAApp.Text = "Check EA App"
+        Me.btEAApp.UseVisualStyleBackColor = True
+        Me.btEAApp.Visible = False
+        '
         'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
         Me.ClientSize = New System.Drawing.Size(1160, 520)
+        Me.Controls.Add(Me.btEAApp)
         Me.Controls.Add(Me.btLegend)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
@@ -498,4 +510,5 @@ Partial Class frmInspector
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents btLegend As Button
+    Friend WithEvents btEAApp As Button
 End Class
