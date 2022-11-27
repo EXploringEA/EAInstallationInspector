@@ -180,7 +180,7 @@ Friend Class AddInEntry
 
     Friend Const cHKCR32 As String = "HKCR32"
     Friend Const cHKCR64 As String = "HKCR64"
-    '  Friend Const cHKCR As String = "HKCR" ' set when not clear which 
+    Friend Const cHKCR As String = "HKCR" ' set when not clear which 
 
     ' 32-bit AddIns on 32-bit EA
     Friend Const cHKCU32 As String = "HKCU32" ' 32-bit Addins on 32-bit OS 

@@ -46,6 +46,8 @@ Module Constants
     Friend Const cBackSlash As String = "\"
     Friend Const cForwardSlash As String = "/"
     Friend Const cInprocServer32 As String = "InprocServer32"
+    Friend Const cImplementedCategories As String = "Implemented Categories"
+    Friend Const cProgID As String = "ProgID"
     Friend Const cWow6432Node As String = "Wow6432Node"
 
 

@@ -112,7 +112,7 @@ Public Class ClassInformation
 
 
 
-    Private OS64Bit As Boolean = False
+    Friend Shared OS64Bit As Boolean = False
     ''' <summary>
     ''' Constructor used to save Sparx information and get the class ID
     ''' </summary>
@@ -152,6 +152,11 @@ Public Class ClassInformation
     ''' NOTE: 32-biut and 64-bit are treated separately
     ''' </summary>
     Private Sub getClassID()
+        'TODO - review the conditions
+        ' REVIEW logic of secondary checks
+        ' is what taskes precendence
+        ' if we have HKCU and HKLM that's fine as the current user will take precendence
+
 
         ClassSource = ""
         ClassID = ""
@@ -164,66 +169,105 @@ Public Class ClassInformation
         Select Case AddInSource
                '32-bit add in
             Case AddInEntry.cHKCU32
-                ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
-                If ClassID <> "" Then
-                    ClassIDExists = True
-                    ClassSource = AddInEntry.cHKCU32
-                    populateClassInformation(AddInEntry.cHKCU32)
-                    Dim c As String = CheckHKLM32()
-                    If c <> "" Then ClassSource += "," & c
-                End If
+                ' check if we have a HKCU32 entry - expected
 
-            Case AddInEntry.cHKLM32
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     ClassIDExists = True
-                    ClassSource = AddInEntry.cHKLM32
-                    populateClassInformation(AddInEntry.cHKLM32)
-                    Dim c As String = CheckHKCU32()
-                    If c <> "" Then ClassSource += "," & c
+                    ' need to check if there value in HKCU (as the ClassID may be present due to HKLM)
+                    Dim CLID = Registry.GetValue(cHKCU_Classes & cBackSlash & AddInName & cBackSlash & cCLSID, "", cNotFound)
+                    ClassSource = IIf(CLID Is Nothing Or CLID = "", AddInEntry.cHKCR, AddInEntry.cHKCU32)
+                    CheckHKCU32(True)
+                    ' also check whether there is a HKLM entry
+                    Dim c As String = CheckHKLM32(False) : If c <> "" Then ClassSource += "," & c
+                    End If
+
+                    Case AddInEntry.cHKLM32
+                ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
+                If ClassID <> "" Then
+                    ClassIDExists = True
+                    Dim CLID = Registry.GetValue(cHKLM_Classes & cBackSlash & AddInName & cBackSlash & cCLSID, "", cNotFound)
+                    ClassSource = IIf(CLID Is Nothing Or CLID = "", AddInEntry.cHKCR, AddInEntry.cHKLM32)
+                    ' also check whether there is a HKCR entry
+                    CheckHKLM32(True)
+                    Dim c As String = CheckHKCU32(False) : If c <> "" Then ClassSource += "," & c
                 End If
                     '64-bit addins
             Case AddInEntry.cHKCU64
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     ClassIDExists = True
-                    ClassSource = AddInEntry.cHKCU64
-                    populateClassInformation(AddInEntry.cHKCU64)
-                    Dim c As String = CheckHKLM()
-                    If c <> "" Then ClassSource += "," & c
+                    Dim CLID = Registry.GetValue(cHKCU_Classes & cBackSlash & AddInName & cBackSlash & cCLSID, "", cNotFound)
+                    ClassSource = IIf(CLID Is Nothing Or CLID = "", AddInEntry.cHKCR, AddInEntry.cHKCU64)
+                    CheckHKCU(True)
+                    ' also check whether there is a HKLM entry
+                    Dim c As String = CheckHKLM(False) : If c <> "" Then ClassSource += "," & c
 
                 End If
             Case AddInEntry.cHKLM64
                 ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
                 If ClassID <> "" Then
                     ClassIDExists = True
-                    ClassSource = AddInEntry.cHKLM64
-                    populateClassInformation(AddInEntry.cHKLM64)
-                    Dim c As String = CheckHKCU()
-                    If c <> "" Then ClassSource += "," & c
+                    Dim CLID = Registry.GetValue(cHKLM_Classes & cBackSlash & AddInName & cBackSlash & cCLSID, "", cNotFound)
+                    ClassSource = IIf(CLID Is Nothing Or CLID = "", AddInEntry.cHKCR, AddInEntry.cHKLM64)
+                    CheckHKLM(True)
+                    ' also check whether there is a HKCR entry
+                    Dim c As String = CheckHKCU(False) : If c <> "" Then ClassSource += "," & c
                 End If
             Case Else
                 MsgBox("Unable to get class ID for " & AddInName & " Source " & AddInSource)
         End Select
         Return
     End Sub
+    ' ----- CLASSID check for DLL file functions
+
+    ' checkHKCU32
+    ' checkHKLM32
+    ' checkHKCU
+    ' checkHKLM
+
+    ' each function gets the filename from the expected location derived from the classID entry and compares with the 
+    ' get location if present
+    ' * check for filename of dll
+    ' * if dll filename exists then get dll details
+    ' * then also check if there is a other location DLL HLCU32 <> HKLM32 or HKCU <> HKLM
+    ' * 
+    ' routines return location found or "" if not found
     ''' <summary>
-    ''' Check of there is an HKCU entry the current classID
+    ''' Check if there is an HKCU entry the current classID
     ''' </summary>
+    ''' <param name="pPrimaryCheck">used to flag that this is a secondary check - so we may already have an entry</param>
     ''' <returns>HKCR if yes else ""</returns>
-    Private Function CheckHKCU32() As String
+    Private Function CheckHKCU32(pPrimaryCheck As Boolean) As String
         Dim _location As String = IIf(OS64Bit, cHKCUWOW_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32,
                                cHKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
-
         If _location <> "" Then
+            Dim prefix As String = ""
+            ' get name of DLL based on location
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            If _filename <> "" And Filename = "" Then
-                populateClassInformation(AddInEntry.cHKCU32)
-            ElseIf _filename = Filename Then
-                Debug.Print("CheckHKCU32() same filename")
-                Return AddInEntry.cHKCU32
-            Else
-                Debug.Print("HKCR " & Filename & "HKCU Filename= " & _filename)
+            If _filename = "" Then
+                _filename = Registry.GetValue(_location, "", "")
+                If _filename <> "" Then prefix = "Default key: "
+            End If
+            '1st pass we check we have a filename 
+            If pPrimaryCheck Then
+                If (_filename <> "" And _filename IsNot Nothing) Then
+                    Filename = _filename ' this is the primary filename
+                    DLLSource = AddInEntry.cHKCU32
+                    getDLLAssembly()
+                    RegistryLocation = _location
+                    RunTimeVersion = Registry.GetValue(RegistryLocation, cRuntimeVersion, cNotSet)
+                    ThreadingModel = Registry.GetValue(RegistryLocation, cThreadingModel, cNotSet)
+                    AssemblyAsString = Registry.GetValue(RegistryLocation, cAssembly, cNotSet)
+                Else
+                    DLLSource = "No HKCU32 filename"
+                End If
+            Else ' secondary check
+                ' we do not have a filename have another entry
+                If ((_filename <> "" And _filename IsNot Nothing) And _filename = Filename) Then ' wee have a match so this is a possible entry
+                    Debug.Print("CheckHKCU32() same filename")
+                    DLLSource += " : " & AddInEntry.cHKCU32
+                End If
             End If
         End If
         Return ""
@@ -232,7 +276,7 @@ Public Class ClassInformation
     ''' Check if there are any HKLM entries for the current classID
     ''' </summary>
     ''' <returns>HKLM if yes else ""</returns>
-    Private Function CheckHKLM32()
+    Private Function CheckHKLM32(pPrimaryCheck As Boolean) As String
         ' there are 2 locations for WOW6432 in HKLM - it is believed they mirror each other but not sure so check both
         Dim _location As String = IIf(OS64Bit, cHKLMWow1_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32,
                        cHKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
@@ -241,105 +285,118 @@ Public Class ClassInformation
                        cHKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32)
         End If
         If _location <> "" Then
+            Dim prefix As String = ""
+
+            ' get name of DLL based on location
             Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-            If _filename <> "" And Filename = "" Then
-                populateClassInformation(AddInEntry.cHKLM32)
-            ElseIf _filename = Filename Then
-                Debug.Print("CheckHKLM32() same filename")
-                Return AddInEntry.cHKLM32
-            Else
-                Debug.Print("HKCR " & Filename & "HKCU Filename= " & _filename)
+            If _filename = "" Then
+                _filename = Registry.GetValue(_location, "", "")
+                If _filename <> "" Then prefix = "Default key: "
             End If
-
-        End If
-        Return ""
-    End Function
-
-
-    Private Function CheckHKCU() As String
-        Dim _location As String = cHKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
-        If RegistryLocation <> "" Then
-            Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-
-            If _filename <> "" And Filename = "" Then
-                populateClassInformation(AddInEntry.cHKCU64)
-            ElseIf _filename = Filename Then
-                Debug.Print("CheckHKCU64() same filename")
-                Return AddInEntry.cHKCU64
-            Else
-                Debug.Print("HKCR " & Filename & "HKCU Filename= " & _filename)
-            End If
-        End If
-        Return ""
-    End Function
-    Private Function CheckHKLM() As String
-        Dim _location As String = cHKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
-
-        If RegistryLocation <> "" Then
-            Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
-
-            If _filename <> "" And Filename = "" Then
-                populateClassInformation(AddInEntry.cHKLM64)
-            ElseIf _filename = Filename Then
-                Debug.Print("CheckHKLM64() same filename")
-                Return AddInEntry.cHKLM64
-            Else
-                Debug.Print("HKCR " & Filename & "HKCU Filename= " & _filename)
-            End If
-        End If
-        Return ""
-
-    End Function
-
-    ''' <summary>
-    ''' use the classID to get the details if there is a 32-bit class
-    ''' information extracted from HKCU or HKLM - so only 32-bit or 64-bit
-    ''' </summary>
-    ''' <param name="pSource">This must be one of cHKCU32, cHKLM32, cHKCU64,cHKLM64</param>
-    Private Sub populateClassInformation(pSource As String)
-        Select Case pSource
-            Case AddInEntry.cHKCU32 ' get information from HKCU
-                RegistryLocation = IIf(OS64Bit, cHKCUWOW_ClassesCLSID & ClassID & cBackSlash & cInprocServer32,
-                        cHKCU_ClassesCLSID & ClassID & cBackSlash & cInprocServer32)
-                DLLSource = AddInEntry.cHKCU32
-
-            Case AddInEntry.cHKLM32 ' get information from HKLM
-                RegistryLocation = IIf(OS64Bit, cHKLMWow_ClassesCLSID & ClassID & cBackSlash & cInprocServer32,
-                      cHKLM_ClassesCLSID & ClassID & cBackSlash & cInprocServer32)
-                DLLSource = AddInEntry.cHKLM32
-
-            Case AddInEntry.cHKCU64 ' get information from HKCU
-                RegistryLocation = cHKCU_ClassesCLSID & ClassID & cBackSlash & cInprocServer32
-                DLLSource = AddInEntry.cHKCU64
-
-            Case AddInEntry.cHKLM64 ' get information from HKLM
-                RegistryLocation = cHKLM_ClassesCLSID & ClassID & cBackSlash & cInprocServer32
-                DLLSource = AddInEntry.cHKLM64
-
-            Case Else
-                DLLSource = cNotFound
-                MsgBox("No class entry in HKCR for Addin - " & AddInName & " Source " & AddInSource)
-        End Select
-
-        Try
-            If RegistryLocation <> "" Then
-                Filename = Registry.GetValue(RegistryLocation, cCodeBase, cNotSet) 'using the class try to find the DLL path
-                If Filename = "" Or Filename = cNotSet Then
-                    Filename = Registry.GetValue(RegistryLocation, "", cNotSet)
+            '1st pass we check we have a filename 
+            If pPrimaryCheck Then
+                If (_filename <> "" And _filename IsNot Nothing) Then
+                    Filename = _filename ' this is the primary filename
+                    DLLSource = prefix & AddInEntry.cHKLM32
+                    getDLLAssembly()
+                    RegistryLocation = _location
+                    RunTimeVersion = Registry.GetValue(RegistryLocation, cRuntimeVersion, cNotSet)
+                    ThreadingModel = Registry.GetValue(RegistryLocation, cThreadingModel, cNotSet)
+                    AssemblyAsString = Registry.GetValue(RegistryLocation, cAssembly, cNotSet)
+                    Return DLLSource
+                Else
+                    DLLSource = "No HKLM filename"
+                    Return DLLSource
                 End If
-                If Filename IsNot Nothing Then getDLLAssembly()
+            Else ' secondary check
+                ' we do not have a filename have another entry
+                If ((_filename <> "" And _filename IsNot Nothing) And _filename = Filename) Then ' wee have a match so this is a possible entry
+                    Debug.Print("CheckHKLM32() same filename")
+                    DLLSource += " : " & AddInEntry.cHKLM32
+                    Return DLLSource
+                End If
+            End If
+
+        End If
+        Return ""
+    End Function
+
+
+    Private Function CheckHKCU(pPrimaryCheck As Boolean) As String
+        Dim _location As String = cHKCU_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
+        If _location <> "" Then
+            Dim prefix As String = ""
+            ' get name of DLL based on location
+            Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
+            If _filename = "" Then
+                _filename = Registry.GetValue(_location, "", "")
+                If _filename <> "" Then prefix = "Default key: "
+            End If
+            '1st pass we check we have a filename 
+            If pPrimaryCheck Then
+                If (_filename <> "" And _filename IsNot Nothing) Then
+                    Filename = _filename ' this is the primary filename
+                    DLLSource = AddInEntry.cHKCU64
+                    getDLLAssembly()
+                    RegistryLocation = _location
+                    RunTimeVersion = Registry.GetValue(RegistryLocation, cRuntimeVersion, cNotSet)
+                    ThreadingModel = Registry.GetValue(RegistryLocation, cThreadingModel, cNotSet)
+                    AssemblyAsString = Registry.GetValue(RegistryLocation, cAssembly, cNotSet)
+                    Return DLLSource
+                Else
+                    DLLSource = "No HKCU filename"
+                    Return DLLSource
+                End If
+            Else ' secondary check
+                ' we do not have a filename have another entry
+                If ((_filename <> "" And _filename IsNot Nothing) And _filename = Filename) Then ' wee have a match so this is a possible entry
+                    Debug.Print("CheckHKCU64() same filename")
+                    DLLSource += " : " & AddInEntry.cHKCU64
+                    Return DLLSource
+                End If
+            End If
+
+        End If
+        Return ""
+    End Function
+    Private Function CheckHKLM(pPrimaryCheck As Boolean) As String
+        Dim _location As String = cHKLM_Classes & cBackSlash & cCLSID & cBackSlash & ClassID & cBackSlash & cInprocServer32
+        Dim prefix As String = ""
+
+        ' get name of DLL based on location
+        Dim _filename As String = Registry.GetValue(_location, cCodeBase, "") 'using the class try to find the DLL path
+        If _filename = "" Then
+            _filename = Registry.GetValue(_location, "", "")
+            If _filename <> "" Then prefix = "Default key: "
+        End If
+
+        '1st pass we check we have a filename 
+        If pPrimaryCheck Then
+            If (_Filename <> "" And _Filename IsNot Nothing) Then
+                Filename = _Filename ' this is the primary filename
+                DLLSource = AddInEntry.cHKLM64
+                getDLLAssembly()
+                RegistryLocation = _location
                 RunTimeVersion = Registry.GetValue(RegistryLocation, cRuntimeVersion, cNotSet)
                 ThreadingModel = Registry.GetValue(RegistryLocation, cThreadingModel, cNotSet)
                 AssemblyAsString = Registry.GetValue(RegistryLocation, cAssembly, cNotSet)
-
+                Return DLLSource
+            Else
+                DLLSource = "No HKCU filename"
+                Return DLLSource
             End If
+        Else ' secondary check
+            ' we do not have a filename have another entry
+            If ((_Filename <> "" And _Filename IsNot Nothing) And _Filename = Filename) Then ' wee have a match so this is a possible entry
+                Debug.Print("CheckHKCU32() same filename")
+                DLLSource += " : " & AddInEntry.cHKLM64
+                Return DLLSource
+            End If
+        End If
+        Return ""
 
+    End Function
 
-        Catch ex As Exception
-            ' if the entry doesn't exist then we may get an exception
-        End Try
-
-    End Sub
 
     ''' <summary>
     ''' Get information for DLL file

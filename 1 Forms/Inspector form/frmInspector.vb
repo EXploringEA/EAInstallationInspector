@@ -131,6 +131,12 @@ Partial Friend Class frmInspector
 
             Me.Text = "EA Installation Inspector Version " & My.Application.Info.Version.ToString
 
+            ' indicate if running in admin or not
+            If IsElevated = True Then Me.Text += " - Administrator (Elevated)"
+            If IsElevated = False Then Me.Text += " - Normal (Non-Elevated)"
+
+
+
             LinkLabel1.Links.Add(0, 15, "http://Exploringea.com")
             init_lv(lvListOfAddIns) ' set up the list view
             setWidths(lvListOfAddIns) ' set list view column widths

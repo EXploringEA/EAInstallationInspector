@@ -11,6 +11,7 @@
 
 Imports Microsoft.Win32
 Imports System.Reflection
+Imports System.Security.Principal
 
 Module SupportFunctions
 
@@ -21,15 +22,23 @@ Module SupportFunctions
     Friend Function versionString() As String
         Dim myVersion As String = cNotSet
         Try
-            myVersion = "EAII V" & My.Application.Info.Version.Major.ToString & "." & _
-               My.Application.Info.Version.Minor.ToString & "." & _
-               My.Application.Info.Version.Build.ToString & "." & _
+            myVersion = "EAII V" & My.Application.Info.Version.Major.ToString & "." &
+               My.Application.Info.Version.Minor.ToString & "." &
+               My.Application.Info.Version.Build.ToString & "." &
                 My.Application.Info.Version.Revision.ToString
         Catch ex As Exception
 
         End Try
         Return myVersion
     End Function
+
+
+    Public ReadOnly Property IsElevated As Boolean
+        Get
+            Return New WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)
+        End Get
+    End Property
+
 
     ' List view 
     ' set the relative widths of the columns
