@@ -68,6 +68,9 @@ Partial Class frmInspector
         Me.btStopQueryActive = New System.Windows.Forms.Button()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.btEAApp = New System.Windows.Forms.Button()
+        Me.btTestAddRegistryKey = New System.Windows.Forms.Button()
+        Me.btDeleteRegistryKey = New System.Windows.Forms.Button()
+        Me.btGetRegistryValues = New System.Windows.Forms.Button()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -434,12 +437,45 @@ Partial Class frmInspector
         Me.btEAApp.UseVisualStyleBackColor = True
         Me.btEAApp.Visible = False
         '
+        'btTestAddRegistryKey
+        '
+        Me.btTestAddRegistryKey.Location = New System.Drawing.Point(18, 48)
+        Me.btTestAddRegistryKey.Name = "btTestAddRegistryKey"
+        Me.btTestAddRegistryKey.Size = New System.Drawing.Size(129, 25)
+        Me.btTestAddRegistryKey.TabIndex = 26
+        Me.btTestAddRegistryKey.Text = "Test Add registry key"
+        Me.btTestAddRegistryKey.UseVisualStyleBackColor = True
+        Me.btTestAddRegistryKey.Visible = False
+        '
+        'btDeleteRegistryKey
+        '
+        Me.btDeleteRegistryKey.Location = New System.Drawing.Point(20, 76)
+        Me.btDeleteRegistryKey.Name = "btDeleteRegistryKey"
+        Me.btDeleteRegistryKey.Size = New System.Drawing.Size(150, 24)
+        Me.btDeleteRegistryKey.TabIndex = 27
+        Me.btDeleteRegistryKey.Text = "Test delete registry key"
+        Me.btDeleteRegistryKey.UseVisualStyleBackColor = True
+        Me.btDeleteRegistryKey.Visible = False
+        '
+        'btGetRegistryValues
+        '
+        Me.btGetRegistryValues.Location = New System.Drawing.Point(163, 48)
+        Me.btGetRegistryValues.Name = "btGetRegistryValues"
+        Me.btGetRegistryValues.Size = New System.Drawing.Size(167, 28)
+        Me.btGetRegistryValues.TabIndex = 28
+        Me.btGetRegistryValues.Text = "GetValue"
+        Me.btGetRegistryValues.UseVisualStyleBackColor = True
+        Me.btGetRegistryValues.Visible = False
+        '
         'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
         Me.ClientSize = New System.Drawing.Size(1160, 520)
+        Me.Controls.Add(Me.btGetRegistryValues)
+        Me.Controls.Add(Me.btDeleteRegistryKey)
+        Me.Controls.Add(Me.btTestAddRegistryKey)
         Me.Controls.Add(Me.btEAApp)
         Me.Controls.Add(Me.btLegend)
         Me.Controls.Add(Me.Label5)
@@ -511,4 +547,7 @@ Partial Class frmInspector
     Friend WithEvents Label5 As Label
     Friend WithEvents btLegend As Button
     Friend WithEvents btEAApp As Button
+    Friend WithEvents btTestAddRegistryKey As Button
+    Friend WithEvents btDeleteRegistryKey As Button
+    Friend WithEvents btGetRegistryValues As Button
 End Class
