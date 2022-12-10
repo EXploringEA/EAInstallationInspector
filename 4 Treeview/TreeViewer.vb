@@ -175,14 +175,14 @@ Partial Class frmInspector
 '1. Top level Sparx AddIn information
                 Case NodeType.SparxRoot ' this is the top level which captures information for each group of addins
                     ' 32-bit CU
-                    myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32) ' get 32-bit SparxKeys for current user
+                    myCUKey32 = Registry.CurrentUser.OpenSubKey(cSparxKeys32) ' get 32-bit SparxKeys for current user
                     myNode = New NodeInfo(NodeType.HIVE, myCUKey32.GetSubKeyNames.Count)
                     myNode.ClassNameLocation = AddInEntry.cHKCU32 ' "HKCU\Software\Sparx Systems\EAAddins"
                     myNode.Name = AddInEntry.cHKCU32
                     myNodes.Add(myNode)
 
                     ' 32-bit LM
-                    myLMKey32 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeysWOW32) '"SOFTWARE\WOW6432Node\Sparx Systems\EAAddins") 'SparxKeys)
+                    myLMKey32 = Registry.LocalMachine.OpenSubKey(cSparxKeysWOW32) '"SOFTWARE\WOW6432Node\Sparx Systems\EAAddins") 'SparxKeys)
                     myNode = New NodeInfo(NodeType.HIVE, myLMKey32.GetSubKeyNames.Count)
 
                     If Environment.Is64BitOperatingSystem Then
@@ -196,13 +196,13 @@ Partial Class frmInspector
 
                     ' 64bit Addins
                     If Environment.Is64BitOperatingSystem Then
-                        myCUKey64 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys64) '"Software\Sparx Systems\EAAddins64") 'SparxKeys) ' get the sparx keys listing the addins for the current user
+                        myCUKey64 = Registry.CurrentUser.OpenSubKey(cSparxKeys64) '"Software\Sparx Systems\EAAddins64") 'SparxKeys) ' get the sparx keys listing the addins for the current user
                         myNode = New NodeInfo(NodeType.HIVE, myCUKey64.GetSubKeyNames.Count)
                         myNode.ClassNameLocation = AddInEntry.cHKCU64 ' "HKCU\Software\Sparx Systems\EAAddins64"
                         myNode.Name = AddInEntry.cHKCU64
                         myNodes.Add(myNode)
 
-                        myLMKey64 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys64) '"SOFTWARE\Sparx Systems\EAAddins64") 'SparxKeys)
+                        myLMKey64 = Registry.LocalMachine.OpenSubKey(cSparxKeys64) '"SOFTWARE\Sparx Systems\EAAddins64") 'SparxKeys)
                         myNode = New NodeInfo(NodeType.HIVE, myLMKey32.GetSubKeyNames.Count)
                         myNode.ClassNameLocation = AddInEntry.cHKLM64 '"HLKM\SOFTWARE\Sparx Systems\EAAddins64"
                         myNode.Name = AddInEntry.cHKLM64
@@ -215,61 +215,61 @@ Partial Class frmInspector
                     ' we now need to get the content for each of the children
                     Select Case pParent.ClassNameLocation
                         Case AddInEntry.cHKCU32 ' "HKCU\Software\Sparx Systems\EAAddins"
-                            myCUKey32 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys32)
+                            myCUKey32 = Registry.CurrentUser.OpenSubKey(cSparxKeys32)
                             For Each pEntryKey In myCUKey32.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
                                 newKey.SparxEntryLocation = AddInEntry.cHKCU32
-                                newKey.ClassNameLocation = AddInInformation.eaHKCU32AddInKeys
-                                newKey.ClassName = Registry.GetValue(AddInInformation.eaHKCU32AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
+                                newKey.ClassNameLocation = ceaHKCU32AddInKeys
+                                newKey.ClassName = Registry.GetValue(ceaHKCU32AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey)
                             Next
 
                         Case AddInEntry.cHKLM32
-                            myLMKey32 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys32)
+                            myLMKey32 = Registry.LocalMachine.OpenSubKey(cSparxKeys32)
 
                             For Each pEntryKey In myLMKey32.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
                                 newKey.SparxEntryLocation = AddInEntry.cHKLM32
-                                newKey.ClassNameLocation = AddInInformation.eaHKLM32AddInKeys
-                                newKey.ClassName = Registry.GetValue(AddInInformation.eaHKLM32AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
+                                newKey.ClassNameLocation = ceaHKLM32AddInKeys
+                                newKey.ClassName = Registry.GetValue(ceaHKLM32AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey)
                             Next
 
 
                         Case AddInEntry.cHKLM32Wow ' "HLKM\SOFTWARE\WOW6432Node\Sparx Systems\EAAddins" ' 64-bit systems
-                            myLMKey32 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeysWOW32)
+                            myLMKey32 = Registry.LocalMachine.OpenSubKey(cSparxKeysWOW32)
 
                             For Each pEntryKey In myLMKey32.GetSubKeyNames
                                 Dim newKey As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
                                 newKey.SparxEntryLocation = AddInEntry.cHKLM32
-                                newKey.ClassNameLocation = AddInInformation.eaHKLM32AddInKey64
-                                newKey.ClassName = Registry.GetValue(AddInInformation.eaHKLM32AddInKey64 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
+                                newKey.ClassNameLocation = ceaHKLM32AddInKey64
+                                newKey.ClassName = Registry.GetValue(ceaHKLM32AddInKey64 & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name
                                 newKey.Name = pEntryKey & " : " & newKey.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey)
                             Next
 
                             '' HKCU and HKLM 64bit addins
                         Case AddInEntry.cHKCU64 ' "HKCU\Software\Sparx Systems\EAAddins"
-                            myCUKey64 = Registry.CurrentUser.OpenSubKey(AddInInformation.SparxKeys64)
+                            myCUKey64 = Registry.CurrentUser.OpenSubKey(cSparxKeys64)
                             For Each pEntryKey In myCUKey64.GetSubKeyNames
                                 Dim newKey64 As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
                                 newKey64.SparxEntryLocation = AddInEntry.cHKCU64
-                                newKey64.ClassNameLocation = AddInInformation.eaHKCU64AddInKeys
+                                newKey64.ClassNameLocation = ceaHKCU64AddInKeys
 
-                                newKey64.ClassName = Registry.GetValue(AddInInformation.eaHKCU64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
+                                newKey64.ClassName = Registry.GetValue(ceaHKCU64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name 
                                 newKey64.Name = pEntryKey & " : " & newKey64.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey64)
                             Next
 
                         Case AddInEntry.cHKLM64  ' "HLKM\SOFTWARE\Sparx Systems\EAAddins64" ' 64-bit systems
-                            myLMKey64 = Registry.LocalMachine.OpenSubKey(AddInInformation.SparxKeys64)
+                            myLMKey64 = Registry.LocalMachine.OpenSubKey(cSparxKeys64)
                             For Each pEntryKey In myLMKey64.GetSubKeyNames
                                 Dim newKey64 As New NodeInfo(NodeType.ClassNameNode, cNumClassLibraryEntries)
                                 newKey64.SparxEntryLocation = AddInEntry.cHKLM64
-                                newKey64.ClassNameLocation = AddInInformation.eaHKLM64AddInKeys
-                                newKey64.ClassName = Registry.GetValue(AddInInformation.eaHKLM64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
+                                newKey64.ClassNameLocation = ceaHKLM64AddInKeys
+                                newKey64.ClassName = Registry.GetValue(ceaHKLM64AddInKeys & cBackSlash & pEntryKey, "", cNotSet) ' look for the class name CLSID name
                                 newKey64.Name = pEntryKey & " : " & newKey64.ClassName ' registry location for addin name 
                                 myNodes.Add(newKey64)
                             Next
@@ -302,7 +302,6 @@ Partial Class frmInspector
                     myNode.CLSID = _C.ClassID 'myCLSID
                     myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
                     myNodes.Add(myNode)
-
 
                     ' CLSID
                     myNode = New NodeInfo(NodeType.CLSIDNode_ClassName, 0)

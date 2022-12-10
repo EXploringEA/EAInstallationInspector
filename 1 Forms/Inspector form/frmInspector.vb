@@ -9,17 +9,28 @@
 '    You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ' =============================================================================================================================================
 
-Imports eaInstallationInspector.RegistryContents
+
 Imports Microsoft.Win32
 Imports System.IO
 Imports System.Reflection
-Imports eaInstallationInspector.AddInInformation
+
 
 ''' <summary>
 ''' Main form - presents the results of checking for EA AddIn's and related classes
 ''' </summary>
 ''' <seealso cref="System.Windows.Forms.Form" />
 Partial Friend Class frmInspector
+
+
+    ' LOCATION OF EA program keys
+    ' 32-bit
+    Private Const EAHKCU32 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA400\EA"
+    Private Const EAHKLM32 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EA400\EA"
+    ' 64-bit
+    Private Const EAHKCU64 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA64\EA"
+    Private Const EAHKLM64 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EA64\EA"
+
+
 
     ' This button will check EA app
     ' Get classID
@@ -139,17 +150,8 @@ Partial Friend Class frmInspector
             tbVersion64.Text = _EAVersion64
 
             checkEACOMServerLocation()
-
-
-            '
             checkDebugFrameworkConfig()
-
             Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns)
-            ' Dim SparxEntries As List(Of SparxEntry) = GetSparxEntries() ' populate the sparx entries
-            'Dim ClassIDEntries As List(Of ClassIDEntry) = getClassIDs(SparxEntries) ' populate the classid
-            '   Dim ClassEntries As List(Of ClassEntry) = getClassEntry(ClassIDEntries) 'populate details of classes
-
-
 
             ' initialise the registry tree and create node for SPARX Addin
             Browser.Nodes.Clear()
@@ -164,6 +166,8 @@ Partial Friend Class frmInspector
             If My.Settings.WindowWidth > 200 Then Me.Width = My.Settings.WindowWidth
             If My.Settings.WindowHeight > 200 Then Me.Height = My.Settings.WindowHeight
             btLegend.Visible = True
+
+            constantcheck()
 
             _loaded = True
 
@@ -543,7 +547,7 @@ Partial Friend Class frmInspector
                 If mylv.SelectedItems.Count > 0 Then
                     Dim MyListViewSelectedItem As ListViewItem = mylv.Items(mylv.SelectedIndices.Item(0))
 
-                    '8000 addContextMenu()
+                    addContextMenu()
                     mnuContextMenu = Nothing
                 End If
 
@@ -572,9 +576,9 @@ Partial Friend Class frmInspector
         Try
             mnuContextMenu = New ContextMenu()
             lvListOfAddIns.ContextMenu = mnuContextMenu ' add to the current form
-            Dim menuItem3 As New MenuItem("&Get registry keys")
-            Dim menuItem1 As New MenuItem("&Add registry")
-            Dim menuItem2 As New MenuItem("&Delete registry entries")
+            Dim menuItem3 As New MenuItem("&View registry keys")
+            Dim menuItem1 As New MenuItem("&Export keys - create")
+            Dim menuItem2 As New MenuItem("&Export keys - delete")
 
 
             menuItem1.Enabled = True
@@ -582,12 +586,12 @@ Partial Friend Class frmInspector
             menuItem3.Enabled = True
             mnuContextMenu.MenuItems.Clear()
             mnuContextMenu.MenuItems.Add(menuItem3)
-            mnuContextMenu.MenuItems.Add(menuItem1)
-            mnuContextMenu.MenuItems.Add(menuItem2)
+            'mnuContextMenu.MenuItems.Add(menuItem1)
+            'mnuContextMenu.MenuItems.Add(menuItem2)
 
-            AddHandler menuItem3.Click, AddressOf GetRegistryValues
-            AddHandler menuItem1.Click, AddressOf EditSelectedItem
-            AddHandler menuItem2.Click, AddressOf DeleteSelectedItem
+            AddHandler menuItem3.Click, AddressOf HandleGetRegistryValues
+            AddHandler menuItem1.Click, AddressOf HandleExportCreateKeys
+            AddHandler menuItem2.Click, AddressOf HandleExportDeleteKeys
 
 
 
@@ -598,298 +602,8 @@ Partial Friend Class frmInspector
         End Try
 
     End Sub
-    Private Sub EditSelectedItem()
 
-        Try
-            '   My.Computer.Registry.CurrentUser.CreateSubKey("SOFTWARE\MyTestKey")
-            '   My.Computer.Registry.SetValue("HKEY_CURRENT_USER\SOFTWARE\MyTestKey", "MyTestKeyValue1", "This is a test value.")
-            My.Computer.Registry.CurrentUser.CreateSubKey("SOFTWARE\Classes\CLSID\4321")
-            My.Computer.Registry.SetValue("HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\4321", "MyTestKeyValue1", "This is a test value.")
-            My.Computer.Registry.LocalMachine.CreateSubKey("SOFTWARE\Classes\CLSID\4321")
-            My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\4321", "MyTestKeyValue1", "This is a test value.")
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-    End Sub
-
-    Private Sub DeleteSelectedItem()
-
-    End Sub
-    'routine to get the keys associated with a specific AddIn
-
-    Friend Sub GetRegistryValues()
-        Try
-
-            Dim myListViewSubItems As ListViewItem.ListViewSubItemCollection = lvListOfAddIns.SelectedItems.Item(0).SubItems
-            Dim myEntryDetail As New AddInEntry
-            myEntryDetail.AddInName = myListViewSubItems(0).Text
-            myEntryDetail.SparxEntry = myListViewSubItems(1).Text
-            myEntryDetail.ClassName = myListViewSubItems(2).Text
-            myEntryDetail.ClassSource = myListViewSubItems(4).Text ' Check the HIVE in which the assembly is defined
-            myEntryDetail.CLSID = myListViewSubItems(3).Text
-            myEntryDetail.CLSIDSource = myListViewSubItems(5).Text
-
-            '       Dim _SparxRoot As String
-            '        Dim _classRoot As String
-
-            Dim _root As String
-
-
-
-            Select Case myEntryDetail.ClassSource
-
-                Case AddInEntry.cHKCU32
-                    ' output header
-                    outputReg("Windows Registry Editor Version 5.00")
-                    ' Sparx root
-                    '!!     Debug.Print("=== Sparx keys entries for " & myEntryDetail.AddInName)
-                    '_SparxRoot = "SOFTWARE\Sparx Systems\EAAddins\" & myEntryDetail.AddInName
-                    outputkeysAndSubKeysWithValues("", "CU", "SOFTWARE\Sparx Systems\EAAddins\" & myEntryDetail.AddInName) ' SparxRoot
-                    ' Class Information
-                    '  _classRoot = "SOFTWARE\Classes\" & myEntryDetail.ClassName
-                    '!!     Debug.Print("=== Class key entry in HKCU " & myEntryDetail.ClassName)
-                    outputkeysAndSubKeysWithValues("", "CU", "SOFTWARE\Classes\" & myEntryDetail.ClassName) '_classRoot)
-                    ' Class - detail
-                    '!!  Debug.Print("=== Class/DLL information for class " & myEntryDetail.CLSID & " in " & myEntryDetail.CLSIDSource)
-
-                    _root = IIf(ClassInformation.OS64Bit, "SOFTWARE\Classes\Wow6432Node" & cBackSlash & cCLSID & cBackSlash & myEntryDetail.CLSID,
-                         "SOFTWARE\Classes" & cBackSlash & cCLSID & cBackSlash & myEntryDetail.CLSID)
-                    If _root <> "" Then
-                        outputReg("[HKEY_CURRENT_USER\" & _root & "]")
-                        ' default key
-                        Dim df1 As String = Trim(My.Computer.Registry.CurrentUser.OpenSubKey(_root).GetValue(""))
-                        If df1 <> "" Then outputReg("@=" & Chr(34) & df1 & Chr(34))
-                        outputkeysAndSubKeysWithValues2("CU", _root)
-
-                    End If
-
-                Case AddInEntry.cHKLM32
-                    ' ONLY possible if elevated
-                    If IsElevated = False Then
-                        MsgBox("Cannot process - application needs to run as Administrator")
-                        Return
-                    End If
-                    ' output header
-                    outputReg("Windows Registry Editor Version 5.00")
-
-                    ' Sparx root
-                    '!!     Debug.Print("=== Sparx keys entries for " & myEntryDetail.AddInName)
-                    ' _SparxRoot = "SOFTWARE\WOW6432Node\Sparx Systems\EAAddins\" & myEntryDetail.AddInName
-                    outputkeysAndSubKeysWithValues("", "LM", "SOFTWARE\WOW6432Node\Sparx Systems\EAAddins\" & myEntryDetail.AddInName) ' _SparxRoot)
-                    ' Class Information
-                    ' _classRoot = "SOFTWARE\Classes\" & myEntryDetail.ClassName
-                    '!!     Debug.Print("=== Class key entry in HKCU " & myEntryDetail.ClassName)
-                    outputkeysAndSubKeysWithValues("", "LM", "SOFTWARE\Classes\" & myEntryDetail.ClassName) ' _classRoot)
-                    ' Class - detail
-                    '!!  Debug.Print("=== Class/DLL information for class " & myEntryDetail.CLSID & " in " & myEntryDetail.CLSIDSource)
-
-                    _root = IIf(ClassInformation.OS64Bit, "SOFTWARE\Classes\Wow6432Node" & cBackSlash & cCLSID & cBackSlash & myEntryDetail.CLSID,
-                         "SOFTWARE\Classes" & cBackSlash & cCLSID & cBackSlash & myEntryDetail.CLSID)
-                    If _root <> "" Then
-                        outputReg("[HKEY_LOCAL_MACHINE\" & _root & "]")
-                        ' default key
-
-                        Dim df1 As String = Trim(My.Computer.Registry.LocalMachine.OpenSubKey(_root).GetValue(""))
-                        If df1 <> "" Then outputReg("@=" & Chr(34) & df1 & Chr(34))
-                        outputkeysAndSubKeysWithValues2("LM", _root)
-
-                    End If
-
-                Case AddInEntry.cHKCU64
-                    ' output header
-                    outputReg("Windows Registry Editor Version 5.00")
-                    ' Sparx root
-                    '!!     Debug.Print("=== Sparx keys entries for " & myEntryDetail.AddInName)
-                    '  _SparxRoot = "SOFTWARE\Sparx Systems\EAAddins64\" & myEntryDetail.AddInName
-                    outputkeysAndSubKeysWithValues("", "CU", "SOFTWARE\Sparx Systems\EAAddins64\" & myEntryDetail.AddInName) ' _SparxRoot)
-                    ' Class Information
-                    '  _classRoot = "SOFTWARE\Classes\" & myEntryDetail.ClassName
-                    '!!     Debug.Print("=== Class key entry in HKCU " & myEntryDetail.ClassName)
-                    outputkeysAndSubKeysWithValues("", "CU", "SOFTWARE\Classes\" & myEntryDetail.ClassName) ' _classRoot)
-                    ' Class - detail
-                    '!!  Debug.Print("=== Class/DLL information for class " & myEntryDetail.CLSID & " in " & myEntryDetail.CLSIDSource)
-
-                    _root = "SOFTWARE\Classes" & cBackSlash & cCLSID & cBackSlash & myEntryDetail.CLSID
-                    If _root <> "" Then
-                        outputReg("[HKEY_CURRENT_USER\" & _root & "]")
-                        ' default key
-                        Dim df1 As String = Trim(My.Computer.Registry.CurrentUser.OpenSubKey(_root).GetValue(""))
-                        If df1 <> "" Then outputReg("@=" & Chr(34) & df1 & Chr(34))
-                        outputkeysAndSubKeysWithValues2("CU", _root)
-
-                    End If
-
-                Case AddInEntry.cHKLM64
-                    ' ONLY possible if elevated
-                    If IsElevated = False Then
-                        MsgBox("Cannot process - application needs to run as Administrator")
-                        Return
-                    End If
-                    ' output header
-                    outputReg("Windows Registry Editor Version 5.00")
-
-                    ' Sparx root
-                    '!!     Debug.Print("=== Sparx keys entries for " & myEntryDetail.AddInName)
-                    '  _SparxRoot = "SOFTWARE\Sparx Systems\EAAddins64\" & myEntryDetail.AddInName
-                    outputkeysAndSubKeysWithValues("", "LM", "SOFTWARE\Sparx Systems\EAAddins64\" & myEntryDetail.AddInName) ' _SparxRoot)
-                    ' Class Information
-                    '   _classRoot = "SOFTWARE\Classes\" & myEntryDetail.ClassName
-                    '!!     Debug.Print("=== Class key entry in HKCU " & myEntryDetail.ClassName)
-                    outputkeysAndSubKeysWithValues("", "LM", "SOFTWARE\Classes\" & myEntryDetail.ClassName) ' _classRoot)
-                    ' Class - detail
-                    '!!  Debug.Print("=== Class/DLL information for class " & myEntryDetail.CLSID & " in " & myEntryDetail.CLSIDSource)
-
-                    _root = "SOFTWARE\Classes" & cBackSlash & cCLSID & cBackSlash & myEntryDetail.CLSID
-                    If _root <> "" Then
-                        outputReg("[HKEY_LOCAL_MACHINE\" & _root & "]")
-                        ' default key
-                        Dim df1 As String = Trim(My.Computer.Registry.LocalMachine.OpenSubKey(_root).GetValue(""))
-                        If df1 <> "" Then outputReg("@=" & Chr(34) & df1 & Chr(34))
-                        outputkeysAndSubKeysWithValues2("LM", _root)
-
-                    End If
-            End Select
-
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-    End Sub
 #End Region
-
-
-    Sub outputReg(pString As String)
-#If DEBUG Then
-        Debug.Print(pString)
-#End If
-
-    End Sub
-
-    Private Sub outputkeysAndSubKeysWithValues(pindent As String, pHive As String, pRootKey As String)
-
-        Dim keyroot As Microsoft.Win32.RegistryKey = Nothing
-        Dim _pathPrefix As String = ""
-        Try
-            Select Case pHive
-                Case "CU"
-                    keyroot = My.Computer.Registry.CurrentUser.OpenSubKey(pRootKey)
-                    _pathPrefix = "[HKEY_CURRENT_USER\"
-                Case "LM"
-                    keyroot = My.Computer.Registry.LocalMachine.OpenSubKey(pRootKey)
-                    _pathPrefix = "[HKEY_LOCAL_MACHINE\"
-            End Select
-
-
-            pindent += " "
-            If keyroot IsNot Nothing Then
-                outputReg(_pathPrefix & pRootKey & "]")
-                ' default key
-                Dim df1 As String = Trim(pindent & keyroot.GetValue(""))
-                If df1 <> "" Then outputReg("@=" & Chr(34) & df1 & Chr(34))
-
-                For Each subkey As String In keyroot.GetSubKeyNames
-                    outputReg(_pathPrefix & pRootKey & "\" & subkey & "]")
-                    Dim kk As String = pRootKey & "\" & subkey
-                    If kk IsNot Nothing Then
-                        Dim sb1 As Microsoft.Win32.RegistryKey = If(pHive = "CU", My.Computer.Registry.CurrentUser.OpenSubKey(kk), My.Computer.Registry.LocalMachine.OpenSubKey(kk))
-
-                        If sb1 IsNot Nothing Then
-                            Dim df2 As String = sb1.GetValue("")
-                            outputReg("@=" & Chr(34) & df2 & Chr(34))
-                            If sb1.SubKeyCount > 0 Then
-                                For Each kk1 In sb1.GetValueNames
-                                    If kk1 = "" Then
-                                        Continue For
-                                    End If
-
-                                    Dim value = sb1.GetValue(kk1)
-                                    outputReg(Chr(34) & kk1 & Chr(34) & "=" & Chr(34) & value & Chr(34))
-                                Next
-                                outputkeysAndSubKeysWithValues(pindent, pHive, kk)
-                            End If
-
-                        End If
-                    End If
-
-                Next
-
-            End If
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-    End Sub
-    Private Sub outputkeysAndSubKeysWithValues2(pHive As String, pRootKey As String)
-
-        Dim keyroot As Microsoft.Win32.RegistryKey = Nothing
-        Dim _pathPrefix As String = ""
-        Try
-            Select Case pHive
-                Case "CU"
-                    keyroot = My.Computer.Registry.CurrentUser.OpenSubKey(pRootKey)
-                    _pathPrefix = "[HKEY_CURRENT_USER\"
-                Case "LM"
-                    keyroot = My.Computer.Registry.LocalMachine.OpenSubKey(pRootKey)
-                    _pathPrefix = "[HKEY_LOCAL_MACHINE\"
-            End Select
-
-
-
-            If keyroot IsNot Nothing Then
-                ' Debug.Print(_pathPrefix & pRootKey & "]")
-                ' default key
-                '  Dim df1 As String = Trim(keyroot.GetValue(""))
-                '   If df1 <> "" Then Debug.Print("@=" & Chr(34) & df1 & Chr(34))
-
-                For Each subkey As String In keyroot.GetSubKeyNames
-                    Debug.Print(_pathPrefix & pRootKey & "\" & subkey & "]")
-                    'Dim abc1 = Trim(pRootKey.GetValue(subkey))
-                    'Debug.Print("@=" & abc1)
-
-                    ' pindent += " "
-                    Dim kk As String = pRootKey & "\" & subkey
-                    If kk IsNot Nothing Then
-                        Dim sb1 As Microsoft.Win32.RegistryKey = If(pHive = "CU", My.Computer.Registry.CurrentUser.OpenSubKey(kk), My.Computer.Registry.LocalMachine.OpenSubKey(kk))
-
-                        If sb1 IsNot Nothing Then
-                            Dim df2 As String = sb1.GetValue("")
-                            If df2 IsNot Nothing AndAlso df2 <> "" Then Debug.Print("@=" & Chr(34) & df2 & Chr(34))
-                            ' Line above needed to output key name
-
-                            'Debug.Print(pindent & "Default: " & sb1.GetValue(""))
-                            For Each kk1 In sb1.GetValueNames
-                                If kk1 = "" Then
-                                    '??                 Debug.Print("@=" & Chr(34) & Chr(34))
-                                    Continue For
-                                End If
-
-                                Dim value = sb1.GetValue(kk1)
-                                'Dim val2 = value
-                                'val2.replace("\", "\\")
-                                Dim val3 = value.replace("\", "\\")
-                                Debug.Print(Chr(34) & kk1 & Chr(34) & "=" & Chr(34) & val3 & Chr(34))
-                            Next
-                            outputkeysAndSubKeysWithValues2(pHive, kk)
-                        End If
-                    End If
-
-                Next
-
-            End If
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-    End Sub
 
 
 #Region "Treeview tab"

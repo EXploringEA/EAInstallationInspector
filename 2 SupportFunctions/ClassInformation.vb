@@ -20,6 +20,11 @@ Imports Microsoft.Win32
 ''' </summary>
 Public Class ClassInformation
 
+    Private Const cImplementedCategories As String = "Implemented Categories"
+    Private Const cProgID As String = "ProgID"
+    Private Const cInprocServer32 As String = "InprocServer32"
+    Private Const cWow6432Node As String = "Wow6432Node"
+
     ' Friend cClass As String = "Class"
     Private Const cAssembly As String = "Assembly"
     Private Const cRuntimeVersion As String = "RuntimeVersion"
@@ -69,45 +74,6 @@ Public Class ClassInformation
 
     ' Location of key in registry
     Property RegistryLocation As String = ""
-
-    Friend Const cHKCR_ClassesRoot As String = "HKEY_CLASSES_ROOT\"
-    'Friend Const cHKCR_ClassesRootWow32CLSID As String = "HKEY_CLASSES_ROOT\Wow6432Node\CLSID\"
-    ' Friend Const cHKCR_ClassesRootCLSID As String = "HKEY_CLASSES_ROOT\CLSID\"
-
-    ' Registry class locations
-    ''' <summary>
-    ''' HKCU Classes for 
-    ''' * 32-bit on 32-bit OS
-    ''' * 64-bit on 64-bit OS
-    ''' </summary>
-    Friend Const cHKCU_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes"
-    Friend Const cHKCU_ClassesCLSID As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\"
-    Friend Const cHKCUWOW_ClassesCLSID As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\Wow6432Node\CLSID\"
-
-
-    '''' <summary>
-    '''' HKCU Classes for 
-    '''' * 32-bit on 64-bit OS
-    '''' </summary>
-    Friend Const cHKCUWOW_Classes As String = "HKEY_CURRENT_USER\SOFTWARE\Classes\Wow6432Node"
-
-    ''' <summary>
-    ''' HKLM Classes
-    ''' * 32-bit on 32-bit OS
-    ''' * 64-bit on 64-bit OS
-    ''' </summary>
-    Friend Const cHKLM_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes"
-    Friend Const cHKLM_ClassesCLSID As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\"
-
-    ''' <summary>
-    ''' HKLM Classes for 
-    ''' * 32-bit on 64-bit OS
-    ''' </summary>
-    Friend Const cHKLMWow1_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node"
-    Friend Const cHKLMWow2_Classes As String = "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Classes"
-    Friend Const cHKLMWow_ClassesCLSID As String = "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Classes\CLSID\"
-
-
 
 
     Friend Shared OS64Bit As Boolean = False
@@ -180,19 +146,19 @@ Public Class ClassInformation
                     If (CLSID IsNot Nothing And CLSID <> "") Then
                         ClassSource = AddInEntry.cHKCU32
                         'GetHKCU32 Class Information
-                        If CheckHKCU32(True) <> "" Then 
+                        If CheckHKCU32(True) <> "" Then
                             ClassSource = AddInEntry.cHKCU32
                             CheckHKLM32(False)
-                        End if
+                        End If
 
-                       '?? Also check if there is a HKLM entry
+                        '?? Also check if there is a HKLM entry
                         Exit Select
                     End If
                     CLSID = Registry.GetValue(cHKLM_Classes & cBackSlash & AddInName & cBackSlash & cCLSID, "", cNotFound)
                     If (CLSID IsNot Nothing And CLSID <> "") Then
                         'GetHKLM32 Class Information
                         If CheckHKLM32(True) <> "" Then ClassSource = AddInEntry.cHKLM32
-                    Exit Select
+                        Exit Select
                     End If
 
                 End If
@@ -208,10 +174,10 @@ Public Class ClassInformation
                     If (CLSID IsNot Nothing And CLSID <> "") Then
                         ClassSource = AddInEntry.cHKLM32
                         'GetHKLM32 Class Information
-                        If CheckHKLM32(True) <> "" Then 
+                        If CheckHKLM32(True) <> "" Then
                             ClassSource = AddInEntry.cHKLM32
                             CheckHKCU32(False)
-                         End If
+                        End If
 
                         Exit Select
                     End If
@@ -284,6 +250,7 @@ Public Class ClassInformation
     End Sub
     ' ----- CLASSID check for DLL file functions
 
+
     ' checkHKCU32
     ' checkHKLM32
     ' checkHKCU
@@ -296,6 +263,12 @@ Public Class ClassInformation
     ' * then also check if there is a other location DLL HLCU32 <> HKLM32 or HKCU <> HKLM
     ' * 
     ' routines return location found or "" if not found
+
+    ' * Primary check - used to get all information for CLassID
+    ' * Secondary check - used to check if filename for the location is the same as existing - if so ...
+    ' TODO check if the secondary is a reasonable check
+
+
     ''' <summary>
     ''' Check if there is an HKCU entry the current classID
     ''' </summary>
@@ -365,9 +338,9 @@ Public Class ClassInformation
             Else
 
                 If _filename = "" Then
-                _filename = Registry.GetValue(_location, "", "")
-                If _filename <> "" Then prefix = "Default key: "
-            End If
+                    _filename = Registry.GetValue(_location, "", "")
+                    If _filename <> "" Then prefix = "Default key: "
+                End If
                 '1st pass we check we have a filename 
                 If pPrimaryCheck Then
                     If (_filename <> "" And _filename IsNot Nothing) Then
@@ -458,8 +431,8 @@ Public Class ClassInformation
 
             '1st pass we check we have a filename 
             If pPrimaryCheck Then
-                If (_Filename <> "" And _Filename IsNot Nothing) Then
-                    Filename = _Filename ' this is the primary filename
+                If (_filename <> "" And _filename IsNot Nothing) Then
+                    Filename = _filename ' this is the primary filename
                     DLLSource = AddInEntry.cHKLM64
                     getDLLAssembly()
                     RegistryLocation = _location
@@ -473,7 +446,7 @@ Public Class ClassInformation
                 End If
             Else ' secondary check
                 ' we do not have a filename have another entry
-                If ((_Filename <> "" And _Filename IsNot Nothing) And _Filename = Filename) Then ' wee have a match so this is a possible entry
+                If ((_filename <> "" And _filename IsNot Nothing) And _filename = Filename) Then ' wee have a match so this is a possible entry
                     Debug.Print("CheckHKCU32() same filename")
                     DLLSource += " : " & AddInEntry.cHKLM64
                     Return DLLSource
@@ -488,12 +461,15 @@ Public Class ClassInformation
 
     ''' <summary>
     ''' Get information for DLL file
+    ''' * Assembly
+    ''' * Version
+    ''' 
     ''' </summary>
     Private Sub getDLLAssembly()
 
         Dim _filename As String = cleanFilename(Filename)
 
-        If _filename IsNot Nothing And _filename <> cNotSet Then
+        If _filename IsNot Nothing AndAlso _filename <> "" AndAlso _filename <> cNotSet Then
             If File.Exists(_filename) Then
                 If Strings.Left(_filename, fileprefixlength) = cFilePrefix Then _filename = Strings.Right(_filename, _filename.Length - fileprefixlength)
                 Try
@@ -502,10 +478,7 @@ Public Class ClassInformation
                 Catch ex As Exception
                     DLLVersion = "Unable to determine"
                 End Try
-                'If _filename <> "" Then _filename = _filename.Replace("/", "\")
                 Filename = cleanFilename(_filename)
-
-                ' now depending on where items were found flag accordingly
             End If
 
             MismatchedHives = ClassSource <> DLLSource
@@ -527,7 +500,7 @@ Public Class ClassInformation
     End Function
 
     ''' <summary>
-    ''' Dls the lexists.
+    ''' does the DLL for the given filename exist
     ''' </summary>
     ''' <param name="pFilePath">DLL Filename path.</param>
     ''' <returns>True if exists else false</returns>
@@ -547,7 +520,8 @@ Public Class ClassInformation
         Return False
     End Function
 
-    ' function uses the properies of the entry to define the colour that should be set
+    ' function to set line colours
+    ' uses the properties of the entry to define the colour that should be set
     ' precendence of colours
     ' SPARX present
     ' CLASSID
@@ -555,6 +529,8 @@ Public Class ClassInformation
     ' Mismatched HIVES
     ' DLL exists
     ' DLL wrong location
+    ' TODO Can we detect other stuff??
+    ' TODO presedence on colouring
 
     Friend Function getLineColour() As Color
         Dim c As Color = Color.White
