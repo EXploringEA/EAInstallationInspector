@@ -577,12 +577,12 @@ Partial Friend Class frmInspector
             mnuContextMenu = New ContextMenu()
             lvListOfAddIns.ContextMenu = mnuContextMenu ' add to the current form
             Dim menuItem3 As New MenuItem("&View registry keys")
-            Dim menuItem1 As New MenuItem("&Export keys - create")
-            Dim menuItem2 As New MenuItem("&Export keys - delete")
+            'Dim menuItem1 As New MenuItem("&Export keys - create")
+            'Dim menuItem2 As New MenuItem("&Export keys - delete")
 
 
-            menuItem1.Enabled = True
-            menuItem2.Enabled = True
+            'menuItem1.Enabled = True
+            'menuItem2.Enabled = True
             menuItem3.Enabled = True
             mnuContextMenu.MenuItems.Clear()
             mnuContextMenu.MenuItems.Add(menuItem3)
@@ -590,8 +590,8 @@ Partial Friend Class frmInspector
             'mnuContextMenu.MenuItems.Add(menuItem2)
 
             AddHandler menuItem3.Click, AddressOf HandleGetRegistryValues
-            AddHandler menuItem1.Click, AddressOf HandleExportCreateKeys
-            AddHandler menuItem2.Click, AddressOf HandleExportDeleteKeys
+            'AddHandler menuItem1.Click, AddressOf HandleExportCreateKeys
+            'AddHandler menuItem2.Click, AddressOf HandleExportDeleteKeys
 
 
 
@@ -799,69 +799,6 @@ Partial Friend Class frmInspector
         a.Show()
 
     End Sub
-
-    '++++ NOT USED
-    ' Test buttons for registry entries
-
-    Private Sub btTestAddRegistryKey_Click(sender As Object, e As EventArgs) Handles btTestAddRegistryKey.Click
-
-
-
-        Try
-            '   My.Computer.Registry.CurrentUser.CreateSubKey("SOFTWARE\MyTestKey")
-            '   My.Computer.Registry.SetValue("HKEY_CURRENT_USER\SOFTWARE\MyTestKey", "MyTestKeyValue1", "This is a test value.")
-            My.Computer.Registry.CurrentUser.CreateSubKey("SOFTWARE\Classes\CLSID\4321")
-            My.Computer.Registry.SetValue("HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\4321", "MyTestKeyValue1", "This is a test value.")
-            My.Computer.Registry.LocalMachine.CreateSubKey("SOFTWARE\Classes\CLSID\4321")
-            My.Computer.Registry.SetValue("HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\4321", "MyTestKeyValue1", "This is a test value.")
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-    End Sub
-
-    Private Sub btDeleteRegistryKey_Click(sender As Object, e As EventArgs) Handles btDeleteRegistryKey.Click
-        Try
-            '  My.Computer.Registry.CurrentUser.DeleteSubKeyTree("SOFTWARE\MyTestKeys")
-            '  My.Computer.Registry.CurrentUser.DeleteSubKeyTree("SOFTWARE\MyTestKeys")
-            My.Computer.Registry.CurrentUser.DeleteSubKeyTree("SOFTWARE\Classes\CLSID\4321")
-            My.Computer.Registry.LocalMachine.DeleteSubKeyTree("SOFTWARE\Classes\CLSID\4321")
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-    End Sub
-
-    Private Sub btGetRegistryValues_Click(sender As Object, e As EventArgs) Handles btGetRegistryValues.Click
-        Try
-            'Dim a = My.Computer.Registry.CurrentUser.GetSubKeyNames("SOFTWARE\MyeaDocX Ltd\")
-            'Dim k = My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\MyTestKeys")
-            '  Dim k = My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Classes\CLSID\4321")
-            Dim k = My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\CLSID\4321")
-
-            If k IsNot Nothing Then
-
-                Dim r As String = ""
-                For Each subkey As String In k.GetSubKeyNames
-                    r += subkey & ":"
-                Next
-                Debug.Print(r)
-            End If
-
-
-
-        Catch ex As Exception
-#If DEBUG Then
-            Debug.Print(ex.ToString)
-#End If
-        End Try
-    End Sub
-    '---------- NOT USED
-
 
 
 

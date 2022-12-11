@@ -128,7 +128,7 @@ Module Constants
 
 
     Friend Const cSoftwareClasses As String = "SOFTWARE\Classes"
-    Friend Const cSoftware_Node As String = cSoftwareClasses & "\Wow6432Node"
+    Friend Const cSoftware_Wow6432Node As String = cSoftwareClasses & "\Wow6432Node"
 
     Friend cRegHeader As String = "Windows Registry Editor Version 5.00"
 

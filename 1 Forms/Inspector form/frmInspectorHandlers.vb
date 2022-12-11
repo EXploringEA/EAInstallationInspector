@@ -66,7 +66,8 @@ Partial Friend Class frmInspector
             myEntryDetail.ClassSource = myListViewSubItems(4).Text ' Check the HIVE in which the assembly is defined
             myEntryDetail.CLSID = myListViewSubItems(3).Text
             myEntryDetail.CLSIDSource = myListViewSubItems(5).Text
-            GetRegistryValuesHandler(myEntryDetail)
+            Dim myRegClass As New RegClass(myEntryDetail)
+            myRegClass.GetRegistryValuesHandler()
         Catch ex As Exception
 #If DEBUG Then
             Debug.Print(ex.ToString)
