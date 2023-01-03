@@ -71,6 +71,7 @@ Partial Class frmInspector
         Me.btTestAddRegistryKey = New System.Windows.Forms.Button()
         Me.btDeleteRegistryKey = New System.Windows.Forms.Button()
         Me.btGetRegistryValues = New System.Windows.Forms.Button()
+        Me.btDisableNameCheck = New System.Windows.Forms.Button()
         Me.tabControl.SuspendLayout()
         Me.tabListOfAddins.SuspendLayout()
         Me.tabRegistryTree.SuspendLayout()
@@ -467,12 +468,23 @@ Partial Class frmInspector
         Me.btGetRegistryValues.UseVisualStyleBackColor = True
         Me.btGetRegistryValues.Visible = False
         '
+        'btDisableNameCheck
+        '
+        Me.btDisableNameCheck.Location = New System.Drawing.Point(193, 82)
+        Me.btDisableNameCheck.Name = "btDisableNameCheck"
+        Me.btDisableNameCheck.Size = New System.Drawing.Size(75, 23)
+        Me.btDisableNameCheck.TabIndex = 1
+        Me.btDisableNameCheck.Text = "Disable Name check"
+        Me.btDisableNameCheck.UseVisualStyleBackColor = True
+        Me.btDisableNameCheck.Visible = False
+        '
         'frmInspector
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
         Me.ClientSize = New System.Drawing.Size(1160, 520)
+        Me.Controls.Add(Me.btDisableNameCheck)
         Me.Controls.Add(Me.btGetRegistryValues)
         Me.Controls.Add(Me.btDeleteRegistryKey)
         Me.Controls.Add(Me.btTestAddRegistryKey)
@@ -550,4 +562,5 @@ Partial Class frmInspector
     Friend WithEvents btTestAddRegistryKey As Button
     Friend WithEvents btDeleteRegistryKey As Button
     Friend WithEvents btGetRegistryValues As Button
+    Friend WithEvents btDisableNameCheck As Button
 End Class

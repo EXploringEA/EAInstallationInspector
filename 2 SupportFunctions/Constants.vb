@@ -60,7 +60,6 @@ Module Constants
     ''' HKLM Keys
     ''' </summary>
     Friend Const ceaHKLM32AddInKey64 As String = "HKEY_LOCAL_MACHINE\" & cSparxKeysWOW32
-
     Friend Const ceaHKLM32AddInKeys As String = "HKEY_LOCAL_MACHINE\" & cSparxKeys32
 
 
@@ -77,87 +76,31 @@ Module Constants
 
 
 
-    Friend Const cHKCR_ClassesRoot As String = "HKEY_CLASSES_ROOT\"
-
-#Region "Current user"
 
 
-    ' Registry class locations
-    ''' <summary>
-    ''' HKCU Classes for 
-    ''' * 32-bit on 32-bit OS
-    ''' * 64-bit on 64-bit OS
-    ''' </summary>
-    '''  
-    Friend Const cHKCU_Root As String = "HKEY_CURRENT_USER"
-    Friend Const cHKCU_Software As String = cHKCU_Root & "\SOFTWARE"
-    Friend Const cHKCU_Classes As String = cHKCU_Software & "\Classes"
-    Friend Const cHKCU_ClassesCLSID As String = cHKCU_Classes & "\CLSID"
-    Friend Const cHKCUWOW_ClassesCLSID As String = cHKCUWOW_Classes & "\CLSID"
-
-
-    '''' <summary>
-    '''' HKCU Classes for 
-    '''' * 32-bit on 64-bit OS
-    '''' </summary>
-    Friend Const cHKCUWOW_Classes As String = cHKCU_Classes & "\Wow6432Node"
-#End Region
-
-#Region "Local machine"
-
-
-    ''' <summary>
-    ''' HKLM Classes
-    ''' * 32-bit on 32-bit OS
-    ''' * 64-bit on 64-bit OS
-    ''' </summary>
-    '''  
-    Friend Const cHKLM_Root As String = "HKEY_LOCAL_MACHINE"
-    Friend Const cHKLM_Software As String = cHKLM_Root & "\SOFTWARE"
-    Friend Const cHKLM_Classes As String = cHKLM_Software & "\Classes"
-    Friend Const cHKLM_ClassesCLSID As String = cHKLM_Classes & "\CLSID"
-
-
-    ''' <summary>
-    ''' HKLM Classes for 
-    ''' * 32-bit on 64-bit OS
-    ''' </summary>
-    Friend Const cHKLMWow1_Classes As String = cHKLM_Classes & "\WOW6432Node"
-    Friend Const cHKLMWow2_Classes As String = cHKLM_Software & "\WOW6432Node\Classes"
-    Friend Const cHKLMWow_ClassesCLSID As String = cHKLMWow1_Classes & "\CLSID"
-
-
-    Friend Const cSoftwareClasses As String = "SOFTWARE\Classes"
-    Friend Const cSoftware_Wow6432Node As String = cSoftwareClasses & "\Wow6432Node"
-
-    Friend cRegHeader As String = "Windows Registry Editor Version 5.00"
-
-
-#End Region
 
     Sub constantcheck()
 
-        ccheck("cHKCU_Root", cHKCU_Root)
-        ccheck("cHKCU_Software", cHKCU_Software)
-        ccheck("cHKCU_Classes", cHKCU_Classes)
-        ccheck("cHKCU_ClassesCLSID", cHKCU_ClassesCLSID)
-        ccheck("cHKCUWOW_ClassesCLSID", cHKCUWOW_ClassesCLSID)
-        ccheck("cHKCUWOW_Classes", cHKCUWOW_Classes)
-        ccheck("cHKLM_Root", cHKLM_Root)
-        ccheck("cHKLM_Software", cHKLM_Software)
-        ccheck("cHKLM_Classes", cHKLM_Classes)
-        ccheck("cHKLM_ClassesCLSID", cHKLM_ClassesCLSID)
-        ccheck("cHKLMWow1_Classes", cHKLMWow1_Classes)
-        ccheck("cHKLMWow2_Classes", cHKLMWow2_Classes)
-        ccheck("cHKLMWow_ClassesCLSID", cHKLMWow_ClassesCLSID)
+        '  ccheck("cHKCU_Root", cHKCU_Root)
+        ' ccheck("cHKCU_Software", cHKCU_Software)
+        '    ccheck("cHKCU_Classes", cHKCU_Classes)
+        '   ccheck("cHKCU_ClassesCLSID", cHKCU_ClassesCLSID)
+        '    ccheck("cHKCUWOW_ClassesCLSID", cHKCUWOW_ClassesCLSID)
+        '    ccheck("cHKCUWOW_Classes", cHKCUWOW_Classes)
+        ' ccheck("cHKLM_Root", cHKLM_Root)
+        '   ccheck("cHKLM_Software", cHKLM_Software)
+        '  ccheck("cHKLM_Classes", cHKLM_Classes)
+        '    ccheck("cHKLM_ClassesCLSID", cHKLM_ClassesCLSID)
+        '   ccheck("cHKLMWow_Classes", cHKLMWow_Classes)
+        '    ccheck("cHKLMWow_ClassesCLSID", cHKLMWow_ClassesCLSID)
 
 
     End Sub
 
-    Sub ccheck(p1 As String, p2 As String)
-        Debug.Print("Constant: " & p1 & " = " & p2)
+    'Sub ccheck(p1 As String, p2 As String)
+    '    Debug.Print("Constant: " & p1 & " = " & p2)
 
-    End Sub
+    'End Sub
 
 #End Region
 End Module

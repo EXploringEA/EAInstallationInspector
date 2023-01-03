@@ -16,8 +16,15 @@ Friend Class RegClass
     Private _ClassNamespace As String = ""
 
 
-    Const cHKCU As String = "CU"
-    Const cHKLM As String = "LM"
+    Private Const cHKCU As String = "CU"
+    Private Const cHKLM As String = "LM"
+
+    Private Const cSoftwareClasses As String = "SOFTWARE\Classes"
+    Private Const cSoftware_Wow6432Node As String = cSoftwareClasses & "\Wow6432Node"
+    Private Const cHKLM_Root As String = "HKEY_LOCAL_MACHINE"
+    Private Const cHKCU_Root As String = "HKEY_CURRENT_USER"
+    Private cRegHeader As String = "Windows Registry Editor Version 5.00"
+
 
     Friend Sub New(pEntryDetails As AddInEntry)
         Try

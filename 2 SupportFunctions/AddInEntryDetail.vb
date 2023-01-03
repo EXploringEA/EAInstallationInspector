@@ -9,6 +9,7 @@
     ' 32-bit AddIns on 32-bit EA
     Friend Const cHKCU32 As String = "HKCU32" ' 32-bit Addins on 32-bit OS 
     Friend Const cHKLM32 As String = "HKLM32" ' 32-bit Addins on 32-bit OS
+    Friend Const cHKLM322 As String = "HKLM322" ' 32-bit Addins on 32-bit OS
 
     ' 32-bit AddIns on 64-bit OS
     Friend Const cHKLM32Wow As String = "HKLM32Wow" ' 32-bit AddIn on 64-bit OS ?? NT SURE WE NEED THIS as the Sparx key is detached from the class registration

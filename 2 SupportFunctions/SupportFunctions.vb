@@ -183,7 +183,7 @@ Module SupportFunctions
     ''' * HKCU
     ''' * HKLM
     ''' </remarks>
-    Sub Get3264AddInClassDetailsAndPopulateListview(plv As ListView)
+    Sub Get3264AddInClassDetailsAndPopulateListview(plv As ListView, pTest As Boolean)
 
         ' Get the entries for each area in the registry containing Sparx AddIn entries 32/64-bit
         ' Need to consider the fact that although the Sparx key may indicate 32bit or 64-bit it cannot be assumed that the class exists.
@@ -194,6 +194,7 @@ Module SupportFunctions
             Try
 
                 AddEntrySparxInformation(_RowItem, CurrentAddInEntry)
+                '  Dim c As ClassInformation = New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKCU32) ', pTest)
                 AddEntryClassInformation(_RowItem, New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKCU32))
 
                 plv.Items.Add(_RowItem)

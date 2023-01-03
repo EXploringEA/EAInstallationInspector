@@ -45,12 +45,14 @@ Partial Friend Class frmInspector
         Try
             Dim EA_ClassID = Registry.GetValue("HKEY_CLASSES_ROOT\EA.App\CLSID", "", cNotSet) 'get the classID for EA.App - is the same for 32-bit and 64-bit
             Dim EACOMServer64 As Boolean = True
-            Dim Akey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\WOW6432Node\CLSID\" & EA_ClassID) ' & "\adrian")
+            Dim Akey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Classes\WOW6432Node\CLSID\" & EA_ClassID)
             Dim Ak1 = Akey.OpenSubKey("InprocServer32")
             If Not Ak1 Is Nothing Then
                 Dim vk1 = Ak1.GetValue("CodeBase")
                 If vk1.contains("86") Then EACOMServer64 = False
+                '      If Ak1.GetValue("CodeBase").vk1.contains("86") Then EACOMServer64 = False
             End If
+
 
             ' now set the back colors
             tbVersion32.BackColor = Color.White
@@ -151,7 +153,7 @@ Partial Friend Class frmInspector
 
             checkEACOMServerLocation()
             checkDebugFrameworkConfig()
-            Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns)
+            Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns, testNames)
 
             ' initialise the registry tree and create node for SPARX Addin
             Browser.Nodes.Clear()
@@ -167,7 +169,10 @@ Partial Friend Class frmInspector
             If My.Settings.WindowHeight > 200 Then Me.Height = My.Settings.WindowHeight
             btLegend.Visible = True
 
-            constantcheck()
+            ' constantcheck()
+
+            testNames = True
+            btDisableNameCheck.Text = "Enabled"
 
             _loaded = True
 
@@ -400,7 +405,7 @@ Partial Friend Class frmInspector
         Try
             checkDebugFrameworkConfig()
             lvListOfAddIns.Items.Clear()
-            Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns)
+            Get3264AddInClassDetailsAndPopulateListview(lvListOfAddIns, testNames)
         Catch ex As Exception
 #If DEBUG Then
             Debug.Print(ex.ToString)
@@ -800,6 +805,16 @@ Partial Friend Class frmInspector
 
     End Sub
 
+    Private testNames As Boolean = True
+    Private Sub btDisableNameCheck_Click(sender As Object, e As EventArgs) Handles btDisableNameCheck.Click
+        If testNames Then
+            testNames = False
+            btDisableNameCheck.Text = "Disabled"
+        Else
+            testNames = True
+            btDisableNameCheck.Text = "Enabled"
 
+        End If
+    End Sub
 
 End Class

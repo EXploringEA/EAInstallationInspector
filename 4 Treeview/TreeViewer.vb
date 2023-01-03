@@ -172,7 +172,6 @@ Partial Class frmInspector
 
             Select Case pParent.NodeType
 
-'1. Top level Sparx AddIn information
                 Case NodeType.SparxRoot ' this is the top level which captures information for each group of addins
                     ' 32-bit CU
                     myCUKey32 = Registry.CurrentUser.OpenSubKey(cSparxKeys32) ' get 32-bit SparxKeys for current user
