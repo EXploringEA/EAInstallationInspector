@@ -35,6 +35,34 @@ Friend Class frmEntryDetail
             tbCLSID.Text = pEntryDetail.CLSID
             tbCLSIDSRC.Text = pEntryDetail.CLSIDSource
 
+            ' need to get the 1st Classsource
+            Dim cs As String = pEntryDetail.ClassSource
+            If cs.Contains(",") Then
+                Dim pos As Integer = cs.IndexOf(",")
+                cs = cs.Substring(0, pos)
+
+            End If
+
+            Dim key As KeyInfo = ClassInformation.CheckKeyInfo(pEntryDetail.CLSID, ClassInformation.KeyLocation(cs, pEntryDetail.CLSID))
+            tbCLSIDAddInName.Visible = True
+            lbCLSIDAddInName.Visible = True
+            tbCLSIDAddInName.Text = key.AddInName
+
+            'If ClassInformation.CheckAddInNamesMatch(pEntryDetail.ClassName, key.AddInName) Then
+            '    tbCLSIDAddInName.Visible = False
+            '    lbCLSIDAddInName.Visible = False
+
+            '    tbCLSIDAddInName.Visible = True
+            '    lbCLSIDAddInName.Visible = True
+            '    tbCLSIDAddInName.Text = key.AddInName
+
+
+            'Else
+            '    tbCLSIDAddInName.Visible = True
+            '    lbCLSIDAddInName.Visible = True
+            '    tbCLSIDAddInName.Text = key.AddInName
+            'End If
+
             tbDLL.Text = pEntryDetail.DLL
             _DLLFilename = pEntryDetail.DLL
             If _DLLFilename <> "" Then

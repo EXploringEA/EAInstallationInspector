@@ -195,23 +195,8 @@ Public Class ClassInformation
 
             Case AddInEntry.cHKCU32   '32-bit add in
                 ' check if we have a HKCU32 entry - expected
-                Dim _location As String = IIf(OS64Bit,
-                               cHKCUWOW_ClassesCLSID & cBackSlash & ClassID & cBackSlash,
-                               cHKCU_ClassesCLSID & cBackSlash & ClassID & cBackSlash)
-                Dim HKCU32Key As KeyInfo = CheckKeyInfo(ClassID, _location)
-
-                _location = IIf(OS64Bit,
-                                cHKLMWow_ClassesCLSID & cBackSlash & ClassID & cBackSlash,
-                                cHKLM_ClassesCLSID & cBackSlash & ClassID & cBackSlash)
-                Dim HKLM32key As KeyInfo = CheckKeyInfo(ClassID, _location)
-
-                'Dim HKLM32key2 As New KeyInfo
-                'HKLM32key2.Found = False
-                'If OS64Bit Then ' also check
-                '    _location = cHKLMWow_ClassesCLSID2 & cBackSlash & ClassID & cBackSlash
-                '    HKLM32key2 = CheckKeyInfo(ClassID, _location)
-                'End If
-
+                Dim HKCU32Key As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKCU32, ClassID))
+                Dim HKLM32key As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKLM32, ClassID))
 
                 If HKCU32Key.Found Then ' check in primary location for 32-bit CU
                     ClassIDExists = True
@@ -220,7 +205,7 @@ Public Class ClassInformation
                     Filename = HKCU32Key.Filename
                     DLLVersion = HKCU32Key.DLLVersion
                     DLLSource = AddInEntry.cHKCU32
-                    DLLExistsInExpectedLocation = True
+                    DLLExistsInExpectedLocation = HKCU32Key.DLLExistsInLocation
                     RegistryLocation = HKCU32Key.RegistryLocation
                     RunTimeVersion = HKCU32Key.RunTimeVersion
                     ThreadingModel = HKCU32Key.ThreadingModel
@@ -234,12 +219,7 @@ Public Class ClassInformation
 
                     If HKLM32key.Found Then 'we also found an entry in HKLM
                         ClassSource += "," & AddInEntry.cHKLM32
-                        '  DLLSource += " and MORE"
                     End If
-
-                    'If HKLM32key2.Found Then
-                    '    ClassSource += ",HKLM322"
-                    'End If
 
 
 
@@ -247,7 +227,7 @@ Public Class ClassInformation
                     MatchedHives = False
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKLM32
-                    DLLExistsInExpectedLocation = False
+                    DLLExistsInExpectedLocation = False ' HKLM32key.DLLExistsInLocation
                     Filename = HKLM32key.Filename ' this is the primary filename saved for later
                     DLLSource = AddInEntry.cHKLM32
                     DLLVersion = HKLM32key.DLLVersion
@@ -260,23 +240,8 @@ Public Class ClassInformation
 
             Case AddInEntry.cHKLM32
 
-                'HKCU
-                Dim _location As String = IIf(OS64Bit,
-                                           cHKCUWOW_ClassesCLSID & cBackSlash & ClassID & cBackSlash,
-                                           cHKCU_ClassesCLSID & cBackSlash & ClassID & cBackSlash)
-                Dim HKCU32Key As KeyInfo = CheckKeyInfo(ClassID, _location)
-                ' HKLM
-                _location = IIf(OS64Bit,
-                       cHKLMWow_ClassesCLSID & cBackSlash & ClassID & cBackSlash,
-                       cHKLM_ClassesCLSID & cBackSlash & ClassID & cBackSlash)
-                Dim HKLM32key As KeyInfo = CheckKeyInfo(ClassID, _location)
-
-                'Dim HKLM32key2 As New KeyInfo
-                'HKLM32key2.Found = False
-                'If OS64Bit Then ' also check
-                '    _location = cHKLMWow_ClassesCLSID2 & cBackSlash & ClassID & cBackSlash
-                '    HKLM32key2 = CheckKeyInfo(ClassID, _location)
-                'End If
+                Dim HKCU32Key As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKCU32, ClassID))
+                Dim HKLM32key As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKLM32, ClassID))
 
 
                 If HKLM32key.Found Then
@@ -301,32 +266,9 @@ Public Class ClassInformation
 
                     If HKCU32Key.Found Then
                         ClassSource += "," & AddInEntry.cHKCU32
-                        '  DLLSource += "and MORE"
                     End If
 
-                    '    If HKLM32key2.Found Then
-                    '        ClassSource += ",HKLM322"
-                    '    End If
 
-                    'ElseIf HKLM32key2.Found Then
-                    '    Filename = HKLM32key2.Filename
-                    '    DLLExistsInExpectedLocation = True
-                    '    ClassIDExists = True
-                    '    ClassSource = AddInEntry.cHKLM322
-                    '    MatchedHives = True
-                    '    DLLVersion = HKLM32key2.DLLVersion
-                    '    DLLExistsInExpectedLocation = True
-                    '    DLLSource = AddInEntry.cHKLM322
-                    '    RegistryLocation = HKLM32key2.RegistryLocation
-                    '    RunTimeVersion = HKLM32key2.RunTimeVersion
-                    '    ThreadingModel = HKLM32key2.ThreadingModel
-                    '    AssemblyAsString = HKLM32key2.AssemblyAsString
-                    '    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKLM32key2.AddInName)
-
-                    '    If HKCU32Key.Found Then
-                    '        ClassSource += "," & AddInEntry.cHKCU32
-                    '        '  DLLSource += "and MORE"
-                    '    End If
 
 
                 ElseIf HKCU32Key.Found Then
@@ -346,11 +288,8 @@ Public Class ClassInformation
 
                     '64-bit addins
             Case AddInEntry.cHKCU64
-                ' check if we have a HKCU32 entry - expected
-                Dim _location As String = cHKCU_ClassesCLSID & cBackSlash & ClassID & cBackSlash
-                Dim HKCUKey As KeyInfo = CheckKeyInfo(ClassID, _location)
-                _location = cHKLM_ClassesCLSID & cBackSlash & ClassID & cBackSlash
-                Dim HKLMkey As KeyInfo = CheckKeyInfo(ClassID, _location)
+                Dim HKCUKey As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKCU64, ClassID))
+                Dim HKLMkey As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKLM64, ClassID))
 
                 If HKCUKey.Found Then
                     ClassIDExists = True
@@ -399,11 +338,8 @@ Public Class ClassInformation
 
             Case AddInEntry.cHKLM64
 
-
-                Dim _location As String = cHKCU_ClassesCLSID & cBackSlash & ClassID & cBackSlash
-                Dim HKCUKey As KeyInfo = CheckKeyInfo(ClassID, _location)
-                _location = cHKLM_ClassesCLSID & cBackSlash & ClassID & cBackSlash
-                Dim HKLMkey As KeyInfo = CheckKeyInfo(ClassID, _location)
+                Dim HKCUKey As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKCU64, ClassID))
+                Dim HKLMkey As KeyInfo = CheckKeyInfo(ClassID, KeyLocation(AddInEntry.cHKLM64, ClassID))
 
                 If HKLMkey.Found Then
                     ClassIDExists = True
@@ -474,10 +410,18 @@ Public Class ClassInformation
         Return (String.Compare(Trim(pG1), Trim(pG2)) = 0)
 
     End Function
-    Private Function CheckAddInNamesMatch(pAdd1 As String, pAdd2 As String) As Boolean
-        Dim a1 As String = Trim(pAdd1.ToLower)
-        Dim a2 As String = Trim(pAdd2.ToLower)
-        Return a1 = a2
+    Friend Shared Function CheckAddInNamesMatch(pAdd1 As String, pAdd2 As String) As Boolean
+        Try
+            If pAdd1 Is Nothing Then Return False
+            If pAdd2 Is Nothing Then Return False
+            Dim a1 As String = Trim(pAdd1.ToLower)
+            Dim a2 As String = Trim(pAdd2.ToLower)
+            '  Return a2.Contains(a1)
+            Return a1 = a2
+        Catch ex As Exception
+
+        End Try
+        Return False
 
     End Function
     ' ----- CLASSID check for DLL file functions
@@ -487,8 +431,34 @@ Public Class ClassInformation
     ' checkHKLM
 
 
+    Friend Shared Function KeyLocation(pKeySource As String, ClassID As String) As String
+        Dim _location As String = ""
+        Try
+            Select Case pKeySource
+                Case AddInEntry.cHKCU32
+                    _location = IIf(OS64Bit,
+                               cHKCUWOW_ClassesCLSID & cBackSlash & ClassID & cBackSlash,
+                               cHKCU_ClassesCLSID & cBackSlash & ClassID & cBackSlash)
+                Case AddInEntry.cHKLM32
+                    _location = IIf(OS64Bit,
+                                 cHKLMWow_ClassesCLSID & cBackSlash & ClassID & cBackSlash,
+                                 cHKLM_ClassesCLSID & cBackSlash & ClassID & cBackSlash)
+                Case AddInEntry.cHKCU64
+                    _location = cHKCU_ClassesCLSID & cBackSlash & ClassID & cBackSlash
+                Case AddInEntry.cHKLM64
+                    _location = cHKLM_ClassesCLSID & cBackSlash & ClassID & cBackSlash
 
-    Private Function CheckKeyInfo(pClassID As String, pLocation As String) As KeyInfo
+            End Select
+        Catch ex As Exception
+
+        End Try
+        Return _location
+    End Function
+
+
+
+
+    Friend Shared Function CheckKeyInfo(pClassID As String, pLocation As String) As KeyInfo
         Dim _info As New KeyInfo
         Try
             If pLocation <> "" Then
@@ -539,7 +509,7 @@ Public Class ClassInformation
     ''' * Version
     ''' 
     ''' </summary>
-    Private Function getDLLVersionFromAssembly(_filename As String) As String
+    Private Shared Function getDLLVersionFromAssembly(_filename As String) As String
         '   Dim _filename As String = cleanFilename(Filename)
         If _filename IsNot Nothing AndAlso _filename <> "" AndAlso _filename <> cNotSet Then
 #If classtrace Then
@@ -564,7 +534,7 @@ Public Class ClassInformation
 
     ' was used to ensure the comparison between filenames was fair - however all entries that are checked are from registry so unless we need to 
     ' use the address other than checking OK to leave raw
-    Private Function cleanFilename(_Filename As String) As String
+    Private Shared Function cleanFilename(_Filename As String) As String
 
         If Strings.Left(_Filename, fileprefixlength) = cFilePrefix Then _Filename = Strings.Right(_Filename, _Filename.Length - fileprefixlength)
         If _Filename <> "" Then _Filename = _Filename.Replace("/", "\")
@@ -607,15 +577,13 @@ Public Class ClassInformation
     Friend Function getLineColour() As Color
         Dim c As Color = Color.White
         Try
-
-            If Not SparxKeyExists Then Return Color.Red
-            If Not ClassIDExists Then Return Color.HotPink
-            If Not MatchedHives Then Return Color.Wheat
-            If Not DLLExistsInExpectedLocation Then Return Color.Pink
-            If IntegrationAddIn = True Then Return Color.PaleGreen
-            If Not AddInNameMatch Then Return Color.Yellow
-
-            Return Color.Lime
+            If Not SparxKeyExists Then Return Color.FromArgb(255, 0, 0)  'Color.Red
+            If Not ClassIDExists Then Return Color.FromArgb(255, 105, 180)
+            If Not DLLExistsInExpectedLocation Or Not MatchedHives Then Return Color.FromArgb(186, 252, 186)
+            If Not MatchedHives Then Return Color.FromArgb(235, 250, 180)
+            If IntegrationAddIn = True Then Return Color.FromArgb(255, 255, 54)
+            If Not AddInNameMatch Then Return Color.FromArgb(255, 230, 153)
+            Return Color.FromArgb(0, 255, 0) ' All OK
 
         Catch ex As Exception
 
