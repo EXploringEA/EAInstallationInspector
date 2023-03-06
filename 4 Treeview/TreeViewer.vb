@@ -284,7 +284,7 @@ Partial Class frmInspector
 
                     ' Classname
                     myNode = New NodeInfo(NodeType.CLSIDNode, 0) ' no children
-                    myNode.Name = cNodeClassname & _C.AddInName
+                    myNode.Name = cNodeClassname & _C.AddInClassName
                     myNode.CLSIDSrc = _C.ClassSource 'CLSIDsrc
                     myNode.CLSID = _C.ClassID 'myCLSID
                     myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
@@ -296,7 +296,7 @@ Partial Class frmInspector
                     myNode = New NodeInfo(NodeType.CLSIDNode_ClassName, 0)
                     myNode.Name = cNodeCLSID & _C.ClassID
                     myNode.CLSIDSrc = _C.ClassSource 'CLSIDsrc
-                    myNode.ClassName = _C.AddInName '_ClassInformation.ClassName
+                    myNode.ClassName = _C.AddInClassName '_ClassInformation.ClassName
                     myNode.ClassNameLocation = pParent.ClassNameLocation
                     myNode.CLSID = _C.ClassID 'myCLSID
                     myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
@@ -306,7 +306,7 @@ Partial Class frmInspector
                     myNode = New NodeInfo(NodeType.CLSIDNode_ClassName, 0)
                     myNode.Name = cNodeClassSources & _C.ClassSource
                     myNode.CLSIDSrc = _C.ClassSource 'CLSIDsrc
-                    myNode.ClassName = _C.AddInName '_ClassInformation.ClassName
+                    myNode.ClassName = _C.AddInClassName '_ClassInformation.ClassName
                     myNode.ClassNameLocation = pParent.ClassNameLocation
                     myNode.CLSID = _C.ClassID 'myCLSID
                     myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation
@@ -316,7 +316,7 @@ Partial Class frmInspector
                     myNode = New NodeInfo(NodeType.CLSIDNode_CodeBase, 0)
                     myNode.Name = cNodeDLLFilename & _C.DisplayFilename
                     myNode.FilePathName = _C.DisplayFilename '_filename
-                    myNode.ClassName = _C.AddInName '.ClassName
+                    myNode.ClassName = _C.AddInClassName '.ClassName
                     myNode.ClassNameLocation = pParent.ClassNameLocation
                     myNode.CLSID = _C.ClassID
                     myNode.CLSIDLocation = _C.ClassSource 'myCLSIDLocation

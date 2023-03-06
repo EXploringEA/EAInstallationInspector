@@ -86,7 +86,7 @@ Public Class ClassInformation
 
     ' Information from Spaxr registry keys
     ' AddIn name - the name of the Key in Sparx entry
-    Property AddInName As String = ""
+    Property AddInClassName As String = ""
     ' Location of the AddIn key within Sparx keys
     Property AddInSource As String = ""
 
@@ -124,22 +124,22 @@ Public Class ClassInformation
     ' Private testnames As Boolean = True
     ' Filename as captured from HKCR
     Private Property Filename As String = ""
-    Private AddInNameMatch As Boolean = False
+    Private AddInClassNameMatch As Boolean = False
     '  Private AddInCheckName As String = ""
     Private IntegrationAddIn As Boolean = False
     ''' <summary>
     ''' Constructor used to save Sparx information and get the class ID
     ''' </summary>
-    ''' <param name="pAddInName"></param>
+    ''' <param name="pAddInClassName"></param>
     ''' <param name="pAddInSource"></param>
-    Sub New(pAddInName As String, pAddInSource As String) ', ptest As Boolean)
+    Sub New(pAddInClassName As String, pAddInSource As String) ', ptest As Boolean)
         ' testnames = ptest
-        AddInName = pAddInName
+        AddInClassName = pAddInClassName
         AddInSource = pAddInSource
         If Environment.Is64BitOperatingSystem Then OS64Bit = True
         If AddInSource <> "" Then SparxKeyExists = True
         getClassInfo()
-        Debug.Print("Addin " & AddInName & " Class ID = " & ClassID)
+        Debug.Print("Addin " & AddInClassName & " Class ID = " & ClassID)
     End Sub
 
     ' we have the addin name and location of Sparx key
@@ -176,7 +176,7 @@ Public Class ClassInformation
     Private Sub getClassInfo()
         ' if we have HKCU and HKLM that's fine as the current user will take precendence
 #If classtrace Then
-        logger.logger.write(vbCrLf & "=== getClassID ==== " & AddInSource & ":" & AddInName)
+        logger.logger.write(vbCrLf & "=== getClassID ==== " & AddInSource & ":" & AddInClassName)
 #End If
 
         ClassSource = ""
@@ -186,9 +186,9 @@ Public Class ClassInformation
         ' get all information from HKCR
         ' 64-bit OS
         ClassSource = cNotFound
-        Debug.Print(AddInName)
+        Debug.Print(AddInClassName)
 
-        ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInName & cBackSlash & cCLSID, "", cNotFound)
+        ClassID = Registry.GetValue(cHKCR_ClassesRoot & AddInClassName & cBackSlash & cCLSID, "", cNotFound)
         If ClassID Is Nothing Then Return  ' no action possible
 
         Select Case AddInSource
@@ -202,15 +202,15 @@ Public Class ClassInformation
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKCU32
                     MatchedHives = True
-                    Filename = HKCU32Key.Filename
+                    Filename = HKCU32Key.DLLFilename
                     DLLVersion = HKCU32Key.DLLVersion
                     DLLSource = AddInEntry.cHKCU32
                     DLLExistsInExpectedLocation = HKCU32Key.DLLExistsInLocation
-                    RegistryLocation = HKCU32Key.RegistryLocation
-                    RunTimeVersion = HKCU32Key.RunTimeVersion
-                    ThreadingModel = HKCU32Key.ThreadingModel
+                    RegistryLocation = HKCU32Key.DLLRegistryLocation
+                    RunTimeVersion = HKCU32Key.DLLRunTimeVersion
+                    ThreadingModel = HKCU32Key.DLLThreadingModel
                     AssemblyAsString = HKCU32Key.AssemblyAsString
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKCU32Key.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKCU32Key.ClassName)
 
                     If HKCU32Key.DefaultKey.ToLower = cMainClass Then
                         DLLSource = "Default key:" & AddInEntry.cHKCU32
@@ -221,21 +221,19 @@ Public Class ClassInformation
                         ClassSource += "," & AddInEntry.cHKLM32
                     End If
 
-
-
                 ElseIf HKLM32key.Found Then ' No HKCU but HKLM found there is it in 32-bit HKLM
                     MatchedHives = False
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKLM32
                     DLLExistsInExpectedLocation = False ' HKLM32key.DLLExistsInLocation
-                    Filename = HKLM32key.Filename ' this is the primary filename saved for later
+                    Filename = HKLM32key.DLLFilename ' this is the primary filename saved for later
                     DLLSource = AddInEntry.cHKLM32
                     DLLVersion = HKLM32key.DLLVersion
-                    RegistryLocation = HKLM32key.RegistryLocation
-                    RunTimeVersion = HKLM32key.RunTimeVersion
-                    ThreadingModel = HKLM32key.ThreadingModel
+                    RegistryLocation = HKLM32key.DLLRegistryLocation
+                    RunTimeVersion = HKLM32key.DLLRunTimeVersion
+                    ThreadingModel = HKLM32key.DLLThreadingModel
                     AssemblyAsString = HKLM32key.AssemblyAsString
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKLM32key.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKLM32key.ClassName)
                 End If
 
             Case AddInEntry.cHKLM32
@@ -245,7 +243,7 @@ Public Class ClassInformation
 
 
                 If HKLM32key.Found Then
-                    Filename = HKLM32key.Filename
+                    Filename = HKLM32key.DLLFilename
                     DLLExistsInExpectedLocation = True
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKLM32
@@ -253,11 +251,11 @@ Public Class ClassInformation
                     DLLVersion = HKLM32key.DLLVersion
                     DLLExistsInExpectedLocation = True
                     DLLSource = AddInEntry.cHKLM32
-                    RegistryLocation = HKLM32key.RegistryLocation
-                    RunTimeVersion = HKLM32key.RunTimeVersion
-                    ThreadingModel = HKLM32key.ThreadingModel
+                    RegistryLocation = HKLM32key.DLLRegistryLocation
+                    RunTimeVersion = HKLM32key.DLLRunTimeVersion
+                    ThreadingModel = HKLM32key.DLLThreadingModel
                     AssemblyAsString = HKLM32key.AssemblyAsString
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKLM32key.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKLM32key.ClassName)
 
                     If HKLM32key.DefaultKey.ToLower = cMainClass Then
                         DLLSource = "Default key:" & AddInEntry.cHKLM32
@@ -268,22 +266,19 @@ Public Class ClassInformation
                         ClassSource += "," & AddInEntry.cHKCU32
                     End If
 
-
-
-
                 ElseIf HKCU32Key.Found Then
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKCU32
                     MatchedHives = False
                     DLLExistsInExpectedLocation = False
-                    Filename = HKCU32Key.Filename ' this is the primary filename saved for later
+                    Filename = HKCU32Key.DLLFilename ' this is the primary filename saved for later
                     DLLSource = AddInEntry.cHKCU32
                     DLLVersion = HKCU32Key.DLLVersion
-                    RegistryLocation = HKCU32Key.RegistryLocation
-                    RunTimeVersion = HKCU32Key.RunTimeVersion
-                    ThreadingModel = HKCU32Key.ThreadingModel
+                    RegistryLocation = HKCU32Key.DLLRegistryLocation
+                    RunTimeVersion = HKCU32Key.DLLRunTimeVersion
+                    ThreadingModel = HKCU32Key.DLLThreadingModel
                     AssemblyAsString = HKCU32Key.AssemblyAsString
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKCU32Key.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKCU32Key.ClassName)
                 End If
 
                     '64-bit addins
@@ -295,21 +290,20 @@ Public Class ClassInformation
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKCU64
                     MatchedHives = True
-                    Filename = HKCUKey.Filename
+                    Filename = HKCUKey.DLLFilename
                     DLLSource = AddInEntry.cHKCU64
                     DLLExistsInExpectedLocation = True
                     DLLVersion = HKCUKey.DLLVersion
-                    RegistryLocation = HKCUKey.RegistryLocation
-                    RunTimeVersion = HKCUKey.RunTimeVersion
-                    ThreadingModel = HKCUKey.ThreadingModel
+                    RegistryLocation = HKCUKey.DLLRegistryLocation
+                    RunTimeVersion = HKCUKey.DLLRunTimeVersion
+                    ThreadingModel = HKCUKey.DLLThreadingModel
                     AssemblyAsString = HKCUKey.AssemblyAsString
 
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKCUKey.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKCUKey.ClassName)
 
                     If HKCUKey.DefaultKey.ToLower = cMainClass Then
                         DLLSource = "Default key:" & AddInEntry.cHKCU64
                         IntegrationAddIn = True
-
                     End If
 
 
@@ -323,16 +317,16 @@ Public Class ClassInformation
                     ClassSource = AddInEntry.cHKLM64
                     MatchedHives = False
 
-                    Filename = HKLMkey.Filename ' this is the primary filename saved for later
+                    Filename = HKLMkey.DLLFilename ' this is the primary filename saved for later
                     DLLSource = AddInEntry.cHKLM64
                     DLLExistsInExpectedLocation = False
                     DLLVersion = HKLMkey.DLLVersion
-                    RegistryLocation = HKLMkey.RegistryLocation
-                    RunTimeVersion = HKLMkey.RunTimeVersion
-                    ThreadingModel = HKLMkey.ThreadingModel
+                    RegistryLocation = HKLMkey.DLLRegistryLocation
+                    RunTimeVersion = HKLMkey.DLLRunTimeVersion
+                    ThreadingModel = HKLMkey.DLLThreadingModel
                     AssemblyAsString = HKLMkey.AssemblyAsString
 
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKLMkey.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKLMkey.ClassName)
 
                 End If
 
@@ -345,15 +339,15 @@ Public Class ClassInformation
                     ClassIDExists = True
                     ClassSource = AddInEntry.cHKLM64
                     MatchedHives = True
-                    Filename = HKLMkey.Filename
+                    Filename = HKLMkey.DLLFilename
                     DLLSource = AddInEntry.cHKLM64
                     DLLVersion = HKLMkey.DLLVersion
                     DLLExistsInExpectedLocation = True
-                    RegistryLocation = HKLMkey.RegistryLocation
-                    RunTimeVersion = HKLMkey.RunTimeVersion
-                    ThreadingModel = HKLMkey.ThreadingModel
+                    RegistryLocation = HKLMkey.DLLRegistryLocation
+                    RunTimeVersion = HKLMkey.DLLRunTimeVersion
+                    ThreadingModel = HKLMkey.DLLThreadingModel
                     AssemblyAsString = HKLMkey.AssemblyAsString
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKLMkey.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKLMkey.ClassName)
 
                     If HKLMkey.DefaultKey.ToLower = cMainClass Then
                         DLLSource = "Default key:" & AddInEntry.cHKLM64
@@ -371,22 +365,22 @@ Public Class ClassInformation
                     ClassSource = AddInEntry.cHKCU64
                     MatchedHives = False
 
-                    Filename = HKCUKey.Filename ' this is the primary filename saved for later
+                    Filename = HKCUKey.DLLFilename ' this is the primary filename saved for later
                     DLLSource = AddInEntry.cHKCU64
                     DLLExistsInExpectedLocation = False
                     DLLVersion = HKCUKey.DLLVersion
 
-                    RegistryLocation = HKCUKey.RegistryLocation
-                    RunTimeVersion = HKCUKey.RunTimeVersion
-                    ThreadingModel = HKCUKey.ThreadingModel
+                    RegistryLocation = HKCUKey.DLLRegistryLocation
+                    RunTimeVersion = HKCUKey.DLLRunTimeVersion
+                    ThreadingModel = HKCUKey.DLLThreadingModel
                     AssemblyAsString = HKCUKey.AssemblyAsString
 
-                    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKCUKey.AddInName)
+                    AddInClassNameMatch = CheckAddInClassNamesMatch(AddInClassName, HKCUKey.ClassName)
 
                 End If
 
             Case Else
-                MsgBox("Unable to get class ID for " & AddInName & " Source " & AddInSource)
+                MsgBox("Unable to get class ID for " & AddInClassName & " Source " & AddInSource)
         End Select
         Return
     End Sub
@@ -404,13 +398,16 @@ Public Class ClassInformation
     '    AssemblyAsString = HKLMkey.AssemblyAsString
     '    AddInNameMatch = CheckAddInNamesMatch(AddInName, HKLMkey.AddInName)
     'End Sub
-    Private Function GUIDsMatch(pG1 As String, pG2 As String) As Boolean
-        'Dim s1 As String = Trim(pG1)
-        'Dim s2 As String = Trim(pG2)
-        Return (String.Compare(Trim(pG1), Trim(pG2)) = 0)
+    Private Function GUIDsMatch(pGUID1 As String, pGUID2 As String) As Boolean
+        Try
+            Return (String.Compare(Trim(pGUID1), Trim(pGUID2)) = 0)
+        Catch ex As Exception
+
+        End Try
+        Return False
 
     End Function
-    Friend Shared Function CheckAddInNamesMatch(pAdd1 As String, pAdd2 As String) As Boolean
+    Friend Shared Function CheckAddInClassNamesMatch(pAdd1 As String, pAdd2 As String) As Boolean
         Try
             If pAdd1 Is Nothing Then Return False
             If pAdd2 Is Nothing Then Return False
@@ -462,33 +459,33 @@ Public Class ClassInformation
         Dim _info As New KeyInfo
         Try
             If pLocation <> "" Then
-                _info.RootLocation = pLocation
+                _info.ClassRootLocation = pLocation
                 Dim prefix As String = ""
-                _info.AddInName = Registry.GetValue(pLocation, "", "")
+                _info.ClassName = Registry.GetValue(pLocation, "", "")
                 Dim _filename As String = Registry.GetValue(pLocation & cInprocServer32, cCodeBase, "") 'using the class try to find the DLL path
                 If _filename Is Nothing Then Return _info
-                _info.Filename = _filename
+                _info.DLLFilename = _filename
                 _info.Found = False
                 If _filename = "" Then ' see if there is a default key - possible addin
                     _info.DefaultKey = Registry.GetValue(pLocation, "", "")
                     If _info.DefaultKey <> "" Then prefix = "Default key: "
-                    _info.Filename = Registry.GetValue(pLocation & cInprocServer32, "", "")
+                    _info.DLLFilename = Registry.GetValue(pLocation & cInprocServer32, "", "")
                     _info.ClassID = pClassID
                     _info.DLLExistsInLocation = False
                     _info.DLLVersion = getDLLVersionFromAssembly(cleanFilename(_filename))
                     _info.Found = True
-                    _info.RunTimeVersion = Registry.GetValue(pLocation & cInprocServer32, cRuntimeVersion, cNotSet)
-                    _info.ThreadingModel = Registry.GetValue(pLocation & cInprocServer32, cThreadingModel, cNotSet)
-                    _info.AddInName = Registry.GetValue(pLocation & "VersionIndependentProgID", "", "")
+                    _info.DLLRunTimeVersion = Registry.GetValue(pLocation & cInprocServer32, cRuntimeVersion, cNotSet)
+                    _info.DLLThreadingModel = Registry.GetValue(pLocation & cInprocServer32, cThreadingModel, cNotSet)
+                    _info.ClassName = Registry.GetValue(pLocation & "VersionIndependentProgID", "", "")
                 Else
                     If (_filename <> "") Then
                         _info.Found = True
                         _info.ClassID = pClassID
                         _info.DLLExistsInLocation = True
                         _info.DLLVersion = getDLLVersionFromAssembly(cleanFilename(_filename))
-                        _info.RegistryLocation = pLocation & cInprocServer32
-                        _info.RunTimeVersion = Registry.GetValue(pLocation & cInprocServer32, cRuntimeVersion, cNotSet)
-                        _info.ThreadingModel = Registry.GetValue(pLocation & cInprocServer32, cThreadingModel, cNotSet)
+                        _info.DLLRegistryLocation = pLocation & cInprocServer32
+                        _info.DLLRunTimeVersion = Registry.GetValue(pLocation & cInprocServer32, cRuntimeVersion, cNotSet)
+                        _info.DLLThreadingModel = Registry.GetValue(pLocation & cInprocServer32, cThreadingModel, cNotSet)
                         _info.AssemblyAsString = Registry.GetValue(pLocation & cInprocServer32, cAssembly, cNotSet)
                     End If
                 End If
@@ -520,13 +517,10 @@ Public Class ClassInformation
                 Try
                     Dim ass As AssemblyName = AssemblyName.GetAssemblyName(_filename)
                     Return ass.Version.ToString
-                    '                    Return True
                 Catch ex As Exception
                     Return "Unable to determine"
                 End Try
-
             End If
-
         End If
         Return ""
     End Function
@@ -567,12 +561,9 @@ Public Class ClassInformation
     ' precendence of colours
     ' SPARX present
     ' CLASSID
-    ' ?loads
     ' Mismatched HIVES
     ' DLL exists
     ' DLL wrong location
-    ' TODO Can we detect other stuff??
-    ' TODO precedence on colouring
 
     Friend Function getLineColour() As Color
         Dim c As Color = Color.White
@@ -582,7 +573,7 @@ Public Class ClassInformation
             If Not DLLExistsInExpectedLocation Or Not MatchedHives Then Return Color.FromArgb(186, 252, 186)
             If Not MatchedHives Then Return Color.FromArgb(235, 250, 180)
             If IntegrationAddIn = True Then Return Color.FromArgb(255, 255, 54)
-            If Not AddInNameMatch Then Return Color.FromArgb(255, 230, 153)
+            If Not AddInClassNameMatch Then Return Color.FromArgb(255, 230, 153)
             Return Color.FromArgb(0, 255, 0) ' All OK
 
         Catch ex As Exception
@@ -597,15 +588,15 @@ Class KeyInfo
 
     Public Found As Boolean = False ' entry for classid found
     Public ClassID As String = "" ' classid
-    Public AddInName As String = "" ' name of AddIn
-    Public RootLocation As String = "" ' location for key root 
-    Public Filename As String = "" ' DLL filename
+    Public ClassName As String = "" ' name of AddIn Class
+    Public ClassRootLocation As String = "" ' location for key root 
+    Public DLLFilename As String = "" ' DLL filename
     ' .net information
-    Public RunTimeVersion As String = "" '.net
-    Public ThreadingModel As String = "" '.net
+    Public DLLRunTimeVersion As String = "" '.net
+    Public DLLThreadingModel As String = "" '.net
     ' Assembly information
     Public AssemblyAsString As String = ""
-    Public RegistryLocation As String = "" ' location of assemblyt key
+    Public DLLRegistryLocation As String = "" ' location of assembly key
     Public DLLExistsInLocation As Boolean = False
     Public DLLVersion As String
     Public DefaultKey As String = ""

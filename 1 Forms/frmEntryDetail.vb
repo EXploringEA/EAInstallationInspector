@@ -43,25 +43,11 @@ Friend Class frmEntryDetail
 
             End If
 
+            ' get key information 
             Dim key As KeyInfo = ClassInformation.CheckKeyInfo(pEntryDetail.CLSID, ClassInformation.KeyLocation(cs, pEntryDetail.CLSID))
             tbCLSIDAddInName.Visible = True
             lbCLSIDAddInName.Visible = True
-            tbCLSIDAddInName.Text = key.AddInName
-
-            'If ClassInformation.CheckAddInNamesMatch(pEntryDetail.ClassName, key.AddInName) Then
-            '    tbCLSIDAddInName.Visible = False
-            '    lbCLSIDAddInName.Visible = False
-
-            '    tbCLSIDAddInName.Visible = True
-            '    lbCLSIDAddInName.Visible = True
-            '    tbCLSIDAddInName.Text = key.AddInName
-
-
-            'Else
-            '    tbCLSIDAddInName.Visible = True
-            '    lbCLSIDAddInName.Visible = True
-            '    tbCLSIDAddInName.Text = key.AddInName
-            'End If
+            tbCLSIDAddInName.Text = key.ClassName
 
             tbDLL.Text = pEntryDetail.DLL
             _DLLFilename = pEntryDetail.DLL

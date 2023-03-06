@@ -14,7 +14,7 @@ Please NOTE: that the colours for indicating the condition of an AddIn has chang
 
 A pre-built .exe and help file are provided under in folders below the root.  
 
-* V7011 contains the current 32-bit/64-bit (note you now need the additional dll's in the same directory as the exe file if you wish to look at dll meta data)
+* V7021 contains the current 32-bit/64-bit (note you now need the additional dll's in the same directory as the exe file if you wish to look at dll meta data)
 
 NOTE: This code is released under the terms of the GPL3 licence agreement and is used at yoru own risk.
 
