@@ -64,9 +64,9 @@ Namespace My.Resources
         '''  Looks up a localized string similar to {\rtf1\adeflang1025\ansi\ansicpg1252\uc1\adeff37\deff0\stshfdbch31505\stshfloch31506\stshfhich31506\stshfbi0\deflang2057\deflangfe2057\themelang2057\themelangfe0\themelangcs0{\fonttbl{\f0\fbidi \froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f2\fbidi \fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}
         '''{\f3\fbidi \froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}{\f10\fbidi \fnil\fcharset2\fprq2{\*\panose 05000000000000000000}Wingdings;}{\f34\fbidi \f [rest of string was truncated]&quot;;.
         '''</summary>
-        Friend ReadOnly Property eaInstallationInspectorInformationV7011() As String
+        Friend ReadOnly Property eaInstallationInspectorInformationV7020() As String
             Get
-                Return ResourceManager.GetString("eaInstallationInspectorInformationV7011", resourceCulture)
+                Return ResourceManager.GetString("eaInstallationInspectorInformationV7020", resourceCulture)
             End Get
         End Property
         

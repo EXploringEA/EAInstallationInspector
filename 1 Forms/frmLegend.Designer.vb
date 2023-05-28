@@ -28,9 +28,11 @@ Partial Class frmLegend
         '
         'pbLegend
         '
+        Me.pbLegend.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.pbLegend.Location = New System.Drawing.Point(0, 0)
         Me.pbLegend.Name = "pbLegend"
-        Me.pbLegend.Size = New System.Drawing.Size(615, 106)
+        Me.pbLegend.Size = New System.Drawing.Size(617, 152)
         Me.pbLegend.TabIndex = 0
         Me.pbLegend.TabStop = False
         '
@@ -38,9 +40,9 @@ Partial Class frmLegend
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(616, 106)
+        Me.ClientSize = New System.Drawing.Size(616, 151)
         Me.Controls.Add(Me.pbLegend)
-        Me.MaximumSize = New System.Drawing.Size(632, 145)
+        Me.MaximumSize = New System.Drawing.Size(632, 190)
         Me.MinimumSize = New System.Drawing.Size(632, 145)
         Me.Name = "frmLegend"
         Me.ShowIcon = False

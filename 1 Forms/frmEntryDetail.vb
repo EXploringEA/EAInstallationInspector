@@ -20,8 +20,6 @@ Imports System.Runtime.InteropServices
 Friend Class frmEntryDetail
 
     Private _DLLFilename As String = ""
-    'Private Const fileprefix As String = "file:///"
-    'Private Const fileprefixlength As Integer = 8
     ''' <summary>
     ''' Initializes a new instance of the <see cref="frmEntryDetail"/> class.
     ''' Populate with the detail for the selected addin row
@@ -36,6 +34,20 @@ Friend Class frmEntryDetail
             tbClassSource.Text = pEntryDetail.ClassSource
             tbCLSID.Text = pEntryDetail.CLSID
             tbCLSIDSRC.Text = pEntryDetail.CLSIDSource
+
+            ' need to get the 1st Classsource
+            Dim cs As String = pEntryDetail.ClassSource
+            If cs.Contains(",") Then
+                Dim pos As Integer = cs.IndexOf(",")
+                cs = cs.Substring(0, pos)
+
+            End If
+
+            ' get key information 
+            Dim key As KeyInfo = ClassInformation.CheckKeyInfo(pEntryDetail.CLSID, ClassInformation.KeyLocation(cs, pEntryDetail.CLSID))
+            tbCLSIDAddInName.Visible = True
+            lbCLSIDAddInName.Visible = True
+            tbCLSIDAddInName.Text = key.ClassName
 
             tbDLL.Text = pEntryDetail.DLL
             _DLLFilename = pEntryDetail.DLL
@@ -250,82 +262,6 @@ Friend Class frmEntryDetail
 
             End Try
 
-            '================OLD=============
-            ' Dim tyt As Type
-            '
-            '   _filename = "C:\Users\EXploringEA\Downloads\dlls\E002_ASimpleEAMenu.DLL"
-            '   _filename = "eaDocXAddIn.eaDocX_Addin"
-            'If File.Exists(_filename) Then
-            '    Debug.Print("DLL Detail: " & _filename)
-            '    Dim assembly As Assembly = Nothing
-            '    Dim myDllClass As Object = Nothing
-            '    Try
-            '        My.Settings.DllFolder = Path.GetDirectoryName(_DLLFilename)
-            '        My.Settings.Save()
-            '        checkDLL(_filename)
-            '        assembly = Assembly.ReflectionOnlyLoadFrom(_filename)
-            '        Dim abc = assembly.GetExportedTypes() 'Type(tbAssemblyName.Text)
-
-            '        ' Dim b = assembly.GetAssembly("eaDocx.aa")
-
-            '        '  assembly = Assembly.ReflectionOnlyLoadFrom(_filename)
-            '        'filecontents = File.ReadAllBytes(_filename)
-            '        'assembly = Assembly.Load(filecontents) 'File.ReadAllBytes(_filename))
-            '        'myDllClass = assembly.CreateInstance(tbAssemblyName.Text)
-
-            '        ' create a domain
-            '        '  Dim aDomain As AppDomain = AppDomain.CreateDomain("DLLDomain")
-            '        '  Dim obj As Object = aDomain.CreateInstanceFromAndUnp(_filename, tbAssemblyName.Text)
-
-            '        Dim s As String = "-----"
-            '        For Each a In assembly.CustomAttributes
-            '            s += a.ToString & vbCrLf
-            '        Next
-
-            '        s += "-------  Referenced assemblies ----------" & vbCrLf
-            '        s += assembly.GetReferencedAssemblies.ToString
-            '        For Each g In assembly.GetReferencedAssemblies
-            '            s += g.ToString & vbCrLf
-            '        Next
-
-            '        's += myDllClass.GetType.ToString
-            '        Debug.Print(s)
-            '    Catch bifex As BadImageFormatException
-            '        MsgBox("Bad image format exception - which indicates that the DLL may not be a valid assembly at least in terms of loading by the EA Installation Inspector " _
-            '               & "it could be due to the DLL being compiler with a later version of the CLR (.NET framework) than this tool. " & vbCrLf _
-            '               & "NOTE: it may be this tool failing to load rather than your addin failing !" & vbCrLf _
-            '               & "-----------------" & vbCrLf _
-            '               & "Windows exception message below which may gives some clues " _
-            '               & bifex.ToString, MsgBoxStyle.Exclamation, "Bad Image format exception")
-            '        Return
-            '    Catch fnfex As FileNotFoundException
-            '        MsgBox("File Not found - could be that referenced dll's by your addin aren't present: " & fnfex.ToString, MsgBoxStyle.Exclamation, "File not found exception")
-            '        Return
-            '    Catch flex As FileLoadException
-            '        MsgBox("File not found - could be that referenced dll's by your addin aren't present: " & flex.ToString, MsgBoxStyle.Exclamation, "File Load Exception")
-            '        Return
-            '    Catch ex As Exception
-            '        MsgBox("Exception: " & ex.ToString, MsgBoxStyle.Exclamation, "Other exceptions")
-            '        assembly = Nothing
-            '    End Try
-            '    If assembly IsNot Nothing Then
-
-            '        Dim types As Type() = assembly.GetTypes()
-            '        '   Dim s As String = " List of types " & vbCrLf
-            '        Dim _ListOfTypes As New ArrayList
-            '        For Each t As Type In types
-            '            _ListOfTypes.Add(t)
-            '        Next
-            '        '  MsgBox(s, MsgBoxStyle.OkOnly, "List of public methods for DLL")
-            '        Dim frmMethods As New frmListOfClasses(_ListOfTypes)
-            '        frmMethods.ShowDialog()
-            '    Else
-            '        MsgBox("Sorry not available as unable to load assembly for " & vbCrLf & _filename, vbExclamation, "Assembly Information Not Available")
-            '    End If
-
-            'Else
-            '    MessageBox.Show("File " & _filename & " does not exist")
-            'End If
 
         Catch ex As Exception
 #If DEBUG Then

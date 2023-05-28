@@ -8,10 +8,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("eaInstallationInspector V8")>
+<Assembly: AssemblyTitle("eaInstallationInspector V7021")>
 <Assembly: AssemblyDescription("EA AddIn Registry Inspector")> 
 <Assembly: AssemblyCompany("EXploringEA.com")>
-<Assembly: AssemblyProduct("eaInstallationInspector - 29NOV2022")>
+<Assembly: AssemblyProduct("eaInstallationInspector - 03JAN2023")>
 <Assembly: AssemblyCopyright("Copyright © EXploringEA.com 2014-2022")>
 <Assembly: AssemblyTrademark("")> 
 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("7.0.1.1")>
-<Assembly: AssemblyFileVersion("7.0.1.1")>
+<Assembly: AssemblyVersion("7.0.2.1")>
+<Assembly: AssemblyFileVersion("7.0.2.1")>

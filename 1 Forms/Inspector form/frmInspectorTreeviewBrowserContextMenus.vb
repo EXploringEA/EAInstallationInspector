@@ -48,7 +48,7 @@ Partial Friend Class frmInspector
                     AddHandler mnuItemOpenDLLLocation.Click, AddressOf OpenFullFilenameWithExplorer
                     Dim mnuFilenameInfo As New MenuItem("File info : " & currentFilename)
                     mnuDGContextMenu.MenuItems.Add(mnuFilenameInfo)
-                    AddHandler mnuFilenameInfo.Click, AddressOf DisplayFileInformation
+                    AddHandler mnuFilenameInfo.Click, AddressOf HandleDisplayFileInformation
                     Dim mnuFilenameCheck As New MenuItem("Filename query : " & currentFilename)
                     AddHandler mnuFilenameCheck.Click, AddressOf RunQueryForFilename
                     mnuDGContextMenu.MenuItems.Add(mnuFilenameCheck)

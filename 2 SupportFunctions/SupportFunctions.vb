@@ -9,9 +9,6 @@
 '    You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ' =============================================================================================================================================
 
-Imports eaInstallationInspector.RegistryContents
-Imports Microsoft.Win32
-Imports System.Reflection
 Imports System.Security.Principal
 
 Module SupportFunctions
@@ -28,7 +25,9 @@ Module SupportFunctions
                My.Application.Info.Version.Build.ToString & "." &
                 My.Application.Info.Version.Revision.ToString
         Catch ex As Exception
-
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
         End Try
         Return myVersion
     End Function
@@ -76,7 +75,9 @@ Module SupportFunctions
             setWidths(plv)
 
         Catch ex As Exception
-
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
         End Try
     End Sub
     ''' <summary>
@@ -121,7 +122,9 @@ Module SupportFunctions
 
 
         Catch ex As Exception
-
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
         End Try
     End Sub
 
@@ -180,7 +183,7 @@ Module SupportFunctions
     ''' * HKCU
     ''' * HKLM
     ''' </remarks>
-    Sub Get3264AddInClassDetailsAndPopulateListview(plv As ListView)
+    Sub Get3264AddInClassDetailsAndPopulateListview(plv As ListView, pTest As Boolean)
 
         ' Get the entries for each area in the registry containing Sparx AddIn entries 32/64-bit
         ' Need to consider the fact that although the Sparx key may indicate 32bit or 64-bit it cannot be assumed that the class exists.
@@ -191,6 +194,7 @@ Module SupportFunctions
             Try
 
                 AddEntrySparxInformation(_RowItem, CurrentAddInEntry)
+                '  Dim c As ClassInformation = New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKCU32) ', pTest)
                 AddEntryClassInformation(_RowItem, New ClassInformation(CurrentAddInEntry.ClassName, AddInEntry.cHKCU32))
 
                 plv.Items.Add(_RowItem)
@@ -239,35 +243,6 @@ Module SupportFunctions
 
     End Sub
 
-    'Friend Function GetSparxEntries() As List(Of SparxEntry)
-
-    '    Dim ListOfSparx As New List(Of SparxEntry)
-    '    ' Get the entries for each area in the registry containing Sparx AddIn entries 32/64-bit
-    '    ' Need to consider the fact that although the Sparx key may indicate 32bit or 64-bit it cannot be assumed that the class exists.
-
-    '    Dim AI As New AddInInformation
-    '    For Each CurrentAddInEntry In AI.getListof32BitHKCUSparxEntries() ' 32-bit EA entries for current user
-    '        ListOfSparx.Add(CurrentAddInEntry)
-    '    Next
-
-
-    '    For Each CurrentAddInEntry In AI.getListof32BitHKLMSparxEntries() ' 32-bit EA entries for local machine
-    '        ListOfSparx.Add(CurrentAddInEntry)
-    '    Next
-
-    '    ' 64-bit HKCU
-    '    For Each CurrentAddInEntry In AI.getListof64BitHKCUSparxEntries() ' 64-bit EA entries for current user
-    '        ListOfSparx.Add(CurrentAddInEntry)
-
-    '    Next
-
-    '    ' 64-bit HKLM
-    '    For Each CurrentAddInEntry In AI.getListof64BitHKLMSparxEntries() ' 64-bit EA entries for Local machine
-    '        ListOfSparx.Add(CurrentAddInEntry)
-    '    Next
-    '    Return ListOfSparx
-
-    'End Function
 
     ' execute shell command - SHOULD be done started in a background thread 
     Friend Function ExecuteCommand(pCommand As String) As String

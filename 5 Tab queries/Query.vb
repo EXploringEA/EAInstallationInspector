@@ -18,7 +18,7 @@ Imports System.IO
 ' need to have a single query class to which we add queries which are then processed in the background
 
 Public Class Query
-
+    Private Const cLogFile As String = "log file "
 
     ' colours used for output
     Private cQueryRowColorDefault As Color = Color.White

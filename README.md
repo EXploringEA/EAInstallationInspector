@@ -6,7 +6,7 @@ This is a windows application which displays registry entries associated with Sp
 
 For more information review the document **eaInstallationInspectorInformationV7011.pdf** located under the resources directory.
 
-Current release is V7.0.1.1 29NOV2022 - this release does some under the hood tidying up prior to adding some new features as well as tweaks to documentation - do let me know if anything is unclear.
+Current release is V7.0.2.1 04JAN2023 - this release adds support to export registry entries that can be used to add/remove relevant EAddIn Keys - USE WITH CARE AND ONLY IF YOU KNOW WHAT YOU ARE DOING.
 
 I continue to tinker with the code do let me know if you find any issues or have suggestions on potential improvements.
 
@@ -14,7 +14,7 @@ Please NOTE: that the colours for indicating the condition of an AddIn has chang
 
 A pre-built .exe and help file are provided under in folders below the root.  
 
-* V7011 contains the current 32-bit/64-bit (note you now need the additional dll's in the same directory as the exe file if you wish to look at dll meta data)
+* V7021 contains the current 32-bit/64-bit (note you now need the additional dll's in the same directory as the exe file if you wish to look at dll meta data)
 
 NOTE: This code is released under the terms of the GPL3 licence agreement and is used at yoru own risk.
 

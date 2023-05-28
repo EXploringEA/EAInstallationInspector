@@ -15,7 +15,7 @@ Imports System.Reflection
 Partial Friend Class frmInspector
 #Region "Handlers"
 
-    Private Sub DisplayFileInformation()
+    Private Sub HandleDisplayFileInformation()
         Try
             ' pop up window of filename information
             Dim s As String = "File does not exist: " & currentFilename
@@ -35,37 +35,10 @@ Partial Friend Class frmInspector
             s += "Full name: " & _fileInfo.FullName & vbCrLf & vbCrLf
             s += "Created: " & _fileInfo.CreationTime.ToLongDateString & vbCrLf
             s += "Last accessed: " & _fileInfo.LastAccessTime.ToLongDateString & vbCrLf & vbCrLf
-                '  s += "Length " & _fileInfo.Length & vbCrLf
-                s += "Directory: " & _fileInfo.DirectoryName & vbCrLf & vbCrLf
-                '   MsgBox(s, MsgBoxStyle.OkOnly, "File information " & _filename)
-                MessageBox.Show(s, "File information " & _filename, MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Catch ex As Exception
-#If DEBUG Then
-                Debug.Print(ex.ToString)
-#End If
-        End Try
-
-    End Sub
-
-
-    '    ' queries should run in background
-    '    Private Sub RunQueryForFilename()
-    '        Try
-    '            If currentFilename <> "" Then RunQuery(currentFilename)
-
-    '        Catch ex As Exception
-    '#If DEBUG Then
-    '            Debug.Print(ex.ToString)
-    '#End If
-    '        End Try
-
-    '    End Sub
-
-
-
-    Private Sub RunQueryForProgID()
-        Try
-            Debug.Print("RunQueryForProgID IsNot NotImplemented")
+            '  s += "Length " & _fileInfo.Length & vbCrLf
+            s += "Directory: " & _fileInfo.DirectoryName & vbCrLf & vbCrLf
+            '   MsgBox(s, MsgBoxStyle.OkOnly, "File information " & _filename)
+            MessageBox.Show(s, "File information " & _filename, MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
 #If DEBUG Then
             Debug.Print(ex.ToString)
@@ -74,15 +47,48 @@ Partial Friend Class frmInspector
 
     End Sub
 
-    Private Sub ClearQueryLogWindow()
+
+#End Region
+#Region "ListView context menu handlers"
+
+
+    'routine to get the keys associated with a specific AddIn
+
+
+
+    Private Sub HandleGetRegistryValues()
         Try
-            lvQuery.Items.Clear()
-            Query.ResetQueryStatus()
+            Dim myListViewSubItems As ListViewItem.ListViewSubItemCollection = lvListOfAddIns.SelectedItems.Item(0).SubItems
+            Dim myEntryDetail As New AddInEntry
+            myEntryDetail.AddInName = myListViewSubItems(0).Text
+            myEntryDetail.SparxEntry = myListViewSubItems(1).Text
+            myEntryDetail.ClassName = myListViewSubItems(2).Text
+            myEntryDetail.ClassSource = myListViewSubItems(4).Text ' Check the HIVE in which the assembly is defined
+            myEntryDetail.CLSID = myListViewSubItems(3).Text
+            myEntryDetail.CLSIDSource = myListViewSubItems(5).Text
+            Dim myRegClass As New RegClass(myEntryDetail)
+            myRegClass.GetRegistryValuesHandler()
         Catch ex As Exception
 #If DEBUG Then
             Debug.Print(ex.ToString)
 #End If
         End Try
+    End Sub
+
+    Private Sub HandleExportCreateKeys()
+
+        Try
+
+        Catch ex As Exception
+#If DEBUG Then
+            Debug.Print(ex.ToString)
+#End If
+        End Try
+    End Sub
+
+    Private Sub HandleExportDeleteKeys()
+
     End Sub
 #End Region
+
 End Class

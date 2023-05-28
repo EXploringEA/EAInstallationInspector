@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\2 SupportFunctions"
+    "\\1 Forms",
+    "\\1 Forms\\Inspector form"
   ],
-  "SelectedNode": "\\eaInstallationInspector.sln",
+  "SelectedNode": "\\1 Forms\\Inspector form\\frmInspectorRegistryFunctions.vb",
   "PreviewInSolutionExplorer": false
 }

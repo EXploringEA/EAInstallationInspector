@@ -11,45 +11,96 @@
 
 Module Constants
 
-
-
-
-    ' LOCATION OF EA program keys
-    ' 32-bit
-    Friend Const EAHKCU32 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA400\EA"
-    Friend Const EAHKLM32 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EA400\EA"
-    ' 64-bit
-    Friend Const EAHKCU64 As String = "HKEY_CURRENT_USER\Software\Sparx Systems\EA64\EA"
-    Friend Const EAHKLM64 As String = "HKEY_LOCAL_MACHINE\Software\Sparx Systems\EA64\EA"
-
-
     ''' <summary>
     ''' Text not set
     ''' </summary>
     Friend Const cNotSet As String = "NOT SET"
     Friend Const cNotFound As String = "Not found"
-
-    Friend Const cLogFile As String = "log file "
-
     Friend Const cFilePrefix As String = "file:///"
     Friend Const fileprefixlength As Integer = 8
-
     Friend cCodeBase As String = "CodeBase"
-
-
-
-
     Friend Const cCLSID As String = "CLSID"
     '   Friend Const cProgID As String = "ProgID"
 
     ' Strings that are used
     Friend Const cBackSlash As String = "\"
     Friend Const cForwardSlash As String = "/"
-    Friend Const cInprocServer32 As String = "InprocServer32"
-    Friend Const cImplementedCategories As String = "Implemented Categories"
-    Friend Const cProgID As String = "ProgID"
-    Friend Const cWow6432Node As String = "Wow6432Node"
+
+#Region "Usedin AddIn information and treeviewer"
+
+#Region "Sparx keys"
+
+
+    ' Sparx subkey folders - which exist in both HKCU and HKLM
+    ''' <summary>
+    ''' The sparx keys - 32-bit  
+    ''' </summary>
+    Friend Const cSparxKeys32 As String = "Software\Sparx Systems\EAAddins"
+    ''' <summary>
+    ''' The sparx keys - 32-bit addin for 64-bit OS
+    ''' </summary>
+    Friend Const cSparxKeysWOW32 As String = "Software\Wow6432Node\Sparx Systems\EAAddins"
+
+    ' 64-bit AddIns
+
+    ''' <summary>
+    ''' The sparx keys - x64
+    ''' </summary>
+    Friend Const cSparxKeys64 As String = "Software\Sparx Systems\EAAddins64"
+
+    ' Exact registry locations for Sparx keys
+    ' 32-bit AddIns
+
+    ''' <summary>
+    ''' HKCU Keys
+    ''' </summary>
+    Friend Const ceaHKCU32AddInKeys As String = "HKEY_CURRENT_USER\" & cSparxKeys32
+
+    ''' <summary>
+    ''' HKLM Keys
+    ''' </summary>
+    Friend Const ceaHKLM32AddInKey64 As String = "HKEY_LOCAL_MACHINE\" & cSparxKeysWOW32
+    Friend Const ceaHKLM32AddInKeys As String = "HKEY_LOCAL_MACHINE\" & cSparxKeys32
+
+
+    ' 64-bit AddIns
+    ''' <summary>
+    ''' HKCU Keys
+    ''' </summary>6
+    Friend Const ceaHKCU64AddInKeys As String = "HKEY_CURRENT_USER\" & cSparxKeys64
+    ''' <summary>
+    ''' HKLM Keys
+    ''' </summary>
+    Friend Const ceaHKLM64AddInKeys As String = "HKEY_LOCAL_MACHINE\" & cSparxKeys64
+#End Region
 
 
 
+
+
+
+    Sub constantcheck()
+
+        '  ccheck("cHKCU_Root", cHKCU_Root)
+        ' ccheck("cHKCU_Software", cHKCU_Software)
+        '    ccheck("cHKCU_Classes", cHKCU_Classes)
+        '   ccheck("cHKCU_ClassesCLSID", cHKCU_ClassesCLSID)
+        '    ccheck("cHKCUWOW_ClassesCLSID", cHKCUWOW_ClassesCLSID)
+        '    ccheck("cHKCUWOW_Classes", cHKCUWOW_Classes)
+        ' ccheck("cHKLM_Root", cHKLM_Root)
+        '   ccheck("cHKLM_Software", cHKLM_Software)
+        '  ccheck("cHKLM_Classes", cHKLM_Classes)
+        '    ccheck("cHKLM_ClassesCLSID", cHKLM_ClassesCLSID)
+        '   ccheck("cHKLMWow_Classes", cHKLMWow_Classes)
+        '    ccheck("cHKLMWow_ClassesCLSID", cHKLMWow_ClassesCLSID)
+
+
+    End Sub
+
+    'Sub ccheck(p1 As String, p2 As String)
+    '    Debug.Print("Constant: " & p1 & " = " & p2)
+
+    'End Sub
+
+#End Region
 End Module

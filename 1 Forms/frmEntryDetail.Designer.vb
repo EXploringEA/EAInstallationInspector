@@ -56,6 +56,8 @@ Partial Class frmEntryDetail
         Me.Label2 = New System.Windows.Forms.Label()
         Me.tbDLLDate = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.tbCLSIDAddInName = New System.Windows.Forms.TextBox()
+        Me.lbCLSIDAddInName = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'lbAddInName
@@ -80,16 +82,16 @@ Partial Class frmEntryDetail
         '
         'tbAddInName
         '
-        Me.tbAddInName.Location = New System.Drawing.Point(120, 6)
+        Me.tbAddInName.Location = New System.Drawing.Point(121, 6)
         Me.tbAddInName.Name = "tbAddInName"
         Me.tbAddInName.ReadOnly = True
-        Me.tbAddInName.Size = New System.Drawing.Size(502, 20)
+        Me.tbAddInName.Size = New System.Drawing.Size(501, 20)
         Me.tbAddInName.TabIndex = 2
         '
         'lbDLL
         '
         Me.lbDLL.AutoSize = True
-        Me.lbDLL.Location = New System.Drawing.Point(14, 173)
+        Me.lbDLL.Location = New System.Drawing.Point(17, 208)
         Me.lbDLL.Name = "lbDLL"
         Me.lbDLL.Size = New System.Drawing.Size(73, 13)
         Me.lbDLL.TabIndex = 3
@@ -98,25 +100,25 @@ Partial Class frmEntryDetail
         '
         'tbAssemblyName
         '
-        Me.tbAssemblyName.Location = New System.Drawing.Point(120, 64)
+        Me.tbAssemblyName.Location = New System.Drawing.Point(121, 64)
         Me.tbAssemblyName.Name = "tbAssemblyName"
         Me.tbAssemblyName.ReadOnly = True
-        Me.tbAssemblyName.Size = New System.Drawing.Size(502, 20)
+        Me.tbAssemblyName.Size = New System.Drawing.Size(501, 20)
         Me.tbAssemblyName.TabIndex = 4
         '
         'tbDLL
         '
-        Me.tbDLL.Location = New System.Drawing.Point(120, 151)
+        Me.tbDLL.Location = New System.Drawing.Point(121, 174)
         Me.tbDLL.Multiline = True
         Me.tbDLL.Name = "tbDLL"
         Me.tbDLL.ReadOnly = True
-        Me.tbDLL.Size = New System.Drawing.Size(502, 57)
+        Me.tbDLL.Size = New System.Drawing.Size(501, 57)
         Me.tbDLL.TabIndex = 5
         '
         'btClose
         '
         Me.btClose.BackColor = System.Drawing.Color.SpringGreen
-        Me.btClose.Location = New System.Drawing.Point(540, 248)
+        Me.btClose.Location = New System.Drawing.Point(547, 270)
         Me.btClose.Name = "btClose"
         Me.btClose.Size = New System.Drawing.Size(75, 26)
         Me.btClose.TabIndex = 6
@@ -135,7 +137,7 @@ Partial Class frmEntryDetail
         '
         'tbSparxRef
         '
-        Me.tbSparxRef.Location = New System.Drawing.Point(120, 35)
+        Me.tbSparxRef.Location = New System.Drawing.Point(121, 35)
         Me.tbSparxRef.Name = "tbSparxRef"
         Me.tbSparxRef.ReadOnly = True
         Me.tbSparxRef.Size = New System.Drawing.Size(502, 20)
@@ -156,7 +158,7 @@ Partial Class frmEntryDetail
         Me.tbClassSource.Location = New System.Drawing.Point(298, 93)
         Me.tbClassSource.Name = "tbClassSource"
         Me.tbClassSource.ReadOnly = True
-        Me.tbClassSource.Size = New System.Drawing.Size(325, 20)
+        Me.tbClassSource.Size = New System.Drawing.Size(324, 20)
         Me.tbClassSource.TabIndex = 10
         '
         'lbCLSID
@@ -170,10 +172,10 @@ Partial Class frmEntryDetail
         '
         'tbCLSID
         '
-        Me.tbCLSID.Location = New System.Drawing.Point(120, 122)
+        Me.tbCLSID.Location = New System.Drawing.Point(121, 122)
         Me.tbCLSID.Name = "tbCLSID"
         Me.tbCLSID.ReadOnly = True
-        Me.tbCLSID.Size = New System.Drawing.Size(502, 20)
+        Me.tbCLSID.Size = New System.Drawing.Size(501, 20)
         Me.tbCLSID.TabIndex = 12
         '
         'lbCLSIDSRC
@@ -187,7 +189,7 @@ Partial Class frmEntryDetail
         '
         'tbCLSIDSRC
         '
-        Me.tbCLSIDSRC.Location = New System.Drawing.Point(120, 93)
+        Me.tbCLSIDSRC.Location = New System.Drawing.Point(121, 93)
         Me.tbCLSIDSRC.Name = "tbCLSIDSRC"
         Me.tbCLSIDSRC.ReadOnly = True
         Me.tbCLSIDSRC.Size = New System.Drawing.Size(85, 20)
@@ -196,7 +198,7 @@ Partial Class frmEntryDetail
         'btCopyDetailToClipboard
         '
         Me.btCopyDetailToClipboard.BackColor = System.Drawing.Color.Gold
-        Me.btCopyDetailToClipboard.Location = New System.Drawing.Point(89, 248)
+        Me.btCopyDetailToClipboard.Location = New System.Drawing.Point(121, 270)
         Me.btCopyDetailToClipboard.Name = "btCopyDetailToClipboard"
         Me.btCopyDetailToClipboard.Size = New System.Drawing.Size(116, 26)
         Me.btCopyDetailToClipboard.TabIndex = 15
@@ -206,7 +208,7 @@ Partial Class frmEntryDetail
         'btDLLDetail
         '
         Me.btDLLDetail.BackColor = System.Drawing.Color.Yellow
-        Me.btDLLDetail.Location = New System.Drawing.Point(211, 248)
+        Me.btDLLDetail.Location = New System.Drawing.Point(243, 270)
         Me.btDLLDetail.Name = "btDLLDetail"
         Me.btDLLDetail.Size = New System.Drawing.Size(189, 26)
         Me.btDLLDetail.TabIndex = 16
@@ -216,7 +218,7 @@ Partial Class frmEntryDetail
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(14, 221)
+        Me.Label1.Location = New System.Drawing.Point(17, 239)
         Me.Label1.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(64, 13)
@@ -225,8 +227,8 @@ Partial Class frmEntryDetail
         '
         'tbDLLVersion
         '
-        Me.tbDLLVersion.Location = New System.Drawing.Point(120, 221)
-        Me.tbDLLVersion.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.tbDLLVersion.Location = New System.Drawing.Point(121, 236)
+        Me.tbDLLVersion.Margin = New System.Windows.Forms.Padding(2)
         Me.tbDLLVersion.Name = "tbDLLVersion"
         Me.tbDLLVersion.ReadOnly = True
         Me.tbDLLVersion.Size = New System.Drawing.Size(138, 20)
@@ -235,7 +237,7 @@ Partial Class frmEntryDetail
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(277, 225)
+        Me.Label2.Location = New System.Drawing.Point(283, 243)
         Me.Label2.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(66, 13)
@@ -244,19 +246,39 @@ Partial Class frmEntryDetail
         '
         'tbDLLDate
         '
-        Me.tbDLLDate.Location = New System.Drawing.Point(391, 221)
-        Me.tbDLLDate.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.tbDLLDate.Location = New System.Drawing.Point(394, 236)
+        Me.tbDLLDate.Margin = New System.Windows.Forms.Padding(2)
         Me.tbDLLDate.Name = "tbDLLDate"
         Me.tbDLLDate.ReadOnly = True
-        Me.tbDLLDate.Size = New System.Drawing.Size(231, 20)
+        Me.tbDLLDate.Size = New System.Drawing.Size(228, 20)
         Me.tbDLLDate.TabIndex = 20
+        '
+        'tbCLSIDAddInName
+        '
+        Me.tbCLSIDAddInName.Location = New System.Drawing.Point(121, 148)
+        Me.tbCLSIDAddInName.Name = "tbCLSIDAddInName"
+        Me.tbCLSIDAddInName.Size = New System.Drawing.Size(501, 20)
+        Me.tbCLSIDAddInName.TabIndex = 21
+        Me.tbCLSIDAddInName.Visible = False
+        '
+        'lbCLSIDAddInName
+        '
+        Me.lbCLSIDAddInName.AutoSize = True
+        Me.lbCLSIDAddInName.Location = New System.Drawing.Point(13, 154)
+        Me.lbCLSIDAddInName.Name = "lbCLSIDAddInName"
+        Me.lbCLSIDAddInName.Size = New System.Drawing.Size(97, 13)
+        Me.lbCLSIDAddInName.TabIndex = 22
+        Me.lbCLSIDAddInName.Text = "CLSID Class Name"
+        Me.lbCLSIDAddInName.Visible = False
         '
         'frmEntryDetail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.SkyBlue
-        Me.ClientSize = New System.Drawing.Size(634, 282)
+        Me.ClientSize = New System.Drawing.Size(634, 307)
+        Me.Controls.Add(Me.lbCLSIDAddInName)
+        Me.Controls.Add(Me.tbCLSIDAddInName)
         Me.Controls.Add(Me.tbDLLDate)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.tbDLLVersion)
@@ -280,7 +302,7 @@ Partial Class frmEntryDetail
         Me.Controls.Add(Me.lbAddInName)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximumSize = New System.Drawing.Size(654, 325)
+        Me.MaximumSize = New System.Drawing.Size(654, 350)
         Me.MinimumSize = New System.Drawing.Size(654, 325)
         Me.Name = "frmEntryDetail"
         Me.Text = "EA AddIn Entry & DLL Details"
@@ -310,4 +332,6 @@ Partial Class frmEntryDetail
     Friend WithEvents tbDLLDate As System.Windows.Forms.TextBox
     Friend WithEvents ToolTip1 As ToolTip
     Private WithEvents lbAddInName As Label
+    Friend WithEvents tbCLSIDAddInName As TextBox
+    Friend WithEvents lbCLSIDAddInName As Label
 End Class

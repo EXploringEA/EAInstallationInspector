@@ -61,6 +61,8 @@
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DefineTrace>true</DefineTrace>
@@ -126,6 +128,12 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="1 Forms\frmDisplayRegistryKeys.Designer.vb">
+      <DependentUpon>frmDisplayRegistryKeys.vb</DependentUpon>
+    </Compile>
+    <Compile Include="1 Forms\frmDisplayRegistryKeys.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="1 Forms\frmLegend.Designer.vb">
       <DependentUpon>frmLegend.vb</DependentUpon>
     </Compile>
@@ -150,12 +158,13 @@
     <Compile Include="1 Forms\Inspector form\frmInspectorSupport.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="1 Forms\Inspector form\frmInspectorQueryContextMenus.vb">
+    <Compile Include="1 Forms\Inspector form\frmInspectorQueries.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="1 Forms\Inspector form\frmInspectorTreeviewBrowserContextMenus.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="2 SupportFunctions\AddInEntryDetail.vb" />
     <Compile Include="2 SupportFunctions\AddInInformation.vb" />
     <Compile Include="2 SupportFunctions\ClassInformation.vb" />
     <Compile Include="2 SupportFunctions\Constants.vb" />
@@ -179,7 +188,8 @@
     </Compile>
     <Compile Include="2 SupportFunctions\CSVArrayListConversion.vb" />
     <Compile Include="2 SupportFunctions\logger.vb" />
-    <Compile Include="2 SupportFunctions\RegistryFunctions.vb" />
+    <Compile Include="2 SupportFunctions\RegClass.vb" />
+    <Compile Include="2 SupportFunctions\RegFileOutput.vb" />
     <Compile Include="4 Treeview\NodeInfo.vb" />
     <Compile Include="1 Forms\Inspector form\frmInspectorBrowserEvents.vb">
       <SubType>Form</SubType>
@@ -209,6 +219,9 @@
     <Compile Include="NameSpaceDoc.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="1 Forms\frmDisplayRegistryKeys.resx">
+      <DependentUpon>frmDisplayRegistryKeys.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="1 Forms\frmEntryDetail.resx">
       <DependentUpon>frmEntryDetail.vb</DependentUpon>
     </EmbeddedResource>
@@ -248,6 +261,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="2 SupportFunctions\_NotUsed\" />
     <Folder Include="3 Resources\" />
     <Folder Include="4 Treeview\Reference\" />
     <Folder Include="Assembly\" />
