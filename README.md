@@ -4,9 +4,9 @@ Source code for the [EXploringEA's EA Installation Inspector](https://exploringe
 
 This is a windows application which displays registry entries associated with Sparxsystems EA Addins.
 
-For more information review the document **eaInstallationInspectorInformationV7011.pdf** located under the resources directory.
+For more information review the document **eaInstallationInspectorInformationV7020.pdf** located under the resources directory.
 
-Current release is V7.0.2.1 04JAN2023 - this release adds support to export registry entries that can be used to add/remove relevant EAddIn Keys - USE WITH CARE AND ONLY IF YOU KNOW WHAT YOU ARE DOING.
+Current release is V7.0.2.2 28MAY2023 - this release adds support to export registry entries that can be used to add/remove relevant EAddIn Keys - USE WITH CARE AND ONLY IF YOU KNOW WHAT YOU ARE DOING.
 
 I continue to tinker with the code do let me know if you find any issues or have suggestions on potential improvements.
 

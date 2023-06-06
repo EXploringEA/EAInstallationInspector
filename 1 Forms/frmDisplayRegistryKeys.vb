@@ -1,4 +1,5 @@
-﻿Public Class frmDisplayRegistryKeys
+﻿Imports System.IO
+Public Class frmDisplayRegistryKeys
 
     Private _Keys As List(Of RegKeyItem)
     Private _CreateKeys As List(Of RegKeyItem)
@@ -68,22 +69,35 @@
         End Try
     End Sub
 
-
+    '20230528 - added dialog to indicate if create / delete reg files have been created and exist
     Private Sub btExportFiles_Click_1(sender As Object, e As EventArgs) Handles btExportFiles.Click
         Try
+            ' Dim _CreateRegfilename As String = "AddRegfile_" & _hive & "_" & _classname & "_"
+            'Dim _DeleteRegFilename As String = "DeleteRegfile_" & _hive & "_" & _classname & "_"
+
             Dim _createRegfile As New RegFileOutput("AddRegfile_" & _hive & "_" & _classname & "_")
+            Dim _CreateRegfilename As String = _createRegfile.filename
             For Each s As RegKeyItem In _CreateKeys
                 If s.Exposed = RegKeyItem.KeyType.Standard Or (s.Exposed = RegKeyItem.KeyType.ExposedAssembly And cbIncludeAssemblies.Checked) Then
                     _createRegfile.output(s.KeyName)
                 End If
             Next
             _createRegfile.close()
-            Dim _deleteRegFile As New RegFileOutput("DeleteRegFile_" & _hive & "_" & _classname & "_")
+            Dim _deleteRegFile As New RegFileOutput("DeleteRegfile_" & _hive & "_" & _classname & "_")
+            Dim _DeleteRegFilename As String = _deleteRegFile.filename
             For Each s As RegKeyItem In _DeleteKeys
                 If s.Exposed = RegKeyItem.KeyType.Standard Or (s.Exposed = RegKeyItem.KeyType.ExposedAssembly And cbIncludeAssemblies.Checked) Then
                     _deleteRegFile.output(s.KeyName)
                 End If
             Next
+            Dim _s As String = "Files exported check " & vbCrLf & vbCrLf
+
+            _s = _s & IIf(File.Exists(_CreateRegfilename), "Exported create reg file " & _CreateRegfilename, "Failed to export delete reg file " & _CreateRegfilename)
+            _s += vbCrLf & vbCrLf
+            _s = _s & IIf(File.Exists(_DeleteRegFilename), "Exported delete reg file " & _DeleteRegFilename, "Failed to export delete reg file " & _DeleteRegFilename)
+
+            MsgBox(_s)
+
             _deleteRegFile.close()
 
         Catch ex As Exception

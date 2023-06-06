@@ -1,0 +1,12 @@
+20230530
+Try to improve recognition of keys
+* Ident keys from class name -> extract GUID's
+* Ident keys from filename > extract GUID's
+* Use GUID's to identify any keys
+* Produce a reg file to delete them
+View more registry keys
+* Add Typelib check
+* Add Interfaces check
+
+----
+* To test create a reg file that has all the keys - so we can use the delete reg file than add in to check it is fully registered
