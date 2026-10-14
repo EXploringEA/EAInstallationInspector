@@ -10,7 +10,7 @@ Current release is V7.0.2.1 04JAN2023 - this release adds support to export regi
 
 I continue to tinker with the code do let me know if you find any issues or have suggestions on potential improvements.
 
-Please NOTE: that the colours for indicating the condition of an AddIn has changed.  See https://exploringea.co.uk/tools/index.php/EaInspector/EaInspector.html for details - I'll try and keep the site updated - the documents are lagging behind at the moment,
+Please NOTE: that the colours for indicating the condition of an AddIn has changed.
 
 A pre-built .exe and help file are provided under in folders below the root.  
 
